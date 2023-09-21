@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "306515254042",
+    "project_id": "recuerda-facil",
+    "storage_bucket": "recuerda-facil.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:306515254042:android:2c1c9d6ad90f0b5972aaa3",
+        "android_client_info": {
+          "package_name": "com.recuerdafacil.recuerda_facil"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "306515254042-7se2167f638tqv77vu5rbhsbq3kshor2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.recuerdafacil.recuerda_facil",
+            "certificate_hash": "3acbf7bf4f95be5818485eb0bc4413fa993b3b15"
+          }
+        },
+        {
+          "client_id": "306515254042-pfnr14h2jp264q00v4it81fdsg7ummgu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFHPMbxLyr_GIciZ0uFIr0ndwUT8zzIC4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "306515254042-1jdn621kf6e7f2bco6fkcvu1tr3621g8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "306515254042-8itqnlujku61rc21cpivmjtjkl9goh1f.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.recuerdafacil.recuerdaFacil.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
