@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:recuerda_facil/screens/home_screen.dart';
 
 class CreateUserScreen extends StatefulWidget {
@@ -116,7 +117,7 @@ class CreateUserScreenState extends State<CreateUserScreen> {
           if(credenciales !=null){
             await credenciales.user!.sendEmailVerification();
             await FirebaseAuth.instance.signOut();
-            Navigator.of(context).pop();
+            context.pop();
             
           }
 

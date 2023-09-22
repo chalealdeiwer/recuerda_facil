@@ -42,6 +42,15 @@ Stream<int> getNotesLengthStream(String user) {
 
   return controller.stream;
 }
+Future<int> getNotesLengthFuture(String user) async {
+  final querySnapshot = await FirebaseFirestore.instance
+      .collection("notes")
+      .where("user", isEqualTo: user) // Cambiado de 'arrayContains' a 'isEqualTo' ya que estamos filtrando por un solo usuario
+      .get();
+
+  return querySnapshot.docs.length;
+}
+
 
 
 Stream<List> getNotesStream(String user) {

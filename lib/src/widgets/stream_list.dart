@@ -11,10 +11,15 @@ class StreamListWidget extends StatefulWidget {
   State<StreamListWidget> createState() => _StreamListWidgetState();
 }
 
+
 class _StreamListWidgetState extends State<StreamListWidget> {
   @override
   Widget build(BuildContext context) {
+
+    final colors = Theme.of(context).colorScheme;
     final noteProvider = Provider.of<NoteProvider>(context);
+    
+
 
     return StreamBuilder<List>(
       stream: noteProvider.getNotesStream(
@@ -42,17 +47,21 @@ class _StreamListWidgetState extends State<StreamListWidget> {
                 return Dismissible(
                   onDismissed: (direction) async {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      duration: const Duration(milliseconds: 1100),
+                      action: SnackBarAction(label: "Aceptar", onPressed: (){
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      }),
+                      duration: const Duration(milliseconds: 2000),
                       content: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          Icon(Icons.delete_forever),
                           Text(
                             "¡Recordatorio Eliminado!",
                             style: TextStyle(
                               color: Colors.black,
                             ),
                           ),
-                          Icon(Icons.delete_forever)
+                          
                         ],
                       ),
                       backgroundColor: Colors.red[200],
@@ -61,30 +70,34 @@ class _StreamListWidgetState extends State<StreamListWidget> {
                     notes2.removeAt(index);
                   },
                   confirmDismiss: (direction) async {
-                    bool result = false;
+                    bool result = true;
                     result = await showDialog(
-                        barrierDismissible: false,
+                        barrierDismissible: true,
                         context: context,
                         builder: (context) {
-                          return AlertDialog(
-                            title: Text(
-                                "¿Está seguro de que quiere eliminar ${snapshot.data?[index]['title']} ?"),
-                            actions: [
-                              TextButton(
-                                  style: TextButton.styleFrom(
-                                      foregroundColor: Colors.green),
-                                  onPressed: () {
-                                    return Navigator.pop(context, false);
-                                  },
-                                  child: const Text("Cancelar")),
-                              TextButton(
-                                  style: TextButton.styleFrom(
-                                      foregroundColor: Colors.red),
-                                  onPressed: () {
-                                    return Navigator.pop(context, true);
-                                  },
-                                  child: const Text("Si, estoy seguro"))
-                            ],
+                          return Center(
+                            child: SingleChildScrollView(
+                              child: AlertDialog(
+                                title: Text(
+                                    "¿Está seguro de que quiere eliminar ${snapshot.data?[index]['title']} ?"),
+                                actions: [
+                                  TextButton(
+                                      style: TextButton.styleFrom(
+                                          foregroundColor: Colors.green),
+                                      onPressed: () {
+                                        return Navigator.pop(context, false);
+                                      },
+                                      child: const Text("Cancelar")),
+                                  TextButton(
+                                      style: TextButton.styleFrom(
+                                          foregroundColor: Colors.red),
+                                      onPressed: () {
+                                        return Navigator.pop(context, true);
+                                      },
+                                      child: const Text("Si, estoy seguro"))
+                                ],
+                              ),
+                            ),
                           );
                         });
 
@@ -106,12 +119,12 @@ class _StreamListWidgetState extends State<StreamListWidget> {
                   key: Key(notes2[index]['key']),
                   child: Container(
                     margin:
-                        EdgeInsets.only(left: 5, right: 5, bottom: 2, top: 2),
+                        const EdgeInsets.only(left: 5, right: 5, bottom: 2, top: 2),
 
                     // padding: EdgeInsets.only(left: 10,right: 10,bottom: 5,top: 5),
                     decoration: BoxDecoration(
-                        color:Theme.of(context).colorScheme.secondary.withOpacity(0.20),
-                        // color: Colors.grey[400],
+                        // color:Theme.of(context).colorScheme.secondary.withOpacity(0.20),
+                        color: colors.surfaceVariant,
                         
                         borderRadius: BorderRadius.circular(20)),
                     child: 
@@ -126,16 +139,23 @@ class _StreamListWidgetState extends State<StreamListWidget> {
                           ),
                           maxLines: 30,
                         ),
-                        subtitle: Container(
+                        subtitle: 
+
+                          
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width*0.8,
                           height: 60,
                           child: Column(
 
                             children: [
+
                               Row(
+                                
+                                
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text(notes2[index]['content']),
+                                  Text(notes2[index]['content'],maxLines: 1  ),
                                   const SizedBox(
                                     width: 5,
                                   ),
@@ -146,7 +166,7 @@ class _StreamListWidgetState extends State<StreamListWidget> {
                                   Text(notes2[index]['state'])
                                 ],
                               ),
-                              SizedBox(height: 23,),
+                              const SizedBox(height: 23,),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
@@ -187,7 +207,7 @@ class _StreamListWidgetState extends State<StreamListWidget> {
                                         TextField(
                                           maxLines: 2,
                                           controller: titlecontrolador,
-                                          decoration: InputDecoration(
+                                          decoration: const InputDecoration(
 
                                               // hintText:
                                               // notes[index]['title'].toString(),
@@ -199,7 +219,7 @@ class _StreamListWidgetState extends State<StreamListWidget> {
                                         TextField(
                                           maxLines: 2,
                                           controller: contentcontrolador,
-                                          decoration: InputDecoration(
+                                          decoration: const InputDecoration(
 
                                               // hintText:
                                               // notes[index]['content'].toString(),
@@ -215,22 +235,28 @@ class _StreamListWidgetState extends State<StreamListWidget> {
                                                   .then((value) {
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(SnackBar(
+                                                      action: SnackBarAction(
+                                                        textColor: Colors.black,
+                                                        label:'¡Ok!'
+                                                      , onPressed: (){}),
                                                       duration: const Duration(milliseconds: 1100),
                                                         backgroundColor:
                                                             Colors.yellow[200],
                                                         content: const Row(
+                                                          
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
                                                                   .spaceBetween,
                                                           children: [
+                                                            Icon(Icons
+                                                                .add_alert_sharp),
                                                             Text(
                                                               "¡Recordatorio actualizado correctamente!",
                                                               style: TextStyle(
                                                                   color: Colors
                                                                       .black),
                                                             ),
-                                                            Icon(Icons
-                                                                .add_alert_sharp)
+
                                                           ],
                                                         )));
                                                 Navigator.pop(context);
@@ -275,5 +301,6 @@ class _StreamListWidgetState extends State<StreamListWidget> {
         }
       },
     );
+    
   }
 }

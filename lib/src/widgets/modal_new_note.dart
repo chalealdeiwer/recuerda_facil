@@ -134,31 +134,33 @@ class _ModalNewNoteState extends State<ModalNewNote> {
                 maxLines: 2,
               ),
               const SizedBox(height: 10),
-              Row(
+              Wrap(
                 children: [
-                  FilledButton(
+                  OutlinedButton.icon(
+                    icon: const Icon(Icons.calendar_month),
                     onPressed: () {
                       selectDate();
                     },
-                    child: Text(
+                    label: Text(
                       dateInput == null
                           ? "¿Cuando recordar?"
                           : DateFormat.yMEd('es').format(dateInput!),
-                      style: TextStyle(color: Colors.white),
+                      // style: TextStyle(color: Colors.white),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 2,
                   ),
-                  FilledButton(
+                  OutlinedButton.icon(
                     onPressed: () {
                       selectHour();
                     },
-                    child: Text(
+                    icon: const Icon(Icons.watch),
+                    label: Text(
                       hourInput == null
                           ? "¿A qué hora?"
                           : hourInput!.format(context),
-                      style: TextStyle(color: Colors.white),
+                      // style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ],
@@ -201,17 +203,28 @@ class _ModalNewNoteState extends State<ModalNewNote> {
                               combinedDateTime);
                           Navigator.of(context).pop(true);
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              duration: const Duration(milliseconds: 1100),
+                              action: SnackBarAction(
+                                textColor: Colors.black,
+                                label: '¡Ok!' ,
+                                onPressed: () {
+                                  // ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                  
+                                  // Code to execute.
+                                },
+                              ),
+
+                              duration: const Duration(milliseconds: 2000),
                               backgroundColor: Colors.green[200],
                               content: const Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
+                                  Icon(Icons.add_alert_sharp),
                                   Text(
                                     "¡Recordatorio agregado correctamente!",
                                     style: TextStyle(color: Colors.black),
                                   ),
-                                  Icon(Icons.add_alert_sharp)
+                                  
                                 ],
                               )
                               )

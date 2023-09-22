@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:recuerda_facil/screens/create_user_screen.dart';
 import 'package:recuerda_facil/screens/home_screen.dart';
@@ -147,10 +148,7 @@ class LoginScreenState extends State<LoginScreen> {
         const Text("¿Nuevo Aquí?"),
         TextButton(
             onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const CreateUserScreen()));
+              context.push('/createUser');
             },
             child: const Text("Registrarse"))
       ],

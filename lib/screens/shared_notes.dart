@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
 import 'package:recuerda_facil/models/note.dart';
@@ -72,7 +73,7 @@ class _SharedNotesScreenState extends State<SharedNotesScreen> {
               qrValue = cameraScanResult.toString();
             });
             await addUserNote(qrValue);
-            Navigator.of(context).pushNamed('/home');
+            context.push('/home');
             showwAlertDialog(context, "Información", "El usuario se ha encontrado y se cargaron los recordatorios correctamente");
           }else{
             showwAlertDialog(context, "Información", "El usuario NO se ha econtrado");
@@ -122,7 +123,7 @@ class _SharedNotesScreenState extends State<SharedNotesScreen> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(height: 40,),
+          const SizedBox(height: 40,),
           Text(
             FirebaseAuth.instance.currentUser!.displayName.toString(),
             style: const TextStyle(fontSize: 40),

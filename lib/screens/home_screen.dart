@@ -1,12 +1,13 @@
+
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:recuerda_facil/providers/notes_provider.dart';
-import 'package:recuerda_facil/screens/login_screen.dart';
 import 'package:recuerda_facil/services/permissions.dart';
 import 'package:recuerda_facil/src/widgets/customDrawer/drawer.dart';
 import 'package:recuerda_facil/src/widgets/modal_new_note.dart';
@@ -82,11 +83,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       GoogleSignIn().signOut();
 
                       FirebaseAuth.instance.signOut();
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LoginScreen()),
-                          (route) => false);
+                      // Navigator.pushAndRemoveUntil(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => const LoginScreen()),
+                      //     (route) => false);
+                      context.pushReplacement('/');
                     },
                     icon: const Icon(Icons.exit_to_app))
               ],
@@ -94,35 +96,20 @@ class _HomeScreenState extends State<HomeScreen> {
             drawer: MyDrawer(),
             //aqui va de nuevo con provider
             // body: Text("Hola"),
-            body: Column(
+            body: ListView(
               children: [
+                 _CategoriesWidget(),
+                //  MyExpansionTile(),
+                
+                  Container(
+                    height:MediaQuery.of(context).size.height*0.5,
+                    child: StreamListWidget()),
+                
+                //containerrrrr
                 Container(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: StreamBuilder<int>(
-                    stream: noteProvider.getNotesLengthStream(
-                        FirebaseAuth.instance.currentUser!.uid.toString()),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        final notesLength = snapshot.data;
-                        return Text(
-                          'Recordatorios: $notesLength',
-                          style: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.start,
-                        );
-                      } else {
-                        return Text(
-                            'Cargando...'); // Puedes mostrar un mensaje de carga mientras se obtiene la longitud.
-                      }
-                    },
-                  ),
-                ),
-                Expanded(child: StreamListWidget()),
-                Container(
-                  
                   height: 250,
                   child: Padding(
-
+                
                     padding: const EdgeInsets.all(20.0),
                     child: Text(
                       widget.text,
@@ -134,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: FontWeight.w600),
                     ),
                   ),
-                )
+                ),
               ],
             ),
             // bottomNavigationBar: const BottonBar(),
@@ -186,8 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.of(context)
-                                        .pop(); // Cierra el AlertDialog
+                                    context.pop(); // Cierra el AlertDialog
                                   },
                                   child: const Text('Cerrar'),
                                 ),
@@ -212,7 +198,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           DateTime.now());
 
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              duration: const Duration(milliseconds: 1100),
+                              duration: const Duration(milliseconds: 2000),
+                              action: SnackBarAction(
+                                textColor: Colors.black,
+                                label: "¡Ok!", onPressed: (){}),
                               backgroundColor: Colors.green[200],
                               content: const Row(
                                 mainAxisAlignment:
@@ -273,3 +262,153 @@ void showNewNote(BuildContext context) {
         );
       });
 }
+class _CategoriesWidget extends StatefulWidget {
+  const _CategoriesWidget();
+
+  @override
+  State<_CategoriesWidget> createState() => _CategoriesWidgetState();
+}
+
+enum Categories { sin_categoria, salud, medicamentos, trabajo,cumpleanos,aniversarios,personal }
+
+class _CategoriesWidgetState extends State<_CategoriesWidget> {
+
+  Categories selectCategorie = Categories.sin_categoria;
+
+  @override
+  Widget build(BuildContext context) {
+    final noteProvider = Provider.of<NoteProvider>(context);
+    bool _isExpanded = false; 
+
+    return ExpansionTile(
+      initiallyExpanded: _isExpanded,
+       onExpansionChanged: (bool expanding) => setState(() {
+        print(expanding);
+        _isExpanded = expanding;
+      }),
+      
+      title:  StreamBuilder<int>(
+                    stream: noteProvider.getNotesLengthStream(
+                        FirebaseAuth.instance.currentUser!.uid.toString()),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final notesLength = snapshot.data;
+                        return Text(
+                          'Todos los recordatorios $notesLength',
+                          style: TextStyle(
+                              fontSize: 25, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.start,
+                        );
+                      } else {
+                        return Text(
+                            'Cargando...'); // Puedes mostrar un mensaje de carga mientras se obtiene la longitud.
+                      }
+                    },
+                  ),
+
+      // title: const Text("Todos los Recordatorios",style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
+     subtitle: Text("$selectCategorie"),
+
+      children: [
+        GestureDetector(
+          onTap: () {
+            setState(() {
+                _isExpanded = false;
+                print(_isExpanded);
+      
+            });
+          },
+          child: RadioListTile(
+            title: const Text("Sin Categoría"),
+            subtitle: const Text("Recordatorios sin categoría"),
+            value: Categories.sin_categoria,
+            groupValue: selectCategorie,
+            onChanged: (value) {
+              setState(() {
+                selectCategorie = Categories.sin_categoria;
+                _isExpanded = false;
+                print(_isExpanded);
+
+              });
+            },
+          ),
+        ),
+        RadioListTile(
+          title: const Text("Salud"),
+          subtitle: const Text("Categoría Salud"),
+          value: Categories.salud,
+          groupValue: selectCategorie,
+          onChanged: (value) {
+            setState(() {
+              _isExpanded = false;
+              selectCategorie = Categories.salud;
+            });
+            
+          },
+          
+        ),
+        RadioListTile(
+          title: const Text("Medicamentos"),
+          subtitle: const Text("Categoría Medicamentos"),
+          value: Categories.medicamentos,
+          groupValue: selectCategorie,
+          onChanged: (value) {
+            setState(() {
+              _isExpanded = false;
+              selectCategorie = Categories.medicamentos;
+            });
+          },
+        ),
+        RadioListTile(
+          title: const Text("Trabajo"),
+          subtitle: const Text("Categoría Trabajo"),
+          value: Categories.trabajo,
+          groupValue: selectCategorie,
+          onChanged: (value) {
+            setState(() {
+              _isExpanded = false;
+              selectCategorie = Categories.trabajo;
+            });
+          },
+        ),
+        RadioListTile(
+          title: const Text("Cumpleaños"),
+          subtitle: const Text("Categoría Cumpleaños"),
+          value: Categories.cumpleanos,
+          groupValue: selectCategorie,
+          onChanged: (value) {
+            setState(() {
+              _isExpanded = false;
+              selectCategorie = Categories.cumpleanos;
+            });
+          },
+        ),
+        RadioListTile(
+          title: const Text("Aniversario"),
+          subtitle: const Text("Categoría Aniversarios"),
+          value: Categories.aniversarios,
+          groupValue: selectCategorie,
+          onChanged: (value) {
+            setState(() {
+              _isExpanded = false;
+              selectCategorie = Categories.aniversarios;
+            });
+          },
+        ),
+        RadioListTile(
+          title: const Text("Personal"),
+          subtitle: const Text("Categoría Personal"),
+          value: Categories.personal,
+          groupValue: selectCategorie,
+          onChanged: (value) {
+            setState(() {
+              _isExpanded = false;
+              selectCategorie = Categories.personal;
+            });
+          },
+        ),
+      ],
+    );
+  }
+}
+
