@@ -1,135 +1,46 @@
 import 'package:flutter/material.dart';
 
-class CategoriesWidget extends StatelessWidget {
-  static const String name = 'ui_controls_screen';
-  const CategoriesWidget({super.key});
+class MyExpansionTile extends StatefulWidget {
+  @override
+  _MyExpansionTileState createState() => _MyExpansionTileState();
+}
+
+class _MyExpansionTileState extends State<MyExpansionTile> {
+  bool _isExpanded = false; // Valor inicial para rastrear si el ExpansionTile está expandido.
+  int? _selectedValue;     // Valor para rastrear el RadioListTile seleccionado.
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('UI Controls'),
-      ),
-      body: const _CategoriesWidget(),
-    );
-  }
-}
-
-class _CategoriesWidget extends StatefulWidget {
-  const _CategoriesWidget();
-
-  @override
-  State<_CategoriesWidget> createState() => _CategoriesWidgetState();
-}
-
-enum Transportation { car, boat, plane, submarine }
-
-class _CategoriesWidgetState extends State<_CategoriesWidget> {
-  bool isDeveloper = true;
-  bool wantsBreakfast= false;
-  bool wantsLunch= false;
-  bool wantsDinner= false;
-
-
-  Transportation selectTransportation = Transportation.car;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      physics: const ClampingScrollPhysics(),
-      children: [
-        SwitchListTile(
-          value: isDeveloper,
-          title: const Text("Developer Mode"),
-          subtitle: const Text("Controles adicionales"),
-          onChanged: (value) {
-            
+    return ExpansionTile(
+      initiallyExpanded: _isExpanded,
+      title: Text('Elige una opción'),
+      onExpansionChanged: (bool expanding) => setState(() {
+        _isExpanded = expanding;
+      }),
+      children: <Widget>[
+        RadioListTile<int>(
+          title: Text('Opción 1'),
+          value: 1,
+          groupValue: _selectedValue,
+          onChanged: (int? value) {
             setState(() {
-              isDeveloper = !isDeveloper;
+              _selectedValue = value;
+              _isExpanded = false; // Contrae el ExpansionTile.
             });
           },
         ),
-        ExpansionTile(
-          title: const Text("Vehículo de transporte"),
-          subtitle: Text("$selectTransportation"),
-          children: [
-            RadioListTile(
-              title: const Text("By Car"),
-              subtitle: const Text("Viajar por carro"),
-              value: Transportation.car,
-              groupValue: selectTransportation,
-              onChanged: (value) {
-                setState(() {
-                  selectTransportation = Transportation.car;
-                });
-              },
-            ),
-            RadioListTile(
-              title: const Text("By boat"),
-              subtitle: const Text("Viajar por barco"),
-              value: Transportation.boat,
-              groupValue: selectTransportation,
-              onChanged: (value) {
-                setState(() {
-                  selectTransportation = Transportation.boat;
-                });
-              },
-            ),
-            RadioListTile(
-              title: const Text("By plane"),
-              subtitle: const Text("Viajar por avion"),
-              value: Transportation.plane,
-              groupValue: selectTransportation,
-              onChanged: (value) {
-                setState(() {
-                  selectTransportation = Transportation.plane;
-                });
-              },
-            ),
-            RadioListTile(
-              title: const Text("By Submarine"),
-              subtitle: const Text("Viajar por Submarino"),
-              value: Transportation.submarine,
-              groupValue: selectTransportation,
-              onChanged: (value) {
-                setState(() {
-                  selectTransportation = Transportation.submarine;
-                });
-              },
-            )
-          ],
+        RadioListTile<int>(
+          title: Text('Opción 2'),
+          value: 2,
+          groupValue: _selectedValue,
+          onChanged: (int? value) {
+            setState(() {
+              _selectedValue = value;
+              _isExpanded = false; // Contrae el ExpansionTile.
+            });
+          },
         ),
-      
-      CheckboxListTile(
-        title: const Text("¿Quieres desayuno?"),
-        value: wantsBreakfast,
-        onChanged: (value) {
-          
-          setState(() {
-            wantsBreakfast = !wantsBreakfast;
-          });
-        
-        },),
-        CheckboxListTile(
-        title: const Text("¿Quieres almuerzo?"),
-        value: wantsLunch,
-        onChanged: (value) {
-          
-          setState(() {
-            wantsLunch = !wantsLunch;
-          });
-        
-        },),
-        CheckboxListTile(
-        title: const Text("¿Quieres cena?"),
-        value: wantsDinner,
-        onChanged: (value) {
-          
-          setState(() {
-            wantsDinner = !wantsDinner;
-          });
-        
-        },)
+        // ... Puedes agregar más RadioListTile si lo deseas.
       ],
     );
   }

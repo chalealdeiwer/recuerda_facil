@@ -13,7 +13,7 @@ import 'package:recuerda_facil/src/widgets/customDrawer/drawer.dart';
 import 'package:recuerda_facil/src/widgets/modal_new_note.dart';
 import 'package:recuerda_facil/src/widgets/stream_list.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
-
+// ignore: must_be_immutable
 class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
   var text = "Mantén presionado el botón y empieza el reconocimiento de voz";
@@ -99,7 +99,8 @@ class _HomeScreenState extends State<HomeScreen> {
             body: ListView(
               children: [
                  _CategoriesWidget(),
-                //  MyExpansionTile(),
+
+
                 
                   Container(
                     height:MediaQuery.of(context).size.height*0.5,
