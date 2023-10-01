@@ -19,3 +19,14 @@ Future<bool> requestMicrophone() async {
     // El usuario negó el permiso, puedes mostrar un mensaje de error o solicitar el permiso nuevamente
   }return false;
 }
+    // El usuario negó el permiso, puedes mostrar un mensaje de error o solicitar el permiso nuevamente
+
+Future<bool> requestNotification() async {
+  final status = await Permission.notification.request();
+  if (status.isGranted) {
+    return true;
+    // El permiso de la cámara se otorgó, ahora puedes abrir el escáner QR
+  } else {
+    // El usuario negó el permiso, puedes mostrar un mensaje de error o solicitar el permiso nuevamente
+  }return false;
+}

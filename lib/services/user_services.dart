@@ -1,69 +1,149 @@
-import 'package:recuerda_facil/models/note.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:recuerda_facil/models/user.dart';
+import 'package:recuerda_facil/models/user_account.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
-Future<List> getUsers() async {
-  List users = [];
-  QuerySnapshot queryusers = await db.collection("users").get();
-  queryusers.docs.forEach((element) {
-    final Map<String, dynamic> data=element.data() as Map<String,dynamic>;
-    final people ={
-      "displayName": data['displayName'],
-      "email":data['email'],
-      "emailVerified":data['emailVerified'],
-      "uid":element.id,
-      "categories":data['categories']
+Future<List<UserAccount>> getUsers() async {
 
-    };
-    users.add(people); });
+  List<UserAccount> users = [];
+  QuerySnapshot queryusers = await db.collection("users").get();
+
+  queryusers.docs.forEach((element) {
+    final Map<String, dynamic> data = element.data() as Map<String, dynamic>;
+   final UserAccount user= UserAccount.fromMap(data);
+    users.add(user);
+  });
   return users;
 }
 
-Future<Map<String, dynamic>?> getUser(String uid) async {
-  try {
-    final DocumentSnapshot userDoc = await db
-        .collection("users")
-        .doc(uid)
-        .get();
-      print(userDoc.data().toString());
+Future<void> addUserCategory(String uid, String newCategory) async {
+  final DocumentReference userDocRef = db.collection("users").doc(uid);
+  final DocumentSnapshot userDocSnapshot = await userDocRef.get();
 
-    if (userDoc.exists) {
-      print("el usuario existe");
-      return userDoc.data() as Map<String, dynamic>;
-    } else {
-      print("el usuario no existe");
-      return null; // El usuario no existe
-    }
-  } catch (e) {
-    print("Error al obtener los datos del usuario: $e");
-    return null;
+  if (userDocSnapshot.exists) {
+    final Map<String, dynamic> data = userDocSnapshot.data() as Map<String, dynamic>;
+    List<dynamic> arrayCategories = data['categories'] ?? [];
+    arrayCategories.add(newCategory);
+    await userDocRef.update({"categories": arrayCategories});
+  } else {
+    print('User document not found');
   }
 }
-Future<List<String>> getUserCategories(String uid) async {
-  List<String> categories = [];
 
-  final QuerySnapshot querySnapshot = await db
-      .collection('users')
-      .where('uid', isEqualTo: uid)
-      .get();
+Future<void> removeUserCategory(String uid, String categoryToRemove) async {
+  final DocumentReference userDocRef = db.collection("users").doc(uid);
+  final DocumentSnapshot userDocSnapshot = await userDocRef.get();
 
-  querySnapshot.docs.forEach((element) {
-    final Map<String, dynamic> data = element.data() as Map<String, dynamic>;
-    final userCategories = data['categories'] as List<dynamic>;
-    userCategories.toList();
-    categories.addAll(userCategories.cast<String>());
-    // Agregar las categorías del usuario a la lista
-    
-  });
-
-  return categories;
+  if (userDocSnapshot.exists) {
+    final Map<String, dynamic> data = userDocSnapshot.data() as Map<String, dynamic>;
+    List<dynamic> arrayCategories = data['categories'] ?? [];
+    // Eliminar la categoría especificada de la lista
+    arrayCategories.remove(categoryToRemove);
+    // Actualizar la lista de categorías en la base de datos
+    await userDocRef.update({"categories": arrayCategories});
+  } else {
+    print('User document not found');
+  }
 }
+
+// Future<UserAccount?> getUser(String uid) async {
+//  await Future.delayed(Duration(seconds: 2));
+//   try {
+//   final QuerySnapshot<Map<String,  dynamic>> userDoc = await db
+//         .collection("users")
+//         .where("uid", isEqualTo: uid)
+//         .get();
+//      final user= UserAccount.fromMap(userDoc.docs.first.data());
+//         return user;
+//   } catch (e) {
+//     print("Error al obtener los datos del usuario: $e");
+//     return null;
+//   }
+// }
+Stream<UserAccount?> getUserStream(String uid) {
+  
+    return db
+        .collection("users")
+        .doc(uid)
+        .snapshots()
+        .map((snapshot) {
+          if (snapshot.exists) {
+            final Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+            return UserAccount.fromMap(data);
+          }
+          return null;
+        });
+  }
+
+// Future<List<String>> getUserCategories(String uid) async {
+  
+//   if(uid.isEmpty){
+//     return ['Sin Categoría'];
+//   }
+//   // Inicializar con la categoría predeterminada
+//   List<String> categories = ['Sin Categoría'];
+//   // Intentar obtener las categorías del usuario de Firestore
+//   try {
+//     final QuerySnapshot querySnapshot = await db
+//         .collection('users')
+//         .where('uid', isEqualTo: uid)
+//         .get();
+
+//     // Verificar si se obtuvieron documentos
+//     if (querySnapshot.docs.isNotEmpty) {
+//       querySnapshot.docs.forEach((element) {
+//         final Map<String, dynamic> data = element.data() as Map<String, dynamic>;
+
+//         // Verificar si las categorías están presentes y no son nulas
+//         if (data.containsKey('categories') && data['categories'] != null) {
+//           final userCategories = data['categories'] as List<dynamic>;
+
+//           // Asegurarse de que la lista de categorías no esté vacía
+//           if (userCategories.isNotEmpty) {
+//             categories.addAll(userCategories.cast<String>());
+//           }
+//         }
+//       });
+//     }
+//   } catch (e) {
+//     print('Error obteniendo categorías: $e');
+//     // Opcionalmente, manejar el error según sea necesario
+//   }
+
+//   return categories;
+// }
 //funcionando
 
-Future<void> addUser(String displayName,String email, bool emailVerified, String uid)async{
-  await db.collection("users").add({"displayName": displayName,"email":email,"emailVerified":emailVerified,"uid":uid,"categories":['Sin Categoría','Salud','Medicamentos','Trabajo','Cumpleaños','Aniversarios','Personal']});
+// Future<void> addUser(String displayName,String email, bool emailVerified, String uid, String photoURL)async{
+//   await db.collection("users").add(
+//     {"displayName": displayName,
+//     "email":email,
+//     "emailVerified":emailVerified,
+//     "uid":uid,
+//     "categories":['Salud','Medicamentos','Trabajo','Cumpleaños','Aniversarios','Personal'],
+//     "photoURL":photoURL,
+//     "created":Timestamp.now(),
+//     "private":true
+//     }
+//     );
 
+// }
+
+Future<bool> getPrivate(String uid)async{
+  try{
+    final QuerySnapshot userDoc = await db.collection("users").where('uid', isEqualTo: uid).limit(1).get();
+    if(userDoc.docs.isNotEmpty){
+      final Map<String, dynamic> data = userDoc.docs.first.data() as Map<String, dynamic>;
+      final bool private = data['private'] as bool;
+      return private;
+    }else{
+      return false;
+    }
+  }catch(e){
+    print("Error al obtener los datos del usuario: $e");
+    return false;
+  }
 }
 
 Future<bool> searchUserUid(String uid) async {
