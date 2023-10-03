@@ -31,6 +31,7 @@ class UserNotifier extends StateNotifier<User?> {
             'created': Timestamp.now(),
             "emailVerified": user.emailVerified,
             "categories": [
+              'Sin Categoría',
               'Salud',
               'Medicamentos',
               'Trabajo',
@@ -42,7 +43,7 @@ class UserNotifier extends StateNotifier<User?> {
             "private": false,
             "uid": user.uid
           });
-          print("usuario añadido a la base de dato s");
+          print("usuario añadido a la base de datos");
         } else {
           print("el usuario ya esta en la base de datos");
         }

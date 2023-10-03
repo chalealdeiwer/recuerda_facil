@@ -40,6 +40,7 @@ class CategorySelector extends ConsumerWidget {
       scrollDirection: Axis.horizontal,
       itemCount: categories.length + 1,
       itemBuilder: (BuildContext context, int index) {
+
         if (index == categories.length) {
           return IconButton(
             onPressed: () async {
@@ -102,6 +103,9 @@ class CategorySelector extends ConsumerWidget {
             ),
           );
         }
+        
+
+
         return Row(
           children: [
             GestureDetector(
