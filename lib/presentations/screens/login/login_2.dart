@@ -30,6 +30,7 @@ class _Login2ScreenState extends ConsumerState<Login2Screen> {
     final colors = Theme.of(context).colorScheme;
     final user = ref.watch(userProvider);
     final isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
+    final  size = MediaQuery.of(context).size;
 
 
     // Usa el método watch directamente dentro del método build
@@ -70,22 +71,22 @@ class _Login2ScreenState extends ConsumerState<Login2Screen> {
                             "Recuerda",
                             style: TextStyle(
                                 fontFamily: 'SpicyRice-Regular',
-                                fontSize: 70,
+                                fontSize: 65,
                                 color: colors.primary),
                           ),
                           Text(
                             "Fácil",
                             style: TextStyle(
                                 fontFamily: 'SpicyRice-Regular',
-                                fontSize: 65,
+                                fontSize: 60,
                                 color: colors.secondary),
                           ),
                         ],
                       ),
                       const SizedBox(width: 10,),
                       SizedBox(
-                        height: 100,
-                        width: 100,
+                        height: 90,
+                        width: 90,
                         child: Image.asset(
                           isDarkMode ? "assets/circleLogoWhite.png" : "assets/circleLogo.png",
                           fit: BoxFit.cover,

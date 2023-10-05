@@ -17,7 +17,7 @@ class SupportScreen extends StatelessWidget {
             children: [
               const Icon(
                 Icons.support_agent_rounded,
-                size: 100,
+                size: 90,
               ),
               Text(
                 "Soporte / Ayuda",
@@ -44,6 +44,7 @@ class SupportScreen extends StatelessWidget {
                   context.push('/support/contact_info');
                 },
                 child: Column(
+                 
                   children: [
                     const Icon(
                       Icons.account_circle_rounded,
@@ -69,7 +70,7 @@ class SupportScreen extends StatelessWidget {
                       children: [
                         const Icon(
                           Icons.question_mark_rounded,
-                          size: 100,
+                          size: 80,
                         ),
                         Text(
                           "Preguntas\nFrecuentes\n(FAQ)",
@@ -89,7 +90,7 @@ class SupportScreen extends StatelessWidget {
                       children: [
                         const Icon(
                           Icons.comment_rounded,
-                          size: 100,
+                          size: 80,
                         ),
                         Text(
                           "\nComentarios",

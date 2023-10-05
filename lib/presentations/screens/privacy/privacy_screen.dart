@@ -70,7 +70,7 @@ class PrivacyScreen extends ConsumerWidget {
                 height: 20,
               ),
               Container(
-                  height: size.height * 2.3,
+                  height: size.height * 2.5,
                   width: double.infinity,
                   decoration: BoxDecoration(
                       color: colors.surfaceVariant,

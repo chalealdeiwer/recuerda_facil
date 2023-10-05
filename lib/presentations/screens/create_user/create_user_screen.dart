@@ -26,11 +26,12 @@ class CreateUserScreenState extends ConsumerState<CreateUserScreen> {
     final colors = Theme.of(context).colorScheme;
     final isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
     return  Scaffold(
+      appBar: AppBar(),
       body: SingleChildScrollView(
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 100,),
+            const SizedBox(height: 30,),
             Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -50,22 +51,22 @@ class CreateUserScreenState extends ConsumerState<CreateUserScreen> {
                                 "Recuerda",
                                 style: TextStyle(
                                     fontFamily: 'SpicyRice-Regular',
-                                    fontSize: 70,
+                                    fontSize: 65,
                                     color: colors.primary),
                               ),
                               Text(
                                 "Fácil",
                                 style: TextStyle(
                                     fontFamily: 'SpicyRice-Regular',
-                                    fontSize: 65,
+                                    fontSize: 60,
                                     color: colors.secondary),
                               ),
                             ],
                           ),
                           const SizedBox(width: 10,),
                           SizedBox(
-                            height: 100,
-                            width: 100,
+                            height: 90,
+                            width: 90,
                             child: Image.asset(
                               isDarkMode ? "assets/circleLogoWhite.png" : "assets/circleLogo.png",
                               fit: BoxFit.cover,

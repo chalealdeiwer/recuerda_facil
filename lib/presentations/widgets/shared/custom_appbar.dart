@@ -34,7 +34,7 @@ class CustomAppbar extends ConsumerWidget {
               "Recuerda Fácil",
               style: TextStyle(
                   color: colors.primary,
-                  fontSize: 25,
+                  fontSize: 24,
                   // fontWeight: FontWeight.bold,
                   fontFamily: 'SpicyRice-Regular'),
             ),
