@@ -8,14 +8,8 @@ import 'package:recuerda_facil/services/user_services.dart';
 import '../providers/user_account_provider.dart';
 
 class CategorySelector extends ConsumerWidget {
-  
-
-
-
-
-
   @override
-  Widget build(BuildContext context,ref) {
+  Widget build(BuildContext context, ref) {
     final user = ref.watch(userProvider);
     final userAcc = ref.watch(userProviderr(user!.uid));
     final List<String> categories;
@@ -40,7 +34,6 @@ class CategorySelector extends ConsumerWidget {
       scrollDirection: Axis.horizontal,
       itemCount: categories.length + 1,
       itemBuilder: (BuildContext context, int index) {
-
         if (index == categories.length) {
           return IconButton(
             onPressed: () async {
@@ -103,8 +96,6 @@ class CategorySelector extends ConsumerWidget {
             ),
           );
         }
-        
-
 
         return Row(
           children: [
@@ -129,7 +120,8 @@ class CategorySelector extends ConsumerWidget {
                     .watch(indexCategoryProvider.notifier)
                     .update((state) => index);
                 // Verificar si la categoría seleccionada es "Sin Categoría"
-                if (categories[index] != "Sin Categoría") {
+                if (categories[index] != "Sin Categoría" &&
+                    categories[index] != "Todos") {
                   showDialog(
                     context: context,
                     builder: (context) {
@@ -148,6 +140,12 @@ class CategorySelector extends ConsumerWidget {
                             // Por favor verifica este widget, no es estándar en Flutter y podría causar un error
                             child: const Text('Eliminar'),
                             onPressed: () async {
+                              ref
+                                  .watch(categoryProvider.notifier)
+                                  .update((state) => categories[1]);
+                              ref
+                                  .watch(indexCategoryProvider.notifier)
+                                  .update((state) => 1);
                               await removeUserCategory(
                                       FirebaseAuth.instance.currentUser!.uid,
                                       categories[index])
@@ -229,5 +227,3 @@ class CategorySelector extends ConsumerWidget {
     );
   }
 }
-
-

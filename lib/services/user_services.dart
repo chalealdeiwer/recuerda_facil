@@ -42,6 +42,20 @@ Future<void> removeUserCategory(String uid, String categoryToRemove) async {
     arrayCategories.remove(categoryToRemove);
     // Actualizar la lista de categorías en la base de datos
     await userDocRef.update({"categories": arrayCategories});
+
+    // Obtener todas las notas que pertenecen a la categoría que se va a eliminar
+    final QuerySnapshot noteSnapshot = await db.collection("notes")
+        .where("category", isEqualTo: categoryToRemove)
+        .get();
+
+    List<Future<void>> updateOperations = [];
+
+    for (DocumentSnapshot noteDoc in noteSnapshot.docs) {
+      DocumentReference noteRef = db.collection("notes").doc(noteDoc.id);
+      updateOperations.add(noteRef.update({"category": ""}));
+    }
+
+    await Future.wait(updateOperations);
   } else {
     print('User document not found');
   }

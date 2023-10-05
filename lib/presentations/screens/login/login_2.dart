@@ -4,9 +4,8 @@ import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:recuerda_facil/models/user.dart';
-import 'package:recuerda_facil/presentations/providers/user_provider.dart';
 import 'package:recuerda_facil/presentations/screens/screens.dart';
-import 'package:recuerda_facil/services/user_services.dart';
+import '../../providers/providers.dart';
 
 class Login2Screen extends ConsumerStatefulWidget {
   static const name = "login_screen";
@@ -25,118 +24,211 @@ class _Login2ScreenState extends ConsumerState<Login2Screen> {
   @override
   void initState() {
     super.initState();
-    
   }
-  
 
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     final user = ref.watch(userProvider);
+    final isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
+
 
     // Usa el método watch directamente dentro del método build
-    return user != null ? HomeScreen() : logiin(user);
-
-
+    return user != null ? HomeScreen() : logiin(user, colors,isDarkMode);
   }
 
-
-  Widget logiin(User? user){
+  Widget logiin(User? user, ColorScheme colors, bool isDarkMode) {
     return Scaffold(
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Padding(
-            padding:  EdgeInsets.all(16.0),
-            child: Text(
-              "Recuerda Fácil",
-              style: TextStyle( fontSize: 40, fontWeight: FontWeight.bold),
+      
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 30,
             ),
-          ),
-          SizedBox(
-          width: MediaQuery.of(context).size.width,
-            child: const Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Text("Iniciar Sesión",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.start),
-            )
-          ),
-          Offstage(
-            offstage: error == '',
-            child: Padding(
-              padding:  const EdgeInsets.all(8.0),
-              child: Text(
-                error,
-                style: const TextStyle(color: Colors.red, fontSize: 16),
+            const Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Text("Bienvenido a:",
+                      style: TextStyle(
+                        fontFamily: 'SpicyRice-Regular',
+                        fontSize: 25,
+                      )),
+                )),
+            Center(
+              child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Wrap(
+                    alignment: WrapAlignment.center,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Recuerda",
+                            style: TextStyle(
+                                fontFamily: 'SpicyRice-Regular',
+                                fontSize: 70,
+                                color: colors.primary),
+                          ),
+                          Text(
+                            "Fácil",
+                            style: TextStyle(
+                                fontFamily: 'SpicyRice-Regular',
+                                fontSize: 65,
+                                color: colors.secondary),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(width: 10,),
+                      SizedBox(
+                        height: 100,
+                        width: 100,
+                        child: Image.asset(
+                          isDarkMode ? "assets/circleLogoWhite.png" : "assets/circleLogo.png",
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    ],
+                  )),
+            ),
+            SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: const Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Text("Iniciar Sesión",
+                        style: TextStyle(
+                          fontFamily: 'SpicyRice-Regular',
+                          fontSize: 28,
+                        )
+                        )
+                        )
+                        ),
+            Offstage(
+              offstage: error == '',
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  error,
+                  style: const TextStyle(color: Colors.red, fontSize: 16),
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: formulario(),
-          ),
-          // botonLogin(),
-          newUser(),
-          buildOrLine(),
-          buttonGoogle()
-        ],
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: formulario(),
+            ),
+            botonLogin(),
+            buildOrLine(),
+            buttonGoogle(),
+            const Padding(
+              padding:  EdgeInsets.symmetric(horizontal:16.0),
+              child:  Divider(),
+            ),
+            newUser(),
+            privacy(),
+
+            const SizedBox(height: 100,),
+
+          ],
+        ),
       ),
     );
   }
-  // Widget botonLogin() {
-  //   return FractionallySizedBox(
-  //     widthFactor: 0.6,
-  //     child: ElevatedButton(
-  //         onPressed: () async {
-  //           if (_formkey.currentState!.validate()) {
-  //             _formkey.currentState!.save();
-  //             UserCredential? credenciales = await login(email, password);
-  //             if (credenciales != null) {
-  //               if (credenciales.user != null) {
-  //                 if (credenciales.user!.emailVerified) {
-  //                   Navigator.pushAndRemoveUntil(
-  //                       context,
-  //                       MaterialPageRoute(builder: (context) => HomeScreen()),
-  //                       (route) => false);
-  //                 } else {
-  //                   setState(() {
-  //                     error = "Debes verificar tu correo antes de acceder";
-  //                   });
-  //                 }
-  //               }
-  //             }
 
+  Widget botonLogin() {
+    return FractionallySizedBox(
+      widthFactor: 0.6,
+      child: FilledButton(
+          onPressed: () async {
+            if (_formkey.currentState!.validate()) {
+              _formkey.currentState!.save();
               
-  //           }
-  //         },
-  //         child: const Text("Login")),
-  //   );
-  // }
+              // UserCredential? credenciales = await login(email, password);
+              // if (credenciales != null) {
+              //   if (credenciales.user != null) {
+              //     if (credenciales.user!.emailVerified) {
+              //       Navigator.pushAndRemoveUntil(
+              //           context,
+              //           MaterialPageRoute(builder: (context) => HomeScreen()),
+              //           (route) => false);
+              //     } else {
+              //       setState(() {
+              //         error = "Debes verificar tu correo antes de acceder";
+              //       });
+              //     }
+                // }
+              // }
 
+            }
+          },
+          child: const Text("Ingresar",style: TextStyle(fontSize: 25),)),
+    );
+  }
 
-   Widget newUser() {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
+  Widget privacy(){
+    return Wrap(
+      alignment: WrapAlignment.center,
+      crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        const Text("¿Nuevo Aquí?"),
+        const Text(
+          "Al registrarte aceptas el Tratamiento de Datos y ",
+          style: TextStyle(fontSize: 18),
+        ),
+        TextButton(
+            onPressed: () {
+              context.push('/privacy');
+            },
+            child: const Text(
+              "Política de Privacidad",
+              style: TextStyle(fontSize: 18,color: Colors.blue),
+            ))
+      ],
+    );
+  }
+
+  Widget newUser() {
+    return Wrap(
+      alignment: WrapAlignment.center,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      
+      children: [
+        const Text(
+          "¿Nuevo Aquí?",
+          style: TextStyle(fontSize: 25),
+        ),
         TextButton(
             onPressed: () {
               context.push('/createUser');
             },
-            child: const Text("Registrarse"))
+            child: const Text(
+              "Regístrate",
+              style: TextStyle(fontSize: 25),
+            ))
       ],
     );
   }
+
   Widget buildOrLine() {
-    return const Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Expanded(child: Divider()),
-        Text("  ó  "),
-        Expanded(child: Divider())
-      ],
+    return const Padding(
+      padding:  EdgeInsets.symmetric(horizontal:16.0),
+      child:  Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Expanded(child: Divider()),
+          Text(
+            "  ó  ",
+            style: TextStyle(fontSize: 30),
+          ),
+          Expanded(child: Divider())
+        ],
+      ),
     );
   }
+
   Widget buttonGoogle() {
     return Column(
       children: [
@@ -144,11 +236,10 @@ class _Login2ScreenState extends ConsumerState<Login2Screen> {
             padding: const EdgeInsets.only(left: 40),
             // mini: true,
             text: "Entrar con Google",
-            Buttons.Google, onPressed: ()async {
-              
-             ref.read(userProvider.notifier).signInWithGoogle();
-             final user =  ref.watch(userProvider);
-
+            
+            Buttons.Google, onPressed: () async {
+          ref.read(userProvider.notifier).signInWithGoogle();
+          final user = ref.watch(userProvider);
 
           // if (user!= null) {
           //   if( await searchUserUid(user.uid)){
@@ -164,12 +255,12 @@ class _Login2ScreenState extends ConsumerState<Login2Screen> {
 
           //   }
 
-            
           // }
         })
       ],
     );
   }
+
   Widget formulario() {
     return Form(
         key: _formkey,
@@ -181,13 +272,18 @@ class _Login2ScreenState extends ConsumerState<Login2Screen> {
           ],
         ));
   }
+
   Widget builEmail() {
     return TextFormField(
-      decoration: InputDecoration(
+      style: const TextStyle(fontSize: 30) ,
+      decoration:  InputDecoration(
           labelText: "Correo",
+          labelStyle: const TextStyle(fontSize: 25),
           border: OutlineInputBorder(
               borderRadius: new BorderRadius.circular(8),
-              borderSide: new BorderSide(color: Colors.black))),
+              borderSide: new BorderSide(color: Colors.black)
+              )
+              ),
       keyboardType: TextInputType.emailAddress,
       validator: (value) {
         if (value!.isEmpty) {
@@ -200,10 +296,14 @@ class _Login2ScreenState extends ConsumerState<Login2Screen> {
       },
     );
   }
+
   Widget builPassword() {
     return TextFormField(
+      style: const TextStyle(fontSize: 30),
       decoration: InputDecoration(
           labelText: "Contraseña",
+          labelStyle: const TextStyle(fontSize: 25),
+
           border: OutlineInputBorder(
               borderRadius: new BorderRadius.circular(8),
               borderSide: new BorderSide(color: Colors.black))),
@@ -219,6 +319,4 @@ class _Login2ScreenState extends ConsumerState<Login2Screen> {
       },
     );
   }
-
-
 }

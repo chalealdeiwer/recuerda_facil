@@ -23,8 +23,10 @@ const appMenuItems =<MenuItem>[
   MenuItem(title: 'Mi cuenta', subTitle: 'Gestionar mi cuenta', link: '/account', icon: Icons.account_circle_rounded),
   MenuItem(title: 'Guía de Usuario', subTitle: 'Una guía detallada', link: '/user_guide', icon: Icons.help_center_rounded),
   MenuItem(title: 'Configuración', subTitle: 'Configuraciones Generales', link: '/settings', icon: Icons.settings),
+  MenuItem(title: 'Apariencia', subTitle: 'Apariencia de la aplicación', link: '/appearance', icon: Icons.color_lens_rounded),
+
   MenuItem(title: 'Privacidad', subTitle: 'Gestión Privacidad', link: '/privacy', icon: Icons.admin_panel_settings),
-  MenuItem(title: 'Soporte', subTitle: 'Soporte de la aplicación', link: '/support', icon: Icons.support_agent_rounded),
+  MenuItem(title: 'Soporte y Ayuda', subTitle: 'Soporte y Ayuda de la aplicación', link: '/support', icon: Icons.support_agent_rounded),
   MenuItem(title: 'Acerca de:', subTitle: 'Acerca de la aplicación', link: '/about', icon: Icons.info_outline),
   MenuItem(title: 'Pruebas', subTitle: 'Pruebas', link: '/test', icon: Icons.tag_faces_outlined),
 

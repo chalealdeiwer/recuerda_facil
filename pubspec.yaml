@@ -49,6 +49,7 @@ dependencies:
   qr_flutter: ^4.1.0
   qrscan: null
   speech_to_text: null
+  url_launcher: ^6.1.14
   velocity_x: ^4.1.1
 
 dev_dependencies:
@@ -80,6 +81,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+  fonts:
+    - family: SpicyRice-Regular
+      fonts:
+        - asset: fonts/SpicyRice-Regular.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:

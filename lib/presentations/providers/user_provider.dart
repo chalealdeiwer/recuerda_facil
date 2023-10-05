@@ -31,6 +31,7 @@ class UserNotifier extends StateNotifier<User?> {
             'created': Timestamp.now(),
             "emailVerified": user.emailVerified,
             "categories": [
+              'Todos',
               'Sin Categoría',
               'Salud',
               'Medicamentos',

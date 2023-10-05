@@ -49,7 +49,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
     return Scaffold(
       body: SingleChildScrollView(
         child: SizedBox(
-          height: 2000,
+          height: 1000,
           child: Stack(
             children: [
               //container
@@ -78,7 +78,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                   ),
                   child: Stack(
                     children: [
-                      // Puedes añadir otros widgets aquí si es necesario
+                      
         
                       // Icono de cámara en la esquina
                       Positioned(
@@ -112,7 +112,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                       },
                       icon: const Icon(Icons.arrow_back))),
         
-              //name
+              //display name
               Positioned(
                   top: size.width * 0.63,
                   left: 10,
@@ -130,16 +130,32 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                     ),
                     style: textStyle.displaySmall,
                   )
-        
-                  // Text(
-                  //   user!.displayName.toString(),
-                  //   style: textStyle.displaySmall,
-                  // ),
+
+                  ),
+                  //email
+                  Positioned(
+                  top: size.width * 0.73,
+                  left: 10,
+                  child: Text(
+                    userAcc.when(
+                      data: (data) {
+                        return "(${data!.email.toString()})";
+                      },
+                      error: (error, stackTrace) {
+                        return "errror";
+                      },
+                      loading: () {
+                        return "loading";
+                      },
+                    ),
+                    style: textStyle.titleMedium,
+                  )
+
                   ),
               //image
               Positioned(
                 top: size.width * 0.3,
-                left: 10,
+                left: size.width/2-size.width*0.17,
                 child: Container(
                     decoration: BoxDecoration(
                       color: colors.surfaceVariant,
@@ -189,41 +205,13 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                       ),
                     )),
               ),
-              // Positioned(
-              //   top: size.height * 0.38,
-              // right: 0,
-              //   left: 0,
-        
-              //   child: FutureBuilder<UserAccount>(future:  getUserAccount(), builder: (context, snapshot) {
-              //     if (snapshot.connectionState == ConnectionState.waiting) {
-              //       return const LinearProgressIndicator();
-              //     } else if (snapshot.hasError) {
-              //       return Text('Error: ${snapshot.error}');
-              //     } else if (snapshot.hasData) {
-              //       print(snapshot.data);
-              //       return Padding(
-              //         padding: const EdgeInsets.symmetric(horizontal:15),
-              //         child: Column(
-              //           children: [
-              //             Row(
-              //               children: [
-              //                 Text("Unido desde:  ${DateFormat('MMMM yyyy').format(snapshot.data!.created)}",style:const TextStyle(fontWeight: FontWeight.bold),),
-              //               ],
-        
-              //             ),
-              //             const Divider()
-        
-              //           ],
-              //         ),
-              //       );
-              //     } else {
-              //       return const Text('No data');
-              //     }
-        
-              // },)),
-        
               Positioned(
-                top: size.height * 0.35,
+                top: size.height * 0.36,
+                left: 0,
+                right: 0,
+                child: const Divider()),
+              Positioned(
+                top: size.height * 0.37,
                 right: 0,
                 left: 0,
                 child: Padding(

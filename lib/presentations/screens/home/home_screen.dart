@@ -15,6 +15,7 @@ import 'package:recuerda_facil/presentations/widgets/stream_list.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 import '../../providers/providers.dart';
+import '../../widgets/shared/custom_appbar.dart';
 
 // ignore: must_be_immutable
 class HomeScreen extends ConsumerStatefulWidget {
@@ -37,6 +38,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final scaffoldKey = GlobalKey<ScaffoldState>();
     final AppNotes noteProvider = ref.watch(noteNotifierProvider);
     final colors = Theme.of(context).colorScheme;
+    final size = MediaQuery.of(context).size;
+    final customBack=ref.watch(customBackground);
+    final opacity=ref.watch(opacityProvider);
+
 
     // final noteProvider = Provider.of<NoteProvider>(context);
     return WillPopScope(
@@ -46,6 +51,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             context: context,
             builder: (context) {
               return AlertDialog(
+                
                 title: const Text('¿Salir?'),
                 content: const Text(
                     '¿Estás seguro de que quieres salir de la aplicación?'),
@@ -71,84 +77,99 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           // Si el usuario cancela el diálogo, no sale de la aplicación.
         },
         child: Scaffold(
+            // backgroundColor: colors.primary,
             key: scaffoldKey,
-
-            // backgroundColor: Vx.hexToColor("#e8eddb"),
-            appBar: AppBar(
-              // backgroundColor: Vx.hexToColor("#e8eddb"),
-              // title: Text(user != null? user.displayName.toString(): "Hola"),
-              title: const Text("Recuerda Fácil"),
-              actions: [
-                IconButton(
-                    onPressed: () {
-                      showNewNote(context, categoy);
-                    },
-                    icon: const Icon(Icons.add)),
-                IconButton(
-                    onPressed: () {
-                      ref.read(themeNotifierProvider.notifier).toogleDarkMode();
-
-                      ref
-                          .read(isDarkmodeProvider.notifier)
-                          .update((darkmode) => !darkmode);
-                    },
-                    icon: isDarkMode
-                        ? const Icon(Icons.light_mode_outlined)
-                        : const Icon(Icons.dark_mode_outlined)),
-                TextButton(
-                    onPressed: () {
-                      context.push('/account');
-                    },
-                    child: (isDarkMode)
-                        ? Image.asset(
-                            'assets/images/logodark.png',
-                            height: 50,
-                          )
-                        : Image.asset(
-                            'assets/images/logo.png',
-                            height: 50,
-                          )),
-              ],
-            ),
             drawer: SideMenu(scaffoldKey: scaffoldKey),
-            body: Column(
+            body: Stack(
               children: [
-                const SizedBox(
-                  height: 2,
-                ),
+                if(customBack)
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: Opacity(
+                    opacity: opacity,
 
-                SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.050,
-                    child: CategorySelector()),
-                const SizedBox(
-                  height: 2,
-                ),
-
-                ClockWidget(),
-                // SizedBox(
-                //     height: MediaQuery.of(context).size.height * 0.75,
-                //     child: const StreamListWidget()),
-                const SizedBox(
-                  height: 5,
-                ),
-                Expanded(child: StreamListWidget()),
-                //container
-                if (widget.isListening)
-                  SizedBox(
-                    height: 250,
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Text(
-                        widget.text,
-                        style: TextStyle(
-                            fontSize: 24,
-                            color: widget.isListening
-                                ? colors.primary
-                                : colors.secondary,
-                            fontWeight: FontWeight.w600),
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.black,
+                        image: DecorationImage(
+                          image: NetworkImage(
+                              'https://images.unsplash.com/photo-1537824598505-99ee03483384?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8NXx8fGVufDB8fHx8fA%3D%3D&w=1000&q=80'), // Cambia la URL por la de tu imagen
+                          fit: BoxFit
+                              .cover, // Esto hará que la imagen cubra toda la pantalla
+                        ),
                       ),
                     ),
                   ),
+                ),
+                CustomScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    slivers: [
+                      const CustomAppbar(),
+
+                      SliverToBoxAdapter(
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 2,
+                            ),
+
+                            SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.050,
+                                child: CategorySelector()),
+                            const SizedBox(
+                              height: 2,
+                            ),
+
+                            ClockWidget(),
+                            // SizedBox(
+                            //     height: MediaQuery.of(context).size.height * 0.75,
+                            //     child:  StreamListWidget()),
+                            // const SizedBox(
+                            //   height: 2,
+                            // ),
+                            //container
+                          ],
+                        ),
+                      ),
+
+                      SliverToBoxAdapter(
+                        child: Column(
+                          children: [
+                            if (widget.isListening)
+                              SizedBox(
+                                height: 250,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Text(
+                                    widget.text,
+                                    style: TextStyle(
+                                        fontSize: 24,
+                                        color: widget.isListening
+                                            ? colors.primary
+                                            : colors.secondary,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                      StreamListWidget(),
+
+                      const SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: 300,
+                        ),
+                      )
+
+                      // SliverToBoxAdapter(
+                      //   child:  StreamListWidget(),
+                      // )
+                    ]),
               ],
             ),
             // bottomNavigationBar: const BottonBar(),
@@ -222,7 +243,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               user!.uid,
                               DateTime.now(),
                               "pendiente",
-                              "Sin Categoría",
+                              categoy,
                               DateTime.now(),
                               Icons.alarm.codePoint.toString())
                           .then((value) {
@@ -286,9 +307,11 @@ void showNewNote(BuildContext context, category) {
         return AlertDialog(
           title: Wrap(
             children: [
-              const Text("Añadir nuevo recordatorio en:"),
+              
+              const Text("Añadir nuevo recordatorio"),
+              if(category!="Sin Categoría"&&category!="Todos")
               Text(
-                category,
+                "en: $category",
                 style: const TextStyle(fontWeight: FontWeight.bold),
               )
             ],

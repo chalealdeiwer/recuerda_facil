@@ -64,7 +64,25 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       name: SupportScreen.name,
       path: '/support',
-      builder: ( context,state)=>const  SupportScreen()
+      builder: ( context,state)=>const  SupportScreen(),
+      routes: [
+        GoRoute(
+          name: ContactInfoScreen.name,
+          path:'contact_info',
+        builder: ( context,state)=>const  ContactInfoScreen()
+         ),
+         GoRoute(
+          name: FAQScreen.name,
+          path:'faq',
+        builder: ( context,state)=>const  FAQScreen()
+         ),
+         GoRoute(
+          name: CommentsScreen.name,
+          path:'comments',
+        builder: ( context,state)=>const  CommentsScreen()
+         ),
+
+      ],
     ),
     GoRoute(
       name: AboutScreen.name,
@@ -75,6 +93,11 @@ final GoRouter appRouter = GoRouter(
       name: CommunityScreen.name,
       path: '/community',
       builder: ( context,state)=>const  CommunityScreen()
+    ),
+    GoRoute(
+      name: AppearanceScreen.name,
+      path: '/appearance',
+      builder: ( context,state)=>const  AppearanceScreen()
     ),
   ],
 );

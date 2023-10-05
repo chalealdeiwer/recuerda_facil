@@ -1,12 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class ClockWidget extends StatefulWidget {
+import '../providers/providers.dart';
+
+class ClockWidget extends ConsumerStatefulWidget {
   @override
   _ClockWidgetState createState() => _ClockWidgetState();
 }
 
-class _ClockWidgetState extends State<ClockWidget> {
+class _ClockWidgetState extends ConsumerState<ClockWidget> {
   late DateTime _dateTime;
   late String _greeting;
   late String _mm;
@@ -17,12 +22,13 @@ class _ClockWidgetState extends State<ClockWidget> {
     _dateTime = DateTime.now();
     _updateGreeting();
     // Actualizar la hora cada segundo
-    // Timer.periodic(Duration(seconds: 1), (timer) {
-    //   setState(() {
-    //     _dateTime = DateTime.now();
-    //     _updateGreeting();
-    //   });
-    // });
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) return;
+      setState(() {
+        _dateTime = DateTime.now();
+        _updateGreeting();
+      });
+    });
   }
 
   void _updateGreeting() {
@@ -50,14 +56,14 @@ class _ClockWidgetState extends State<ClockWidget> {
     mes = mes[0].toUpperCase() + mes.substring(1);
     var ano= DateFormat.y('es').format(_dateTime);
     String time = DateFormat('h:mm').format(_dateTime);
-
+    final opacity=ref.watch(opacityProvider);
     final textStyle = Theme.of(context).textTheme;
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.18,
       width: MediaQuery.of(context).size.width * 0.97,
       decoration: BoxDecoration(
-          color: colors.primary.withOpacity(0.1),
+          color: colors.surfaceVariant.withOpacity(0.9),
           borderRadius: BorderRadius.circular(20)),
       //  alignment: Alignment.bottomLeft,
       child: Padding(

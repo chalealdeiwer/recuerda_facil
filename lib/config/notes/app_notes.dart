@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+
+import '../../models/models.dart';
 
 class AppNotes {
   
@@ -30,48 +31,48 @@ Future<int> getNotesLengthFuture(String user) async {
   return querySnapshot.docs.length;
 }
 
+Stream<List<Note>> getNotesStream(String user, String category) {
 
-
-Stream<List> getNotesStream(String user, String category) {
   FirebaseFirestore db = FirebaseFirestore.instance;
+  final StreamController<List<Note>> controller = StreamController<List<Note>>();  // Ajustado aquí
 
-  final StreamController<List> controller = StreamController<List>();
-  // Configura la consulta Firestore con orderBy
-  db.collection("notes")
-    .where("user", arrayContains: user)
-    .where("category", isEqualTo: category)
-    .orderBy("date_create", descending: true) // Ordenar por date_create en orden descendente
-    .snapshots()
-    .listen((querySnapshot) {
-      List notes = [];
-      querySnapshot.docs.forEach((element) {
-        final Map<String, dynamic> data = element.data() as Map<String, dynamic>;
-        final Timestamp timestamp = data['date_create'];
-        final Timestamp timestamp2 = data['date_finish'];
-        final datec = timestamp.toDate();
-        final datef = timestamp2.toDate();
-        final note = {
-          "title": data['title'],
-          "content": data['content'],
-          "user": data['user'],
-          "key": element.id,
-          "date_create": datec,
-          "date_finish": datef,
-          "state":data['state'],
-          "category":data['category']
-        };
+  Query query;
+  if (category == "Todos") {
+    query = db.collection("notes").where("user", arrayContains: user).orderBy("date_create", descending: true);
+  }else if (category == "Sin Categoría") {
+    query = db.collection("notes").where("user", arrayContains: user).where("category", isEqualTo: "").orderBy("date_create", descending: true);
+  }
+  else {
+    query = db.collection("notes").where("user", arrayContains: user).where("category", isEqualTo: category).orderBy("date_create", descending: true);
+  }
+
+  query.snapshots().listen(
+    (querySnapshot) {
+      List<Note> notes = [];  // Asegúrate de que sea List<Note>
+      for (var element in querySnapshot.docs) {
+        final note = Note.fromJson(element.data() as Map<String, dynamic>, element.id);  // Asegúrate de que el tipo de data sea Map<String, dynamic>
         notes.add(note);
-      });
+      }
+      controller.add(notes);  // Agrega la lista de notas al stream
+    },
+    onError: (error) {
+      // Opcional: manejar errores
+      print('Error al obtener las notas: $error');
+      controller.addError(error);
+    },
+  );
 
-      controller.add(notes); // Agregar los datos al stream
-    });
-    print("notas cargadas");
+  // Opcional: cerrar el StreamController cuando ya no lo necesites
+  // controller.close();
 
-  return controller.stream;
+  return controller.stream;  // Asegúrate de que el tipo de retorno sea Stream<List<Note>>
 }
 //funcionando
 
 Future<void> addNote(String title, String content, String user, DateTime date_create, String state, String category, DateTime date_finish,String icon) async {
+  if(category=="Sin Categoría"||category=="Todos"){
+    category="";
+  }
   try {
     await db.collection("notes").add({
       "title": title,
@@ -92,16 +93,50 @@ Future<void> addNote(String title, String content, String user, DateTime date_cr
 
 
 
-Future<void> addUserNote(String user)async {
-  QuerySnapshot querynotes = await db.collection("notes").where("user", arrayContains: user).get();
-  querynotes.docs.forEach((element) async{
-    final Map<String, dynamic> data=element.data() as Map<String,dynamic>;
-    List<dynamic> arrayUsuarios =data['user'] ?? [];
-    arrayUsuarios.add(FirebaseAuth.instance.currentUser!.uid);
-    await db.collection("notes").doc(element.id).update({"user":arrayUsuarios});
-  });
-  
+Future<void> addUserNote(String user) async {
+  // Obtener la instancia actual de Firebase Auth y el usuario actual
+  final currentUser = FirebaseAuth.instance.currentUser;
+  if (currentUser == null) {
+    print('No user is signed in.');
+    return;
+  }
+
+  // Obtener el UID del usuario actual
+  final currentUserId = currentUser.uid;
+
+  // Obtener todas las notas que contienen al usuario especificado
+  QuerySnapshot queryNotes = await db.collection("notes")
+      .where("user", arrayContains: user)
+      .get();
+
+  // Iterar sobre cada nota
+  for (var noteDoc in queryNotes.docs) {
+    final Map<String, dynamic> noteData = noteDoc.data() as Map<String, dynamic>;
+    List<dynamic> noteUsers = noteData['user'] ?? [];
+    final noteCategory = noteData['category'];
+
+    // Añadir el usuario actual a la lista de usuarios de la nota
+    noteUsers.add(currentUserId);
+    await db.collection("notes").doc(noteDoc.id).update({"user": noteUsers});
+
+    // Verificar si el usuario actual ya tiene esta categoría
+    final userDocRef = db.collection("users").doc(currentUserId);
+    final userDoc = await userDocRef.get();
+    if (userDoc.exists) {
+      final Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
+      List<dynamic> userCategories = userData['categories'] ?? [];
+
+      // Si el usuario no tiene esta categoría y la categoría no es una cadena vacía, añadirla
+      if (!userCategories.contains(noteCategory) && noteCategory != "") {
+        userCategories.add(noteCategory);
+        await userDocRef.update({"categories": userCategories});
+      }
+    } else {
+      print('User document not found');
+    }
+  }
 }
+
 
 //actualizar en la base de datos
 Future<void> updateNote(String uid,String newnote, String newcontent,) async{

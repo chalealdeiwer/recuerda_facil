@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:recuerda_facil/presentations/screens/home/home_screen.dart';
 import 'package:recuerda_facil/services/notification_service.dart';
 import 'package:recuerda_facil/services/permissions.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -12,10 +14,6 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    var isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
-    Brightness brightness = MediaQuery.of(context).platformBrightness;
-    bool isautodark = true;
-    final colors = Theme.of(context).colorScheme;
     final textStyle = Theme.of(context).textTheme;
     // if(brightness==Brightness.light){
     //  isautodark=false;
@@ -25,6 +23,7 @@ class SettingsScreen extends ConsumerWidget {
     // }
 
     return Scaffold(
+      // backgroundColor: Colors.transparent,
       body: Column(
         children: [
           Padding(
@@ -94,102 +93,14 @@ class SettingsScreen extends ConsumerWidget {
                         child: const Text("Permitir"))
                   ],
                 ),
-                 Row(
-                  children: [
-                    Text(" Tema de aplicación ",style: textStyle.displaySmall,),
-                    const Expanded(child: Divider())
-                  ],
-                ),
               ],
             ),
           ),
-
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(horizontal: 20),
-          //   child: Row(
-          //     crossAxisAlignment: CrossAxisAlignment.center,
-          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //     // mainAxisSize: MainAxisSize.max,
-          //     children: [
-          //       const Text("Automático"),
-          //       Switch(
-          //         value: isautodark,
-          //         onChanged: (value) {
-
-          //           // ref.read(themeNotifierProvider.notifier).toogleDarkMode();
-          //           // ref
-          //           //     .read(isDarkmodeProvider.notifier)
-          //           //     .update((darkmode) => !darkmode);
-
-          //           isautodark = !isautodark;
-          //           isDarkMode=false;
-          //         },
-          //       ),
-          //     ],
-          //   ),
-          // ),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              // mainAxisSize: MainAxisSize.max,
-              children: [
-                const Text("Modo Oscuro"),
-                Switch(
-                  value: isDarkMode,
-                  onChanged: (value) {
-                    ref.read(themeNotifierProvider.notifier).toogleDarkMode();
-                    ref
-                        .read(isDarkmodeProvider.notifier)
-                        .update((darkmode) => !darkmode);
-                  },
-                ),
-              ],
-            ),
-          ),
-
-          const Expanded(child: _ThemeChangerView()),
         ],
       ),
       appBar: AppBar(
         title: const Text("Configuraciones"),
       ),
-    );
-  }
-}
-
-class _ThemeChangerView extends ConsumerWidget {
-  const _ThemeChangerView({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context, ref) {
-    final List<Color> colors = ref.watch(colorListProvider);
-    final selectedIndex = ref.watch(themeNotifierProvider).selectedColor;
-    // final int selectedIndex = ref.watch(selectedIndexColorProvider);
-
-    return ListView.builder(
-      itemCount: colors.length,
-      itemBuilder: (context, index) {
-        final Color color = colors[index];
-        return RadioListTile(
-          title: Text(
-            "Color",
-            style: TextStyle(color: color),
-          ),
-          // subtitle: Text("${color.value}"),
-          activeColor: color,
-          value: index,
-          groupValue: selectedIndex,
-          onChanged: (value) {
-            // ref.read(selectedIndexColorProvider.notifier).state=index;
-            ref.read(themeNotifierProvider.notifier).changeColorIndex(index);
-          },
-        );
-      },
     );
   }
 }

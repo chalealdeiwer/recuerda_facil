@@ -19,7 +19,6 @@ class ModalNewNote extends ConsumerStatefulWidget {
 }
 
 class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
-  
   String selectedCategory = 'Sin Categoría';
   String currentUserUID = FirebaseAuth.instance.currentUser?.uid ?? '';
   // Categoría seleccionada inicialmente
@@ -47,10 +46,9 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
       if (value == null) {
         return;
       } else {
-       
+        setState(() {
           dateInput = value;
-        
-        dateInput = value;
+        });
       }
     });
   }
@@ -64,10 +62,9 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
       if (value == null) {
         return;
       } else {
-       
+        setState(() {
           hourInput = value;
-      
-        hourInput = value;
+        });
       }
     });
   }
@@ -75,9 +72,9 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
   // void getCategories() async {
   //   final categoriess = await getUserCategories(currentUserUID);
   //   if (mounted) {
-     
+
   //       userCategories = categoriess;
-      
+
   //   }
   // }
 
@@ -88,10 +85,10 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
   //       DropdownButton<String>(
   //         value: selectedCategory,
   //         onChanged: (String? newValue) {
-            
+
   //             selectedCategory = newValue!;
   //             print(selectedCategory);
-            
+
   //           selectedCategory = newValue!;
   //         },
   //         items: userCategories.map((String category) {
@@ -108,7 +105,7 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
   @override
   Widget build(BuildContext context) {
     final AppNotes noteProvider = ref.watch(noteNotifierProvider);
-    final categoy=ref.watch(categoryProvider);
+    final categoy = ref.watch(categoryProvider);
 
     return Form(
       key: _formKey,
@@ -198,43 +195,46 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
                             : hourInput!.minute,
                       );
                       if (_formKey.currentState!.validate()) {
-                        await noteProvider.addNote(
-                            _titleController.text,
-                            _contentController.text,
-                            FirebaseAuth.instance.currentUser!.uid.toString(),
-                            DateTime.now(),
-                            "pendiente",
-                            categoy,
-                            combinedDateTime,
-                            Icons.note.codePoint.toString()).then((value) =>{
-                              context.pop(),
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            action: SnackBarAction(
-                              textColor: Colors.black,
-                              label: '¡Ok!',
-                              onPressed: () {
-                                // ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        await noteProvider
+                            .addNote(
+                                _titleController.text,
+                                _contentController.text,
+                                FirebaseAuth.instance.currentUser!.uid
+                                    .toString(),
+                                DateTime.now(),
+                                "pendiente",
+                                categoy,
+                                combinedDateTime,
+                                Icons.note.codePoint.toString())
+                            .then((value) => {
+                                  context.pop(),
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          action: SnackBarAction(
+                                            textColor: Colors.black,
+                                            label: '¡Ok!',
+                                            onPressed: () {
+                                              // ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-                                // Code to execute.
-                              },
-                            ),
-                            duration: const Duration(milliseconds: 2000),
-                            backgroundColor: Colors.green[200],
-                            content: const Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Icon(Icons.add_alert_sharp),
-                                Text(
-                                  "¡Recordatorio agregado correctamente!",
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ],
-                            )
-                            )
-                            )
-
-                            });
-                        
+                                              // Code to execute.
+                                            },
+                                          ),
+                                          duration: const Duration(
+                                              milliseconds: 2000),
+                                          backgroundColor: Colors.green[200],
+                                          content: const Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Icon(Icons.add_alert_sharp),
+                                              Text(
+                                                "¡Recordatorio agregado correctamente!",
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                            ],
+                                          )))
+                                });
                       }
 
                       // await NotesServices().saveNotes(

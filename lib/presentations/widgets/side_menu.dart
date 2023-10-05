@@ -28,6 +28,9 @@ class _SideMenuState extends ConsumerState<SideMenu> {
     // final hasNotch = MediaQuery.of(context).viewPadding.top > 35;
     final colors = Theme.of(context).colorScheme;
     return NavigationDrawer(
+
+      // backgroundColor: colors.surfaceVariant,
+
       selectedIndex: navDrawerIndex,
       onDestinationSelected: (value) {
         setState(() {
@@ -44,24 +47,29 @@ class _SideMenuState extends ConsumerState<SideMenu> {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 20.0),
-              child: FadeInRight(
-                delay: const Duration(milliseconds: 200),
-                child: ClipRRect(
-                  child: CircleAvatar(
-                    backgroundColor: const Color.fromARGB(0, 0, 0, 0),
-
-                    radius: 50,
-                    backgroundImage: NetworkImage(userAcc.when(
-                      data: (data) {
-                        return data!.photoURL.toString();
-                      },
-                      error: (error, stackTrace) {
-                        return "errror";
-                      },
-                      loading: () {
-                        return "loading";
-                      },
-                    )), // Ruta de la imagen
+              child: GestureDetector(
+                onTap: () {
+                  context.push('/account');
+                },
+                child: FadeInRight(
+                  delay: const Duration(milliseconds: 200),
+                  child: ClipRRect(
+                    child: CircleAvatar(
+                      backgroundColor: const Color.fromARGB(0, 0, 0, 0),
+              
+                      radius: 50,
+                      backgroundImage: NetworkImage(userAcc.when(
+                        data: (data) {
+                          return data!.photoURL.toString();
+                        },
+                        error: (error, stackTrace) {
+                          return "errror";
+                        },
+                        loading: () {
+                          return "loading";
+                        },
+                      )), // Ruta de la imagen
+                    ),
                   ),
                 ),
               ),
