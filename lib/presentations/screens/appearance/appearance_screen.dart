@@ -19,6 +19,14 @@ class AppearanceScreen extends ConsumerWidget {
     final textStyle = Theme.of(context).textTheme;
     final customBack = ref.watch(customBackground);
     final opacity = ref.watch(opacityProvider);
+    final clockVisibility = ref.watch(clockVisibilityProvider);
+    final bottomVisibility = ref.watch(bottomVisibilityProvider);
+    final categoriesVisibility = ref.watch(categoriesVisibilityProvider);
+    final appBarVisibility = ref.watch(appBarVisibilityProvider);
+    final buttonMicrophone= ref.watch(buttonMicrophoneVisibilityProvider);
+    final buttonNewNote= ref.watch(buttonNewNoteVisibilityProvider);
+    
+
     final size = MediaQuery.of(context).size;
     return Scaffold(
       body: SingleChildScrollView(
@@ -138,6 +146,139 @@ class AppearanceScreen extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     // mainAxisSize: MainAxisSize.max,
                     children: [
+                      const Text("Barra de funciones"),
+                      Switch(
+                        value: appBarVisibility,
+                        onChanged: (value) {
+                          ref
+                              .read(appBarVisibilityProvider.notifier)
+                              .update((appBarVisibility) => !appBarVisibility);
+                              ref
+                              .read(buttonActionVisibilityProvider.notifier)
+                              .update((buttonAction) => !buttonAction);
+                        },
+                      ),
+                    ],
+                  ),
+                  Visibility(
+                    visible: !appBarVisibility,
+                    child:  Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      // mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Text(
+                            "Se agregará un botón de acción",style: TextStyle(color: colors.error),),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // mainAxisSize: MainAxisSize.max,
+                    children: [
+                      const Text("Selector de categoría"),
+                      Switch(
+                        value: categoriesVisibility,
+                        onChanged: (value) {
+                          ref
+                              .read(categoriesVisibilityProvider.notifier)
+                              .update((categoriesVisibility) =>
+                                  !categoriesVisibility);
+                          ref
+                              .watch(categoryProvider.notifier)
+                              .update((state) => "Todos");
+                          ref
+                              .watch(indexCategoryProvider.notifier)
+                              .update((state) => 0);
+                        },
+                      ),
+                    ],
+                  ),
+                  Visibility(
+                    visible: !categoriesVisibility,
+                    child:  Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      // mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Text(
+                            "Los recordatorios nuevos se agregaran a 'Sin Categoría'",style: TextStyle(color: colors.error),),
+                      ],
+                    ),
+                  ),
+                  
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // mainAxisSize: MainAxisSize.max,
+                    children: [
+                      const Text("Mensaje de bienvenida"),
+                      Switch(
+                        value: clockVisibility,
+                        onChanged: (value) {
+                          ref
+                              .read(clockVisibilityProvider.notifier)
+                              .update((clockVisibility) => !clockVisibility);
+                        },
+                      ),
+                    ],
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // mainAxisSize: MainAxisSize.max,
+                    children: [
+                      const Text("Botón Comando de Voz"),
+                      Switch(
+                        value: buttonMicrophone,
+                        onChanged: (value) {
+                          ref
+                              .read(buttonMicrophoneVisibilityProvider.notifier)
+                              .update((buttonMicrophone) => !buttonMicrophone);
+                        },
+                      ),
+                    ],
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // mainAxisSize: MainAxisSize.max,
+                    children: [
+                      const Text("Botón de nueva nota"),
+                      Switch(
+                        value: buttonNewNote,
+                        onChanged: (value) {
+                          ref
+                              .read(buttonNewNoteVisibilityProvider.notifier)
+                              .update((buttonNewNote) => !buttonNewNote);
+                          
+                          
+                        },
+                      ),
+                    ],
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // mainAxisSize: MainAxisSize.max,
+                    children: [
+                      const Text("Botones de página"),
+                      Switch(
+                        value: bottomVisibility,
+                        onChanged: (value) {
+                          ref
+                              .read(bottomVisibilityProvider.notifier)
+                              .update((bottomVisibility) => !bottomVisibility);
+                        },
+                      ),
+                    ],
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // mainAxisSize: MainAxisSize.max,
+                    children: [
                       Text(
                         "Vista previa",
                         style: textStyle.titleLarge,
@@ -161,7 +302,9 @@ class AppearanceScreen extends ConsumerWidget {
                     child: SizedBox(
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height,
-                        child: HomeScreen()),
+                        child: HomeScreen(
+                          pageIndex: 1,
+                        )),
                   ),
                 ),
               ),

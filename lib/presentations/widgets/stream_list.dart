@@ -33,7 +33,7 @@ class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final notes2 = snapshot.data;
-        
+
           if (notes2?.length == 0) {
             return SliverToBoxAdapter(
               child: Column(
@@ -58,15 +58,14 @@ class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
             );
           }
           // return RefreshIndicator(
-           //             onRefresh: () async {
-           //               await noteProvider.getNotesStream(
-           //                   FirebaseAuth.instance.currentUser!.uid.toString(), category);
-           //             }
+          //             onRefresh: () async {
+          //               await noteProvider.getNotesStream(
+          //                   FirebaseAuth.instance.currentUser!.uid.toString(), category);
+          //             }
           return SliverList.builder(
             addAutomaticKeepAlives: true,
             itemCount: notes2!.length,
             itemBuilder: (context, index) {
-              
               return Dismissible(
                 onDismissed: (direction) async {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -179,9 +178,24 @@ class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
                               const SizedBox(
                                 width: 5,
                               ),
-                              // Text(snapshot.data?[index]['user'][0],style: const TextStyle(color: Colors.red),),
-                              Text((notes2[index].category)),
-
+                              if (notes2[index].category != '')
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0,
+                                      vertical:
+                                          4.0), // Ajusta el padding según necesites
+                                  decoration: BoxDecoration(
+                                    color: colors
+                                        .background, // Define el color de fondo
+                                    borderRadius: BorderRadius.circular(
+                                        20), // Define el borderRadius
+                                  ),
+                                  child: Text(
+                                      notes2[index].category), // Tu widget Text
+                                ),
+                              const SizedBox(
+                                width: 10,
+                              ),
                               Text(notes2[index].state)
                             ],
                           ),
@@ -195,18 +209,16 @@ class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
                               notes2[index].dateFinish !=
                                       notes2[index].dateCreate
                                   ? Text(
-                                      'recordar: ${(DateFormat('dd/MM/yyyy hh:mm a').format(notes2[index].dateFinish)).toString()}')
-                                  : Text("iguales"),
+                                      'Recordar: ${DateFormat('dd MMM hh:mm a').format(notes2[index].dateFinish)}')
+                                  : Text(""),
                             ],
                           ),
                           Wrap(
                             alignment: WrapAlignment.end,
                             crossAxisAlignment: WrapCrossAlignment.end,
-
-
                             children: [
                               Text(
-                                  'creado: ${(DateFormat('dd/MM/yyyy hh:mm a').format(notes2[index].dateCreate)).toString()}'),
+                                  'Creado: ${DateFormat('dd MMM hh:mm a').format(notes2[index].dateFinish)}')
                             ],
                           )
                         ],
@@ -232,8 +244,7 @@ class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
                                 child: Column(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Text("Recordatorio"),
                                     TextField(
@@ -268,8 +279,7 @@ class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(SnackBar(
                                                     action: SnackBarAction(
-                                                        textColor:
-                                                            Colors.black,
+                                                        textColor: Colors.black,
                                                         label: '¡Ok!',
                                                         onPressed: () {}),
                                                     duration: const Duration(
@@ -286,8 +296,8 @@ class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
                                                         Text(
                                                           "¡Recordatorio actualizado correctamente!",
                                                           style: TextStyle(
-                                                              color: Colors
-                                                                  .black),
+                                                              color:
+                                                                  Colors.black),
                                                         ),
                                                       ],
                                                     )));

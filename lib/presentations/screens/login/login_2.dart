@@ -5,6 +5,7 @@ import 'package:flutter_signin_button/button_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:recuerda_facil/models/user.dart';
 import 'package:recuerda_facil/presentations/screens/screens.dart';
+import '../../../services/services.dart';
 import '../../providers/providers.dart';
 
 class Login2Screen extends ConsumerStatefulWidget {
@@ -24,20 +25,22 @@ class _Login2ScreenState extends ConsumerState<Login2Screen> {
   @override
   void initState() {
     super.initState();
+      showNotification();
+
   }
 
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
     final user = ref.watch(userProvider);
-    final isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
     final  size = MediaQuery.of(context).size;
 
 
     // Usa el método watch directamente dentro del método build
-    return user != null ? HomeScreen() : logiin(user, colors,isDarkMode);
+    return user != null ? HomeScreen(pageIndex: 1,) : logiin(user);
   }
 
-  Widget logiin(User? user, ColorScheme colors, bool isDarkMode) {
+  Widget logiin(User? user) {
+    final isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
+    final colors = Theme.of(context).colorScheme;
     return Scaffold(
       
       body: SingleChildScrollView(

@@ -11,6 +11,10 @@ import 'package:flutter_localization/flutter_localization.dart';
 import 'package:recuerda_facil/presentations/providers/theme_provider.dart';
 import 'package:recuerda_facil/services/notification_service.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+
 
 void main() async {
   await initializeDateFormatting('es_ES', null);
@@ -21,6 +25,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  tz.initializeTimeZones();
+  await AndroidAlarmManager.initialize();
 
   runApp(
     const ProviderScope(child:  MyApp()),

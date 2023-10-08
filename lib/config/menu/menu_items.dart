@@ -15,9 +15,9 @@ class MenuItem{
 }
 
 const appMenuItems =<MenuItem>[
-  MenuItem(title: 'Vista General', subTitle: 'Página de Recordatorios', link: '/home', icon: Icons.home),
-  MenuItem(title: 'Calendario', subTitle: 'Calendario Recordatorios', link: '/calendar', icon: Icons.calendar_today),
-  MenuItem(title: 'Más', subTitle: 'Mas servicios', link: '/more', icon: Icons.add_circle_outline),
+  MenuItem(title: 'Vista General', subTitle: 'Página de Recordatorios', link: '/home/1', icon: Icons.home),
+  MenuItem(title: 'Calendario', subTitle: 'Calendario Recordatorios', link: '/home/2', icon: Icons.calendar_today),
+  MenuItem(title: 'Más', subTitle: 'Mas servicios', link: '/home/0', icon: Icons.add_circle_outline),
   MenuItem(title: 'Personas', subTitle: 'Encuentra personas', link: '/community', icon: Icons.people),
   MenuItem(title: 'Compartir', subTitle: 'Compartir Recordatorios', link: '/shared', icon: Icons.share_rounded),
   MenuItem(title: 'Mi cuenta', subTitle: 'Gestionar mi cuenta', link: '/account', icon: Icons.account_circle_rounded),

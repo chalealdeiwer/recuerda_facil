@@ -28,6 +28,8 @@ class SupportScreen extends StatelessWidget {
                 style: textStyle.titleLarge,
               ),
               Container(
+                width: 350,
+                height: 450,
                 padding: const EdgeInsets.all(10.0),
                 margin: const EdgeInsets.all(10.0),
                 decoration: BoxDecoration(
@@ -52,7 +54,7 @@ class SupportScreen extends StatelessWidget {
                     ),
                     Text(
                       "Información de contacto",
-                      style: textStyle.displaySmall,
+                      style: textStyle.titleLarge,
                     ),
                   ],
                 ),
@@ -74,13 +76,13 @@ class SupportScreen extends StatelessWidget {
                         ),
                         Text(
                           "Preguntas\nFrecuentes\n(FAQ)",
-                          style: textStyle.displaySmall,
+                          style: textStyle.titleLarge,
                         )
                       ],
                     ),
                   ),
                   const SizedBox(
-                    width: 20,
+                    width: 50,
                   ),
                   GestureDetector(
                     onTap: () {
@@ -94,7 +96,7 @@ class SupportScreen extends StatelessWidget {
                         ),
                         Text(
                           "\nComentarios",
-                          style: textStyle.displaySmall,
+                          style: textStyle.titleLarge,
                         )
                       ],
                     ),

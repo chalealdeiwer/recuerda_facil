@@ -37,7 +37,7 @@ class LoginScreenState extends State<LoginScreen> {
             // return LoginPage();
           }
         }
-        return HomeScreen();
+        return HomeScreen(pageIndex: 0,);
         // return Scaffold(body: Center(child: CircularProgressIndicator(),));
       } );
     
@@ -220,7 +220,7 @@ class LoginScreenState extends State<LoginScreen> {
                   if (credenciales.user!.emailVerified) {
                     Navigator.pushAndRemoveUntil(
                         context,
-                        MaterialPageRoute(builder: (context) => HomeScreen()),
+                        MaterialPageRoute(builder: (context) => HomeScreen(pageIndex: 0,)),
                         (route) => false);
                   } else {
                     setState(() {

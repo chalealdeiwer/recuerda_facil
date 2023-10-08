@@ -33,32 +33,63 @@ Future<void> showNotification() async {
       NotificationDetails(android: androidPlatformChannelSpecifics);
 
   await flutterLocalNotificationsPlugin.show(
-    0,
+    1,
     'Agrega Recordatorios 😄 ',
     'Planea tu día con Recuerda Fácil🌞',
     notificationDetails,
   );
 }
 
-Future<void> showStickyNotificationWithActions() async {
-  const AndroidNotificationDetails androidPlatformChannelSpecifics =
-      AndroidNotificationDetails(
-    'your_default_channel_id',
-    'your_channel_name',
-    importance: Importance.high,
-    priority: Priority.high,
-    showWhen: true,
-    ongoing: true, // Esto hace que la notificación sea persistente
-    // Aquí puedes agregar acciones si la versión de la biblioteca las soporta
+Future<void> showNotificationWithImage() async {
+  var bigPictureStyleInformation = const BigPictureStyleInformation(
+    DrawableResourceAndroidBitmap('/assets/images/users_guide/planDay.png'),   // Reemplaza 'app_icon' con el nombre de tu asset
+    largeIcon: DrawableResourceAndroidBitmap('app_icon'),
+    contentTitle: 'Notificación con imagen',
+    htmlFormatContentTitle: true,
+    summaryText: 'Resumen',
+    htmlFormatSummaryText: true,
   );
 
-  const NotificationDetails platformChannelSpecifics =
+  var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+    'bigPictureChannelId',
+    'bigPictureNotifications',
+    styleInformation: bigPictureStyleInformation,
+  );
+
+  var platformChannelSpecifics =
+      NotificationDetails(android: androidPlatformChannelSpecifics);
+
+  await flutterLocalNotificationsPlugin.show(
+    3,
+    'Notificación con imagen',
+    'Muestra una notificación con imagen',
+    platformChannelSpecifics,
+  );
+}
+Future<void> showNotification2(String content) async {
+  const AndroidNotificationDetails androidPlatformChannelSpecifics =
+      AndroidNotificationDetails(
+    // actions: <AndroidNotificationAction>[
+    //   // AndroidNotificationAction('id_1', 'Cerrar✖️'),
+    
+    // ],
+    'your channel id',
+    'your channel name',
+    importance: Importance.max,
+    priority: Priority.high,
+    showWhen: true,
+    // ongoing: true, // Esto hace que la notificación sea persistente
+
+  );
+  const NotificationDetails notificationDetails =
       NotificationDetails(android: androidPlatformChannelSpecifics);
 
   await flutterLocalNotificationsPlugin.show(
     0,
-    'Persistent Notification',
-    'This notification cannot be dismissed',
-    platformChannelSpecifics,
+    'Ha llegado la hora de recordar.⌚⌚',
+    content,
+    notificationDetails,
   );
 }
+
+

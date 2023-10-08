@@ -29,7 +29,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
     final colors = Theme.of(context).colorScheme;
     return NavigationDrawer(
 
-      // backgroundColor: colors.surfaceVariant,
+      backgroundColor: colors.background,
 
       selectedIndex: navDrawerIndex,
       onDestinationSelected: (value) {
@@ -125,7 +125,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                 await GoogleSignIn().signOut();
                 await FirebaseAuth.instance
                     .signOut()
-                    .then((value) => {context.pushReplacement('/')});
+                    .then((value) => {context.pushReplacement('/login')});
               },
               child: Row(
                 children: [

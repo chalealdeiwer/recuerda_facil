@@ -1,33 +1,20 @@
-import 'dart:io';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
-import '../../../services/select_image.dart';
-import '../../../services/upload_image.dart';
+class MoreView extends StatelessWidget {
+  const MoreView({super.key});
 
-class MoreScreen extends StatefulWidget {
-  static const name = 'more_screen';
-  const MoreScreen({super.key});
-
-  @override
-  State<MoreScreen> createState() => _MoreScreenState();
-}
-
-class _MoreScreenState extends State<MoreScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final textSyle = Theme.of(context).textTheme;
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Más"),
-      ),
-      body: Center(
+    return SingleChildScrollView(
+      child: Center(
         child: Column(children: [
+          const SizedBox(height: 50,),
           Text(
             "Más Recursos",
-            style: textSyle.displaySmall,
+            style: textSyle.displaySmall
+            ,
           ),
           const SizedBox(
             height: 30,
@@ -36,10 +23,8 @@ class _MoreScreenState extends State<MoreScreen> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               color: colors.surfaceVariant,
-              
-            
             ),
-            margin: const EdgeInsets.all(10),
+            margin: const EdgeInsets.all(20),
             padding: const EdgeInsets.all(10),
             child: Column(
               children: [

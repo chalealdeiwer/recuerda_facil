@@ -53,7 +53,8 @@ Stream<List<Note>> getNotesStream(String user, String category) {
         final note = Note.fromJson(element.data() as Map<String, dynamic>, element.id);  // Asegúrate de que el tipo de data sea Map<String, dynamic>
         notes.add(note);
       }
-      controller.add(notes);  // Agrega la lista de notas al stream
+      controller.add(notes);
+      print("notas cargadas");  // Agrega la lista de notas al stream
     },
     onError: (error) {
       // Opcional: manejar errores
