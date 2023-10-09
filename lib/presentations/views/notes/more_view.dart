@@ -6,15 +6,15 @@ class MoreView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final textSyle = Theme.of(context).textTheme;
+    final textStyle = Theme.of(context).textTheme;
     return SingleChildScrollView(
       child: Center(
         child: Column(children: [
           const SizedBox(height: 50,),
           Text(
             "Más Recursos",
-            style: textSyle.displaySmall
-            ,
+            style:  textStyle.displaySmall!.copyWith(fontWeight: FontWeight.bold),
+            
           ),
           const SizedBox(
             height: 30,
@@ -54,7 +54,7 @@ class MoreView extends StatelessWidget {
                           ),
                           Text(
                             "Noticias",
-                            style: textSyle.titleLarge,
+                            style: textStyle.titleLarge,
                           )
                         ],
                       ),
@@ -81,7 +81,7 @@ class MoreView extends StatelessWidget {
                           ),
                           Text(
                             "Mini juegos",
-                            style: textSyle.titleLarge,
+                            style: textStyle.titleLarge,
                           )
                         ],
                       ),
@@ -117,7 +117,7 @@ class MoreView extends StatelessWidget {
                           ),
                           Text(
                             "Tableros",
-                            style: textSyle.titleLarge,
+                            style: textStyle.titleLarge,
                           )
                         ],
                       ),
@@ -144,7 +144,7 @@ class MoreView extends StatelessWidget {
                           ),
                           Text(
                             "Productividad",
-                            style: textSyle.titleLarge,
+                            style: textStyle.titleLarge,
                           )
                         ],
                       ),

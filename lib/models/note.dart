@@ -7,7 +7,7 @@ class Note {
   final String key;
   final DateTime dateCreate;
   final DateTime dateFinish;
-  final String state;
+  final bool stateDone;
   final String category;
   final String icon;  // Nuevo campo para el icono
 
@@ -18,7 +18,7 @@ class Note {
     required this.key,
     required this.dateCreate,
     required this.dateFinish,
-    required this.state,
+    required this.stateDone,
     required this.category,
     required this.icon,  // Nuevo argumento para el icono
   });
@@ -31,7 +31,7 @@ class Note {
       key: id,
       dateCreate: (json['date_create'] as Timestamp).toDate(),
       dateFinish: (json['date_finish'] as Timestamp).toDate(),
-      state: json['state'],
+      stateDone: json['stateDone'],
       category: json['category']??'',
       icon: json['icon']??'',  // Mapear el valor del icono
     );

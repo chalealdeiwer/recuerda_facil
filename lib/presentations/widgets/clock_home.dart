@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:intl/intl.dart';
 
 import '../providers/providers.dart';
@@ -15,10 +16,13 @@ class _ClockWidgetState extends ConsumerState<ClockWidget> {
   late DateTime _dateTime;
   late String _greeting;
   late String _mm;
+  late FlutterTts flutterTts; // Declara una variable para FlutterTts
+
 
   @override
   void initState() {
     super.initState();
+    flutterTts = FlutterTts();
     _dateTime = DateTime.now();
     _updateGreeting();
     // Actualizar la hora cada segundo
@@ -29,6 +33,10 @@ class _ClockWidgetState extends ConsumerState<ClockWidget> {
         _updateGreeting();
       });
     });
+  }
+   Future<void> _speak(String text) async {
+    await flutterTts.setLanguage("es-ES");
+    await flutterTts.speak(text);
   }
 
   void _updateGreeting() {
@@ -58,37 +66,45 @@ class _ClockWidgetState extends ConsumerState<ClockWidget> {
     String time = DateFormat('h:mm').format(_dateTime);
     final opacity=ref.watch(opacityProvider);
     final textStyle = Theme.of(context).textTheme;
+    final ttsWelcomeMessage = ref.watch(ttsWelcomeMessageProvider);
 
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.18,
-      width: MediaQuery.of(context).size.width * 0.97,
-      decoration: BoxDecoration(
-          color: colors.surfaceVariant.withOpacity(0.9),
-          borderRadius: BorderRadius.circular(20)),
-      //  alignment: Alignment.bottomLeft,
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            const SizedBox(
-              height: 1,
-            ),
-            Text(
-              _greeting,
-              style: textStyle.displaySmall,
-              //  textAlign: TextAlign.left,
-            ),
-            Text(
-              " $time $_mm $formatoDia, $dia de $mes de $ano",
-              style: const TextStyle(fontSize: 25),
-              // textAlign: TextAlign.left,
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-          ],
+    return GestureDetector(
+      onTap: () {
+        if(ttsWelcomeMessage) {
+          _speak("$_greeting. $time $_mm $formatoDia, $dia de $mes de $ano");
+        }
+      },
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.18,
+        width: MediaQuery.of(context).size.width * 0.97,
+        decoration: BoxDecoration(
+            color: colors.surfaceVariant.withOpacity(0.9),
+            borderRadius: BorderRadius.circular(20)),
+        //  alignment: Alignment.bottomLeft,
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              const SizedBox(
+                height: 1,
+              ),
+              Text(
+                _greeting,
+                style: textStyle.displaySmall,
+                //  textAlign: TextAlign.left,
+              ),
+              Text(
+                " $time $_mm $formatoDia, $dia de $mes de $ano",
+                style: const TextStyle(fontSize: 25),
+                // textAlign: TextAlign.left,
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+            ],
+          ),
         ),
       ),
     );

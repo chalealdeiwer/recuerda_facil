@@ -263,7 +263,7 @@ class AppearanceScreen extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     // mainAxisSize: MainAxisSize.max,
                     children: [
-                      const Text("Botones de página"),
+                      const Text("Botones de pantalla"),
                       Switch(
                         value: bottomVisibility,
                         onChanged: (value) {

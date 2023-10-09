@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:recuerda_facil/config/notes/app_notes.dart';
 import 'package:recuerda_facil/presentations/views/notes/calendar_view.dart';
@@ -45,6 +46,19 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  late FlutterTts flutterTts;
+
+  @override
+  void initState() {
+    super.initState();
+    flutterTts = FlutterTts();
+  }
+
+  Future<void> _speak(String text) async {
+    await flutterTts.setLanguage("es-ES");
+    await flutterTts.speak(text);
+  }
+
   @override
   Widget build(BuildContext context) {
     final isListeningProv = ref.watch(isListeningProvider);
@@ -62,7 +76,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final buttonMicrophone = ref.watch(buttonMicrophoneVisibilityProvider);
     final buttonNewNote = ref.watch(buttonNewNoteVisibilityProvider);
     final buttonAction = ref.watch(buttonActionVisibilityProvider);
+    final ttsButtonsScreen=ref.watch(ttsButtonsScreenProvider);
     final openMenu = ref.watch(openMenuProvider);
+    String viewRouteSpeechText = "";
     PageController _pageController = PageController(
       initialPage: widget.pageIndex,
       keepPage: true,
@@ -138,8 +154,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   controller: _pageController,
                   children: widget.viewRoutes,
                   onPageChanged: (value) {
+                    if(ttsButtonsScreen){
+                    if (widget.viewRoutes[value].toString() == "CalendarView") {
+                      print("1");
+                      viewRouteSpeechText = "Pantalla, calendario";
+                    } else if (widget.viewRoutes[value].toString() == "HomeView") {
+                      print("2");
+                      viewRouteSpeechText = "Pantalla, Mi día";
+                    } else if (widget.viewRoutes[value].toString() == "MoreView") {
+                      print("3");
+                      viewRouteSpeechText = "Pantalla, más recursos";
+                    }
+                    _speak(viewRouteSpeechText);
+                  }
                     widget.pageIndex = value;
-                  },
+
+                  
+                  }
                 )
               ],
             ),
@@ -271,7 +302,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 "",
                                 user!.uid,
                                 DateTime.now(),
-                                "pendiente",
+                                false,
                                 categoy,
                                 DateTime.now(),
                                 Icons.alarm.codePoint.toString())
@@ -347,6 +378,7 @@ void showNewNote(BuildContext context, category) {
             ],
           ),
           content: const ModalNewNote(),
+
         );
       });
 }

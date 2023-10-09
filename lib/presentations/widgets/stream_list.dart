@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:recuerda_facil/config/notes/app_notes.dart';
@@ -15,9 +16,17 @@ class StreamListWidget extends ConsumerStatefulWidget {
 }
 
 class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
+  late FlutterTts flutterTts; // Declara una variable para FlutterTts
+
   @override
   void initState() {
     super.initState();
+    flutterTts = FlutterTts();
+  }
+
+  Future<void> _speak(String text) async {
+    await flutterTts.setLanguage("es-ES");
+    await flutterTts.speak(text);
   }
 
   @override
@@ -28,6 +37,11 @@ class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
     final colors = Theme.of(context).colorScheme;
     final textStyle = Theme.of(context).textTheme;
     final AppNotes noteProvider = ref.read(noteNotifierProvider);
+    final ttsTitle = ref.watch(ttsTitleProvider);
+    final ttsContent = ref.watch(ttsContentProvider);
+    final ttsCategory = ref.watch(ttsCategoryProvider);
+    final textToSpeech = ref.watch(onTestToSpeechProvider);
+
     return StreamBuilder<List>(
       stream: noteProvider.getNotesStream(user!.uid.toString(), category),
       builder: (context, snapshot) {
@@ -150,9 +164,36 @@ class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
                       color: colors.surfaceVariant.withOpacity(0.8),
                       borderRadius: BorderRadius.circular(20)),
                   child: ListTile(
-                    leading: const Icon(
-                      Icons.notifications_active_outlined,
-                      size: 30,
+                    leading: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        const Flexible(
+                          child: Icon(
+                            Icons.notifications_active_outlined,
+                            size:
+                                30, // Puedes ajustar este valor según sea necesario
+                          ),
+                        ),
+                        const Expanded(
+                          child: SizedBox(
+                            height: 20,
+                          ),
+                        ),
+                        Flexible(
+                          child: Transform.scale(
+                            scale: 1.6,
+                            child: Checkbox(
+                              value: notes2[index].stateDone,
+                              onChanged: ( value) async {
+                                await noteProvider.toggleNoteState(notes2[index].key, 
+                                !value!);
+                                
+                                
+                              },
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                     trailing: const Icon(
                       Icons.arrow_forward_ios_rounded,
@@ -196,7 +237,6 @@ class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
                               const SizedBox(
                                 width: 10,
                               ),
-                              Text(notes2[index].state)
                             ],
                           ),
                           const SizedBox(
@@ -218,7 +258,7 @@ class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
                             crossAxisAlignment: WrapCrossAlignment.end,
                             children: [
                               Text(
-                                  'Creado: ${DateFormat('dd MMM hh:mm a').format(notes2[index].dateFinish)}')
+                                  'Creado: ${DateFormat('dd MMM hh:mm a').format(notes2[index].dateCreate)}')
                             ],
                           )
                         ],
@@ -311,7 +351,34 @@ class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
                             );
                           });
                     },
-                    onLongPress: () {},
+                    onLongPress: () {
+                      String speechText = "";
+
+                      if (ttsTitle && textToSpeech) {
+                        speechText += "Recordatorio ${notes2[index].title}. ";
+                      }
+
+                      if (ttsContent) {
+                        if (notes2[index].content.isNotEmpty) {
+                          speechText +=
+                              "Descripción ${notes2[index].content}. ";
+                        } else {
+                          speechText += "Sin descripción. ";
+                        }
+                      }
+
+                      if (ttsCategory) {
+                        if (notes2[index].category.isNotEmpty) {
+                          speechText += "Categoría ${notes2[index].category}. ";
+                        } else {
+                          speechText += "Sin categoría. ";
+                        }
+                      }
+
+                      if (speechText.isNotEmpty) {
+                        _speak(speechText);
+                      }
+                    },
 
                     // onTap: () async {
 

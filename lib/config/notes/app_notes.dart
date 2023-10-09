@@ -70,7 +70,7 @@ Stream<List<Note>> getNotesStream(String user, String category) {
 }
 //funcionando
 
-Future<void> addNote(String title, String content, String user, DateTime date_create, String state, String category, DateTime date_finish,String icon) async {
+Future<void> addNote(String title, String content, String user, DateTime date_create, bool stateDone, String category, DateTime date_finish,String icon) async {
   if(category=="Sin Categoría"||category=="Todos"){
     category="";
   }
@@ -80,7 +80,7 @@ Future<void> addNote(String title, String content, String user, DateTime date_cr
       "content": content,
       "user": {user},
       "date_create": date_create,
-      "state": state,
+      "stateDone": stateDone,
       "category": category,
       "date_finish": date_finish,
       "icon": icon,
@@ -142,6 +142,9 @@ Future<void> addUserNote(String user) async {
 //actualizar en la base de datos
 Future<void> updateNote(String uid,String newnote, String newcontent,) async{
 await db.collection("notes").doc(uid).update({"title": newnote, "content":newcontent});
+}
+Future<void> toggleNoteState(String uid, bool currentState) async {
+  await db.collection("notes").doc(uid).update({"stateDone": !currentState});
 }
 
 

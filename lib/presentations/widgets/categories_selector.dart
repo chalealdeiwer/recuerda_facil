@@ -1,17 +1,37 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:recuerda_facil/presentations/providers/providers.dart';
 import 'package:recuerda_facil/services/user_services.dart';
 
 import '../providers/user_account_provider.dart';
 
-class CategorySelector extends ConsumerWidget {
+class CategorySelector extends ConsumerStatefulWidget {
   @override
-  Widget build(BuildContext context, ref) {
+  ConsumerState<CategorySelector> createState() => _CategorySelectorState();
+}
+
+class _CategorySelectorState extends ConsumerState<CategorySelector> {
+  late FlutterTts flutterTts; // Declara una variable para FlutterTts
+
+  @override
+  void initState() {
+    super.initState();
+    flutterTts = FlutterTts();
+  }
+
+  Future<void> _speak(String text) async {
+    await flutterTts.setLanguage("es-ES");
+    await flutterTts.speak(text);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
     final userAcc = ref.watch(userProviderr(user!.uid));
+    final ttsCategorySelector = ref.watch(ttsCategorySelectorProvider);
     final List<String> categories;
     categories = userAcc.when(
       data: (data) {
@@ -29,6 +49,7 @@ class CategorySelector extends ConsumerWidget {
     final colors = Theme.of(context).colorScheme;
     final _controller = TextEditingController();
     final _formKey = GlobalKey<FormState>();
+    String categorySpeechText = "";
 
     return ListView.builder(
       scrollDirection: Axis.horizontal,
@@ -109,7 +130,18 @@ class CategorySelector extends ConsumerWidget {
                 ref
                     .watch(indexCategoryProvider.notifier)
                     .update((state) => index);
-              },
+                if (ttsCategorySelector) {
+                if (categories[index] == "Todos") {
+                  categorySpeechText = "Todos los recordatorios";
+                } else if (categories[index] == "" ||
+                    categories[index].toLowerCase() == "sin categoría") {
+                  categorySpeechText = "Sin categoría";
+                } else {
+                  categorySpeechText = "Categoría ${categories[index]}";
+                }
+
+                _speak(categorySpeechText);
+              }},
               onLongPress: () {
                 selectedIndex = index;
 

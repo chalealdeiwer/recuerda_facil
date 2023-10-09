@@ -30,13 +30,27 @@ class CustomAppbar extends ConsumerWidget {
           collapseMode: CollapseMode.parallax,
           title: Align(
             alignment: Alignment.bottomLeft,
-            child: Text(
-              "Recuerda Fácil",
-              style: TextStyle(
-                  color: colors.primary,
-                  fontSize: 24,
-                  // fontWeight: FontWeight.bold,
-                  fontFamily: 'SpicyRice-Regular'),
+            child: Row(
+              children: [
+                Text(
+                  "Recuerda",
+                  style: TextStyle(
+                      color: colors.primary,
+                      fontSize: 24,
+                      // fontWeight: FontWeight.bold,
+                      fontFamily: 'SpicyRice-Regular'),
+                ),
+                const SizedBox(width: 5,),
+                Text(
+                  "Fácil",
+                  style: TextStyle(
+                      color: colors.secondary,
+                      fontSize: 24,
+                      // fontWeight: FontWeight.bold,
+                      fontFamily: 'SpicyRice-Regular'),
+                ),
+                 
+              ],
             ),
           ),
           centerTitle: false,
