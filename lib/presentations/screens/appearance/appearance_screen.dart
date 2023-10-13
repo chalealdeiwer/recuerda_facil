@@ -83,7 +83,7 @@ class AppearanceScreen extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     // mainAxisSize: MainAxisSize.max,
                     children: [
-                      const Text("Modo Oscuro"),
+                       Text("Modo Oscuro",style: textStyle.titleLarge,),
                       Switch(
                         value: isDarkMode,
                         onChanged: (value) {
@@ -110,7 +110,7 @@ class AppearanceScreen extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     // mainAxisSize: MainAxisSize.max,
                     children: [
-                      const Text("Fondo personalizado"),
+                       Text("Fondo personalizado",style: textStyle.titleLarge,),
                       Switch(
                         value: customBack,
                         onChanged: (value) {
@@ -146,7 +146,7 @@ class AppearanceScreen extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     // mainAxisSize: MainAxisSize.max,
                     children: [
-                      const Text("Barra de funciones"),
+                       Text("Barra de funciones",style: textStyle.titleLarge,),
                       Switch(
                         value: appBarVisibility,
                         onChanged: (value) {
@@ -168,7 +168,7 @@ class AppearanceScreen extends ConsumerWidget {
                       // mainAxisSize: MainAxisSize.max,
                       children: [
                         Text(
-                            "Se agregará un botón de acción",style: TextStyle(color: colors.error),),
+                            "Se agregará un botón de acción",style: TextStyle(color: colors.error,fontSize: 20),),
                       ],
                     ),
                   ),
@@ -177,7 +177,7 @@ class AppearanceScreen extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     // mainAxisSize: MainAxisSize.max,
                     children: [
-                      const Text("Selector de categoría"),
+                       Text("Selector de categoría",style: textStyle.titleLarge,),
                       Switch(
                         value: categoriesVisibility,
                         onChanged: (value) {
@@ -197,15 +197,8 @@ class AppearanceScreen extends ConsumerWidget {
                   ),
                   Visibility(
                     visible: !categoriesVisibility,
-                    child:  Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      // mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Text(
-                            "Los recordatorios nuevos se agregaran a 'Sin Categoría'",style: TextStyle(color: colors.error),),
-                      ],
-                    ),
+                    child:  Text(
+                        "Los recordatorios nuevos se agregaran a 'Sin Categoría'",style: TextStyle(color: colors.error,fontSize: 20),),
                   ),
                   
                   Row(
@@ -213,7 +206,7 @@ class AppearanceScreen extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     // mainAxisSize: MainAxisSize.max,
                     children: [
-                      const Text("Mensaje de bienvenida"),
+                       Text("Mensaje de bienvenida",style: textStyle.titleLarge,),
                       Switch(
                         value: clockVisibility,
                         onChanged: (value) {
@@ -229,7 +222,7 @@ class AppearanceScreen extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     // mainAxisSize: MainAxisSize.max,
                     children: [
-                      const Text("Botón Comando de Voz"),
+                       Text("Botón Comando de Voz",style: textStyle.titleLarge,),
                       Switch(
                         value: buttonMicrophone,
                         onChanged: (value) {
@@ -245,7 +238,7 @@ class AppearanceScreen extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     // mainAxisSize: MainAxisSize.max,
                     children: [
-                      const Text("Botón de nueva nota"),
+                       Text("Botón de nueva nota",style: textStyle.titleLarge,),
                       Switch(
                         value: buttonNewNote,
                         onChanged: (value) {
@@ -263,7 +256,7 @@ class AppearanceScreen extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     // mainAxisSize: MainAxisSize.max,
                     children: [
-                      const Text("Botones de pantalla"),
+                       Text("Botones de pantalla",style: textStyle.titleLarge,),
                       Switch(
                         value: bottomVisibility,
                         onChanged: (value) {
@@ -281,7 +274,7 @@ class AppearanceScreen extends ConsumerWidget {
                     children: [
                       Text(
                         "Vista previa",
-                        style: textStyle.titleLarge,
+                        style: textStyle.displaySmall,
                       ),
                     ],
                   ),
@@ -310,14 +303,14 @@ class AppearanceScreen extends ConsumerWidget {
               ),
             ),
 
-            const Padding(
-              padding: EdgeInsets.all(16.0),
+             Padding(
+              padding: const EdgeInsets.all(16.0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 // mainAxisSize: MainAxisSize.max,
                 children: [
-                  Text("Color de aplicación"),
+                  Text("Color de aplicación",style: textStyle.titleLarge,),
                 ],
               ),
             ),

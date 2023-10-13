@@ -55,21 +55,7 @@ class MyApp extends ConsumerWidget {
       //custom theme
       theme: appTheme.getTheme(),
 
-      // ThemeData(
-      //   useMaterial3: true,
-      //   colorScheme: const ColorScheme(brightness: Brightness.light,
-      //    primary: Color.fromARGB(255, 35, 132, 55),
-      //     onPrimary: Color.fromARGB(255, 23, 23, 23),
-      //     secondary: Color.fromARGB(255, 10, 206, 128),
-      //     onSecondary: Color.fromARGB(255, 36, 21, 247),
-      //      error: Color.fromARGB(255, 255, 0, 0),
-      //       onError: Color.fromARGB(255, 52, 58, 38),
-      //        background: Color(0xFFE8EDDB),
-      //         onBackground: Color.fromARGB(255, 57, 57, 57),
-      //          surface: Color(0xFFE8EDDB),
-      //           onSurface: Color.fromARGB(255, 13, 13, 13)),
-
-      // ),
+    
 
       debugShowCheckedModeBanner: false,
     );

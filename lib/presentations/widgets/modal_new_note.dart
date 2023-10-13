@@ -278,6 +278,7 @@ DateTime nextMonday(DateTime date) {
   Widget build(BuildContext context) {
     final AppNotes noteProvider = ref.watch(noteNotifierProvider);
     final categoy = ref.watch(categoryProvider);
+    
 
     return Form(
       key: _formKey,
@@ -374,9 +375,11 @@ DateTime nextMonday(DateTime date) {
                                 DateTime.now(),
                                 false,
                                 categoy,
+                                DateTime(1, 1, 1, 0, 0),
                                 combinedDateTime,
                                 Icons.note.codePoint.toString())
                             .then((value) => {
+                              ref.refresh(remindersProvider(currentUserUID)),
                                   if(mounted)
                                   context.pop(),
                                   ScaffoldMessenger.of(context).showSnackBar(

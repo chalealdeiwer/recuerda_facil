@@ -29,6 +29,8 @@ const appMenuItems =<MenuItem>[
   MenuItem(title: 'Soporte y Ayuda', subTitle: 'Soporte y Ayuda de la aplicación', link: '/support', icon: Icons.support_agent_rounded),
   MenuItem(title: 'Acerca de:', subTitle: 'Acerca de la aplicación', link: '/about', icon: Icons.info_outline),
   MenuItem(title: 'Pruebas', subTitle: 'Pruebas', link: '/test', icon: Icons.tag_faces_outlined),
+  MenuItem(title: 'Mas Funciones', subTitle: 'Pruebas', link: '/more_functions', icon: Icons.emoji_people_rounded),
+
 
 
 

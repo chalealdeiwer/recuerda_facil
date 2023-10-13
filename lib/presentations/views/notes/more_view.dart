@@ -10,11 +10,13 @@ class MoreView extends StatelessWidget {
     return SingleChildScrollView(
       child: Center(
         child: Column(children: [
-          const SizedBox(height: 50,),
+          const SizedBox(
+            height: 50,
+          ),
           Text(
             "Más Recursos",
-            style:  textStyle.displaySmall!.copyWith(fontWeight: FontWeight.bold),
-            
+            style:
+                textStyle.displaySmall!.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(
             height: 30,
@@ -44,10 +46,9 @@ class MoreView extends StatelessWidget {
                           const SizedBox(
                             height: 10,
                           ),
-                          Image.asset(
-                            "assets/circleLogo.png",
-                            width: 100,
-                            height: 100,
+                          const Icon(
+                            Icons.newspaper,
+                            size: 100,
                           ),
                           const SizedBox(
                             height: 10,
@@ -71,10 +72,9 @@ class MoreView extends StatelessWidget {
                           const SizedBox(
                             height: 10,
                           ),
-                          Image.asset(
-                            "assets/circleLogo.png",
-                            width: 100,
-                            height: 100,
+                          const Icon(
+                            Icons.gamepad_outlined,
+                            size: 100,
                           ),
                           const SizedBox(
                             height: 10,
@@ -107,11 +107,7 @@ class MoreView extends StatelessWidget {
                           const SizedBox(
                             height: 10,
                           ),
-                          Image.asset(
-                            "assets/circleLogo.png",
-                            width: 100,
-                            height: 100,
-                          ),
+                          const Icon(Icons.table_view, size: 100),
                           const SizedBox(
                             height: 10,
                           ),
@@ -134,11 +130,7 @@ class MoreView extends StatelessWidget {
                           const SizedBox(
                             height: 10,
                           ),
-                          Image.asset(
-                            "assets/circleLogo.png",
-                            width: 100,
-                            height: 100,
-                          ),
+                        const Icon(Icons.timer, size: 100),
                           const SizedBox(
                             height: 10,
                           ),

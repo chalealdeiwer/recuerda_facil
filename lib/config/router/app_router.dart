@@ -90,5 +90,9 @@ final GoRouter appRouter = GoRouter(
         name: AppearanceScreen.name,
         path: '/appearance',
         builder: (context, state) => const AppearanceScreen()),
+         GoRoute(
+        name: MoreFunctionsScreen.name,
+        path: '/more_functions',
+        builder: (context, state) => const MoreFunctionsScreen()),
   ],
 );

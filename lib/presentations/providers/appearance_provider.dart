@@ -25,3 +25,6 @@ final buttonMicrophoneVisibilityProvider = StateProvider<bool>((ref) {
 final openMenuProvider = StateProvider<bool>((ref) {
   return false;
 });
+final buttonPageChangeProvider = StateProvider<bool>((ref) {
+  return true;
+});

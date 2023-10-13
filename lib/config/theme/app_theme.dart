@@ -21,7 +21,6 @@ const colorList = <Color>[
   Colors.lightBlue,
   Colors.lightGreen,
   Colors.blueGrey,
-  
 ];
 const MaterialColor whiteSwatch = MaterialColor(
   0xFFFFFFFF,
@@ -54,33 +53,41 @@ const MaterialColor blackSwatch = MaterialColor(
   },
 );
 
-class AppTheme{
+class AppTheme {
   final int selectedColor;
   final bool isDarkMode;
-  
 
-  AppTheme( {
-    this.isDarkMode=false,
-    this.selectedColor = 0
-  }):assert(selectedColor>=0 && selectedColor<colorList.length,'Selected color must be greater then 0');
-  
+  AppTheme({this.isDarkMode = false, this.selectedColor = 0})
+      : assert(selectedColor >= 0 && selectedColor < colorList.length,
+            'Selected color must be greater then 0');
 
-  ThemeData getTheme()=> ThemeData(
-    colorSchemeSeed: colorList[selectedColor],
-    useMaterial3: true,
-    brightness: isDarkMode? Brightness.dark: Brightness.light,
-    appBarTheme: const AppBarTheme(
-      centerTitle: false
-    )
-  );
+  ThemeData getTheme() => ThemeData(
+      colorSchemeSeed: colorList[selectedColor],
+      useMaterial3: true,
+      brightness: isDarkMode ? Brightness.dark : Brightness.light,
+      appBarTheme: const AppBarTheme(centerTitle: false));
 
-  ThemeData getTheme2()=>ThemeData(
-    // Colores primarios
-    primarySwatch: blackSwatch,
-        primaryColor: Colors.black,
+  ThemeData getTheme2() => ThemeData(
+        useMaterial3: true,
+        colorScheme: const ColorScheme(
+            brightness: Brightness.dark,
+            primary: Color.fromARGB(255, 255, 255, 255),
+            onPrimary: Color.fromARGB(255, 255, 255, 255),
+            secondary: Color.fromARGB(255, 255, 255, 255),
+            onSecondary: Color.fromARGB(255, 255, 255, 255),
+            error: Color.fromARGB(255, 255, 0, 0),
+            onError: Color.fromARGB(255, 255, 5, 5),
+            background: Color.fromARGB(255, 0, 0, 0),
+            onBackground: Color.fromARGB(255, 57, 57, 57),
+            surface: Color(0xFFE8EDDB),
+            onSurface: Color.fromARGB(255, 13, 13, 13)),
+
+        // Colores primarios
+        primarySwatch: blackSwatch,
+        primaryColor: Colors.white,
         scaffoldBackgroundColor: Colors.black,
         appBarTheme: AppBarTheme(
-          backgroundColor: Colors.black,  // Si deseas un AppBar negro
+          backgroundColor: Colors.black, // Si deseas un AppBar negro
         ),
         textTheme: TextTheme(
           headline1: TextStyle(color: Colors.white),
@@ -104,12 +111,9 @@ class AppTheme{
         iconTheme: IconThemeData(
           color: Colors.black,
         ),
-  );
+      );
 
-  AppTheme copyWith({
-    int? selectedColor,
-    bool? isDarkMode
-
-})=>AppTheme(selectedColor: selectedColor??this.selectedColor,isDarkMode: isDarkMode??this.isDarkMode);
-
+  AppTheme copyWith({int? selectedColor, bool? isDarkMode}) => AppTheme(
+      selectedColor: selectedColor ?? this.selectedColor,
+      isDarkMode: isDarkMode ?? this.isDarkMode);
 }

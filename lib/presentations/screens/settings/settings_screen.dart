@@ -22,6 +22,7 @@ class SettingsScreen extends ConsumerWidget {
     final ttsCategorySelector = ref.watch(ttsCategorySelectorProvider);
     final ttsButtonsScreen = ref.watch(ttsButtonsScreenProvider);
     final ttsWelcomeMessage = ref.watch(ttsWelcomeMessageProvider);
+    final colors = Theme.of(context).colorScheme;
     // if(brightness==Brightness.light){
     //  isautodark=false;
     // }
@@ -53,23 +54,28 @@ class SettingsScreen extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   // mainAxisSize: MainAxisSize.max,
                   children: [
-                    const Text("Notificaciones"),
+                    Text(
+                      "Notificaciones",
+                      style: textStyle.titleLarge,
+                    ),
                     FilledButton(
                         onPressed: () async {
-                          final bool permiso;
-                          permiso = await requestNotification().then((value) {
+                          requestNotification().then((value) {
                             showDialog(
                               context: context,
                               builder: (context) {
                                 if (value) {
                                   return AlertDialog(
-                                    title: const Text('Notificaciones'),
-                                    content: const Text(
-                                        'Las notificaciones están permitidas.'),
+                                    title: const Text(
+                                      'Notificaciones',
+                                    ),
+                                    content: Text(
+                                        'Las notificaciones están permitidas.',
+                                        style: textStyle.titleLarge),
                                     actions: <Widget>[
                                       TextButton(
                                         onPressed: () {
-                                          Navigator.of(context).pop();
+                                          context.pop();
                                         },
                                         child: const Text('OK'),
                                       ),
@@ -78,12 +84,13 @@ class SettingsScreen extends ConsumerWidget {
                                 } else {
                                   return AlertDialog(
                                     title: const Text('Notificaciones'),
-                                    content: const Text(
-                                        'Las notificaciones están desactivadas.'),
+                                    content: Text(
+                                        'Las notificaciones están desactivadas.',
+                                        style: textStyle.titleLarge),
                                     actions: <Widget>[
-                                      TextButton(
+                                      FilledButton(
                                         onPressed: () {
-                                          Navigator.of(context).pop();
+                                          context.pop();
                                         },
                                         child: const Text('OK'),
                                       ),
@@ -95,9 +102,11 @@ class SettingsScreen extends ConsumerWidget {
                             return value;
                           });
                           await showNotification();
-                          // Asumiendo que requestNotification retorna un Future<bool>
                         },
-                        child: const Text("Permitir"))
+                        child: const Text(
+                          "Permitir",
+                          style: TextStyle(fontSize: 23),
+                        ))
                   ],
                 ),
                 Row(
@@ -116,7 +125,7 @@ class SettingsScreen extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   // mainAxisSize: MainAxisSize.max,
                   children: [
-                    const Text("Activar texto a voz"),
+                    Text("Activar texto a voz", style: textStyle.titleLarge),
                     Switch(
                       value: textToSpeech,
                       onChanged: (textToSpeech) {
@@ -150,14 +159,16 @@ class SettingsScreen extends ConsumerWidget {
                   visible: textToSpeech,
                   child: Column(
                     children: [
-                      const Text(
-                          "Para activar la lectura mantén presionado el recordatorio"),
+                      Text("Para activar la lectura toca el recordatorio",
+                          style: textStyle.titleLarge!
+                              .copyWith(color: colors.error)),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         // mainAxisSize: MainAxisSize.max,
                         children: [
-                          const Text("Título Recordatorio"),
+                          Text("Título Recordatorio",
+                              style: textStyle.titleLarge),
                           Switch(
                             value: ttsTitle,
                             onChanged: (ttsTitle) {
@@ -173,7 +184,8 @@ class SettingsScreen extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         // mainAxisSize: MainAxisSize.max,
                         children: [
-                          const Text("Descripción Recordatorio"),
+                          Text("Descripción Recordatorio",
+                              style: textStyle.titleLarge),
                           Switch(
                             value: ttsContent,
                             onChanged: (ttsContent) {
@@ -189,7 +201,8 @@ class SettingsScreen extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         // mainAxisSize: MainAxisSize.max,
                         children: [
-                          const Text("Categoría Recordatorio"),
+                          Text("Categoría Recordatorio",
+                              style: textStyle.titleLarge),
                           Switch(
                             value: ttsCategory,
                             onChanged: (ttsCategory) {
@@ -205,7 +218,8 @@ class SettingsScreen extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         // mainAxisSize: MainAxisSize.max,
                         children: [
-                          const Text("Categoría Selector"),
+                          Text("Categoría Selector",
+                              style: textStyle.titleLarge),
                           Switch(
                             value: ttsCategorySelector,
                             onChanged: (ttsCategorySelector) {
@@ -219,14 +233,17 @@ class SettingsScreen extends ConsumerWidget {
                       ),
                       Visibility(
                           visible: ttsCategorySelector,
-                          child: const Text(
-                              "Se escuchará cada vez que se selecciones una categoría")),
+                          child: Text(
+                              "Se escuchará cada vez que se selecciones una categoría",
+                              style: textStyle.titleLarge!
+                                  .copyWith(color: colors.error))),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         // mainAxisSize: MainAxisSize.max,
                         children: [
-                          const Text("Botones de pantalla"),
+                          Text("Botones de pantalla",
+                              style: textStyle.titleLarge),
                           Switch(
                             value: ttsButtonsScreen,
                             onChanged: (ttsButtonsScreen) {
@@ -240,14 +257,17 @@ class SettingsScreen extends ConsumerWidget {
                       ),
                       Visibility(
                           visible: ttsButtonsScreen,
-                          child: const Text(
-                              "Se escuchará cada vez que cambies de pantalla")),
+                          child: Text(
+                              "Se escuchará cada vez que cambies de pantalla",
+                              style: textStyle.titleLarge!
+                                  .copyWith(color: colors.error))),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         // mainAxisSize: MainAxisSize.max,
                         children: [
-                          const Text("Mensaje de bienvenida"),
+                          Text("Mensaje de bienvenida",
+                              style: textStyle.titleLarge),
                           Switch(
                             value: ttsWelcomeMessage,
                             onChanged: (ttsWelcomeMessage) {
@@ -261,8 +281,10 @@ class SettingsScreen extends ConsumerWidget {
                       ),
                       Visibility(
                           visible: ttsWelcomeMessage,
-                          child: const Text(
-                              "Para escuchar, toca el mensaje de bienvenida")),
+                          child: Text(
+                              "Para escuchar, toca el mensaje de bienvenida",
+                              style: textStyle.titleLarge!
+                                  .copyWith(color: colors.error))),
                     ],
                   ),
                 ),

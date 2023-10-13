@@ -97,35 +97,37 @@ class _SharedNotesScreenState extends ConsumerState<SharedNotesScreen> {
 
     return Scaffold(
       appBar: AppBar(),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 40,),
-          Text(
-            FirebaseAuth.instance.currentUser!.displayName.toString(),
-            style: const TextStyle(fontSize: 40),
-          ),
-          const Text(
-            "Comparta sus recordatorios",
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-          ),
-          const Divider(
-          ),
-          Container(
-            color: Colors.white,
-            child: Center(child: QrImageView(data: data))),
-          dividerorline(),
-          ElevatedButton(
-              onPressed: () {
-                scanQr(noteProvider);
-              },
-              child: const Text(
-                "Cargue Recordatorios",
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-              )),
-          Text(qrValue),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 40,),
+            Text(
+              FirebaseAuth.instance.currentUser!.displayName.toString(),
+              style: const TextStyle(fontSize: 40),
+            ),
+            const Text(
+              "Comparta sus recordatorios",
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            ),
+            const Divider(
+            ),
+            Container(
+              color: Colors.white,
+              child: Center(child: QrImageView(data: data))),
+            dividerorline(),
+            ElevatedButton(
+                onPressed: () {
+                  scanQr(noteProvider);
+                },
+                child: const Text(
+                  "Cargue Recordatorios",
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                )),
+            Text(qrValue),
+          ],
+        ),
       ),
     );
   }

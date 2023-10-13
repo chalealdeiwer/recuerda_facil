@@ -1,4 +1,6 @@
 
+export 'package:recuerda_facil/presentations/screens/more_functions/more_functions_screen.dart';
+
 export 'package:recuerda_facil/presentations/screens/support/comments_screen.dart';
 export 'package:recuerda_facil/presentations/screens/support/faq_screen.dart';
 

@@ -20,9 +20,13 @@ class SideMenu extends ConsumerStatefulWidget {
 }
 
 class _SideMenuState extends ConsumerState<SideMenu> {
+  
   int navDrawerIndex = 0;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) 
+  {
+    final textStyle = Theme.of(context).textTheme;
+
     final userAcc =
         ref.watch(userProviderr(FirebaseAuth.instance.currentUser!.uid));
     // final hasNotch = MediaQuery.of(context).viewPadding.top > 35;
@@ -75,48 +79,54 @@ class _SideMenuState extends ConsumerState<SideMenu> {
               ),
             ),
             const SizedBox(height: 10),
-            Text(
-              FirebaseAuth.instance.currentUser!.displayName.toString(),
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+           Text(
+                    userAcc.when(
+                      data: (data) {
+                        return data!.displayName.toString();
+                      },
+                      error: (error, stackTrace) {
+                        return "errror";
+                      },
+                      loading: () {
+                        return "loading";
+                      },
+                    ),
+                    style: const TextStyle(fontSize: 30),)
           ],
         ),
-        const Padding(
+         Padding(
           padding: EdgeInsets.fromLTRB(28, 16, 28, 10),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
                 padding: EdgeInsets.only(right: 10),
-                child: Text("Principal"),
+                child: Text("Principal",style: textStyle.bodyLarge,),
               ),
               Expanded(child: Divider()),
             ],
           ),
         ),
         ...appMenuItems.sublist(0, 3).map((e) => NavigationDrawerDestination(
-            icon: Icon(e.icon), label: Text(e.title))),
+            icon: Icon(e.icon), label: Text(e.title,style: textStyle.titleLarge,))),
         const Padding(
           padding: EdgeInsets.fromLTRB(28, 16, 28, 10),
         ),
-        const Padding(
+         Padding(
           padding: EdgeInsets.fromLTRB(28, 16, 28, 10),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
                 padding: EdgeInsets.only(right: 10),
-                child: Text("Más Opciones"),
+                child: Text("Más Opciones",style: textStyle.bodyLarge,),
               ),
               Expanded(child: Divider()),
             ],
           ),
         ),
         ...appMenuItems.sublist(3).map((e) => NavigationDrawerDestination(
-            icon: Icon(e.icon), label: Text(e.title))),
+            icon: Icon(e.icon), label: Text(e.title,style: textStyle.titleLarge,))),
         Padding(
           padding: const EdgeInsets.only(left: 17.0),
           child: TextButton(
@@ -134,9 +144,8 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                     color: colors.error,
                   ),
                   Text(
-                    "   Cerrar sesión",
-                    style: TextStyle(color: colors.error),
-                  ),
+                    "   Cerrar sesión",style: textStyle.titleLarge!.copyWith(color: colors.error)),
+                  
                 ],
               )),
         ),
@@ -148,7 +157,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
               Icons.exit_to_app,
             )),
         const SizedBox(
-          height: 30,
+          height: 40,
         )
       ],
     );

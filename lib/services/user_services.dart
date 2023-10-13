@@ -1,17 +1,19 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:recuerda_facil/models/note.dart';
 import 'package:recuerda_facil/models/user.dart';
 import 'package:recuerda_facil/models/user_account.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
 Future<List<UserAccount>> getUsers() async {
-
   List<UserAccount> users = [];
   QuerySnapshot queryusers = await db.collection("users").get();
 
   queryusers.docs.forEach((element) {
     final Map<String, dynamic> data = element.data() as Map<String, dynamic>;
-   final UserAccount user= UserAccount.fromMap(data);
+    final UserAccount user = UserAccount.fromMap(data);
     users.add(user);
   });
   return users;
@@ -22,7 +24,8 @@ Future<void> addUserCategory(String uid, String newCategory) async {
   final DocumentSnapshot userDocSnapshot = await userDocRef.get();
 
   if (userDocSnapshot.exists) {
-    final Map<String, dynamic> data = userDocSnapshot.data() as Map<String, dynamic>;
+    final Map<String, dynamic> data =
+        userDocSnapshot.data() as Map<String, dynamic>;
     List<dynamic> arrayCategories = data['categories'] ?? [];
     arrayCategories.add(newCategory);
     await userDocRef.update({"categories": arrayCategories});
@@ -36,7 +39,8 @@ Future<void> removeUserCategory(String uid, String categoryToRemove) async {
   final DocumentSnapshot userDocSnapshot = await userDocRef.get();
 
   if (userDocSnapshot.exists) {
-    final Map<String, dynamic> data = userDocSnapshot.data() as Map<String, dynamic>;
+    final Map<String, dynamic> data =
+        userDocSnapshot.data() as Map<String, dynamic>;
     List<dynamic> arrayCategories = data['categories'] ?? [];
     // Eliminar la categoría especificada de la lista
     arrayCategories.remove(categoryToRemove);
@@ -44,7 +48,8 @@ Future<void> removeUserCategory(String uid, String categoryToRemove) async {
     await userDocRef.update({"categories": arrayCategories});
 
     // Obtener todas las notas que pertenecen a la categoría que se va a eliminar
-    final QuerySnapshot noteSnapshot = await db.collection("notes")
+    final QuerySnapshot noteSnapshot = await db
+        .collection("notes")
         .where("category", isEqualTo: categoryToRemove)
         .get();
 
@@ -76,22 +81,39 @@ Future<void> removeUserCategory(String uid, String categoryToRemove) async {
 //   }
 // }
 Stream<UserAccount?> getUserStream(String uid) {
-  
-    return db
-        .collection("users")
-        .doc(uid)
-        .snapshots()
-        .map((snapshot) {
-          if (snapshot.exists) {
-            final Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-            return UserAccount.fromMap(data);
-          }
-          return null;
-        });
-  }
+  return db.collection("users").doc(uid).snapshots().map((snapshot) {
+    if (snapshot.exists) {
+      final Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+      return UserAccount.fromMap(data);
+    }
+    return null;
+  });
+}
+
+// Future<List<Note>> getRemindersOfUser(String userId) async {
+//   // Obtener todas las notas que contienen al usuario especificado
+//   QuerySnapshot queryNotes =
+//       await db.collection("notes").where("user", arrayContains: userId).get();
+
+//   List<Note> reminders = [];
+
+//   // Iterar sobre cada nota
+//   for (var noteDoc in queryNotes.docs) {
+//     // Crear un objeto Note usando el método fromJson
+//     final note =
+//         Note.fromJson(noteDoc.data() as Map<String, dynamic>, noteDoc.id);
+
+//     // (Opcional) Puedes añadir una condición para filtrar las notas basadas en una propiedad específica, como date_remember
+    
+//       reminders.add(note);
+    
+//   }
+
+//   return reminders;
+// }
 
 // Future<List<String>> getUserCategories(String uid) async {
-  
+
 //   if(uid.isEmpty){
 //     return ['Sin Categoría'];
 //   }
@@ -144,17 +166,22 @@ Stream<UserAccount?> getUserStream(String uid) {
 
 // }
 
-Future<bool> getPrivate(String uid)async{
-  try{
-    final QuerySnapshot userDoc = await db.collection("users").where('uid', isEqualTo: uid).limit(1).get();
-    if(userDoc.docs.isNotEmpty){
-      final Map<String, dynamic> data = userDoc.docs.first.data() as Map<String, dynamic>;
+Future<bool> getPrivate(String uid) async {
+  try {
+    final QuerySnapshot userDoc = await db
+        .collection("users")
+        .where('uid', isEqualTo: uid)
+        .limit(1)
+        .get();
+    if (userDoc.docs.isNotEmpty) {
+      final Map<String, dynamic> data =
+          userDoc.docs.first.data() as Map<String, dynamic>;
       final bool private = data['private'] as bool;
       return private;
-    }else{
+    } else {
       return false;
     }
-  }catch(e){
+  } catch (e) {
     print("Error al obtener los datos del usuario: $e");
     return false;
   }
@@ -162,8 +189,11 @@ Future<bool> getPrivate(String uid)async{
 
 Future<bool> searchUserUid(String uid) async {
   try {
-    final QuerySnapshot querySnapshot = await db.collection('users').where('uid', isEqualTo: uid).limit(1) 
-.get();
+    final QuerySnapshot querySnapshot = await db
+        .collection('users')
+        .where('uid', isEqualTo: uid)
+        .limit(1)
+        .get();
     if (querySnapshot.docs.isNotEmpty) {
       return true;
     } else {

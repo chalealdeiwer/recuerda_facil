@@ -10,7 +10,8 @@ class HomeView extends ConsumerStatefulWidget {
   ConsumerState<HomeView> createState() => _HomeViewState();
 }
 
-class _HomeViewState extends ConsumerState<HomeView> with AutomaticKeepAliveClientMixin {
+class _HomeViewState extends ConsumerState<HomeView>
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(
     BuildContext context,
@@ -23,6 +24,7 @@ class _HomeViewState extends ConsumerState<HomeView> with AutomaticKeepAliveClie
     final categoriesVisibility = ref.watch(categoriesVisibilityProvider);
     final appBarVisibility = ref.watch(appBarVisibilityProvider);
     final size = MediaQuery.of(context).size;
+    final textStyle = Theme.of(context).textTheme;
 
     return CustomScrollView(physics: const BouncingScrollPhysics(), slivers: [
       appBarVisibility
@@ -31,36 +33,36 @@ class _HomeViewState extends ConsumerState<HomeView> with AutomaticKeepAliveClie
               child: SizedBox(
               height: size.height * 0.06,
             )),
-      if(!appBarVisibility)
-      SliverToBoxAdapter(
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: colors.surfaceVariant.withOpacity(0.5),
-          ),
-          margin:  EdgeInsets.symmetric(horizontal: size.width * 0.2),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "Recuerda ",
-                style: TextStyle(
-                    fontFamily: 'SpicyRice-Regular',
-                    fontSize: 35,
-                    color: colors.primary),
-              ),
-              Text(
-                "Fácil",
-                style: TextStyle(
-                    fontFamily: 'SpicyRice-Regular',
-                    fontSize: 30,
-                    color: colors.secondary),
-              ),
-            ],
+      if (!appBarVisibility)
+        SliverToBoxAdapter(
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: colors.surfaceVariant.withOpacity(0.5),
+            ),
+            margin: EdgeInsets.symmetric(horizontal: size.width * 0.2),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Recuerda ",
+                  style: TextStyle(
+                      fontFamily: 'SpicyRice-Regular',
+                      fontSize: 35,
+                      color: colors.primary),
+                ),
+                Text(
+                  "Fácil",
+                  style: TextStyle(
+                      fontFamily: 'SpicyRice-Regular',
+                      fontSize: 30,
+                      color: colors.secondary),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
       SliverToBoxAdapter(
         child: Column(
           children: [
@@ -99,7 +101,35 @@ class _HomeViewState extends ConsumerState<HomeView> with AutomaticKeepAliveClie
           ],
         ),
       ),
-      StreamListWidget(),
+      SliverToBoxAdapter(
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 2),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: colors.surfaceVariant.withOpacity(0.5)),
+            
+            child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                
+                child: Text("Recordatorios Pendientes",
+                    style: textStyle.titleLarge!
+                        .copyWith(fontWeight: FontWeight.bold))),
+          )),
+      StreamListWidget(done: true),
+      SliverToBoxAdapter(
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 2),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: colors.surfaceVariant.withOpacity(0.5)
+            ),
+            child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("Recordatorios finalizados",
+              style: textStyle.titleLarge!.copyWith(fontWeight: FontWeight.bold)),
+                ),
+          )),
+      StreamListWidget(done: false),
       const SliverToBoxAdapter(
         child: SizedBox(
           height: 500,
@@ -107,8 +137,7 @@ class _HomeViewState extends ConsumerState<HomeView> with AutomaticKeepAliveClie
       ),
     ]);
   }
-  
+
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }

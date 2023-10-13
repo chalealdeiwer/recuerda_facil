@@ -76,8 +76,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final buttonMicrophone = ref.watch(buttonMicrophoneVisibilityProvider);
     final buttonNewNote = ref.watch(buttonNewNoteVisibilityProvider);
     final buttonAction = ref.watch(buttonActionVisibilityProvider);
-    final ttsButtonsScreen=ref.watch(ttsButtonsScreenProvider);
+    final ttsButtonsScreen = ref.watch(ttsButtonsScreenProvider);
     final openMenu = ref.watch(openMenuProvider);
+    final showButton=ref.watch(buttonPageChangeProvider);
     String viewRouteSpeechText = "";
     PageController _pageController = PageController(
       initialPage: widget.pageIndex,
@@ -151,27 +152,37 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 //     index: widget.pageIndex, children: widget.viewRoutes),
 
                 PageView(
-                  controller: _pageController,
-                  children: widget.viewRoutes,
-                  onPageChanged: (value) {
-                    if(ttsButtonsScreen){
-                    if (widget.viewRoutes[value].toString() == "CalendarView") {
-                      print("1");
-                      viewRouteSpeechText = "Pantalla, calendario";
-                    } else if (widget.viewRoutes[value].toString() == "HomeView") {
-                      print("2");
-                      viewRouteSpeechText = "Pantalla, Mi día";
-                    } else if (widget.viewRoutes[value].toString() == "MoreView") {
-                      print("3");
-                      viewRouteSpeechText = "Pantalla, más recursos";
-                    }
-                    _speak(viewRouteSpeechText);
-                  }
-                    widget.pageIndex = value;
+                    controller: _pageController,
+                    children: widget.viewRoutes,
+                    onPageChanged: (value) {
+                      if (value == 1) {
+                        ref.read(buttonPageChangeProvider.notifier).update(
+                            (showButton) => true)
+                            ;
+                      } else {
+                        ref.read(buttonPageChangeProvider.notifier).update(
+                            (showButton) => false)
+                            ;
+                      }
 
-                  
-                  }
-                )
+                      if (ttsButtonsScreen) {
+                        if (widget.viewRoutes[value].toString() ==
+                            "CalendarView") {
+                          print("1");
+                          viewRouteSpeechText = "Pantalla, calendario";
+                        } else if (widget.viewRoutes[value].toString() ==
+                            "HomeView") {
+                          print("2");
+                          viewRouteSpeechText = "Pantalla, Mi día";
+                        } else if (widget.viewRoutes[value].toString() ==
+                            "MoreView") {
+                          print("3");
+                          viewRouteSpeechText = "Pantalla, más recursos";
+                        }
+                        _speak(viewRouteSpeechText);
+                      }
+                      widget.pageIndex = value;
+                    })
               ],
             ),
             bottomNavigationBar: bottomVisibility
@@ -180,10 +191,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             floatingActionButton: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                if (buttonAction)
+                if (buttonAction&&showButton)
                   Column(
                     children: [
-                      if (openMenu)
+                      if (openMenu&&showButton)
                         Builder(
                           builder: (context) => FadeInUp(
                             duration: const Duration(milliseconds: 500),
@@ -204,7 +215,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       const SizedBox(
                         height: 10,
                       ),
-                      if (openMenu && !buttonNewNote)
+                      if (openMenu && !buttonNewNote&&showButton)
                         FadeInUp(
                           duration: const Duration(milliseconds: 500),
                           child: FloatingActionButton(
@@ -234,7 +245,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       )
                     ],
                   ),
-                if (buttonMicrophone)
+                if (buttonMicrophone&&showButton)
                   AvatarGlow(
                     endRadius: 70.0,
                     animate: isListeningProv,
@@ -305,6 +316,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 false,
                                 categoy,
                                 DateTime.now(),
+                                DateTime.now(),
                                 Icons.alarm.codePoint.toString())
                             .then((value) {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -337,7 +349,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ),
                     ),
                   ),
-                if (buttonNewNote)
+                if (buttonNewNote&&showButton)
                   AvatarGlow(
                     endRadius: 70.0,
                     animate: true,
@@ -378,7 +390,6 @@ void showNewNote(BuildContext context, category) {
             ],
           ),
           content: const ModalNewNote(),
-
         );
       });
 }
