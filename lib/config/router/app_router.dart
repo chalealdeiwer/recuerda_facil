@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:recuerda_facil/presentations/screens/login/login_2.dart';
 import 'package:recuerda_facil/presentations/screens/screens.dart';
 import 'package:recuerda_facil/presentations/screens/test/alarm.dart';
+import 'package:recuerda_facil/presentations/views/notes/more_view.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/login',
@@ -15,10 +16,7 @@ final GoRouter appRouter = GoRouter(
             pageIndex: int.parse(pageIndex),
           );
         }),
-        GoRoute(
-      path: '/',
-    redirect: (_,__)=>'/home/1'
-    ),
+    GoRoute(path: '/', redirect: (_, __) => '/home/1'),
     GoRoute(
         name: LoginScreen.name,
         path: '/login',
@@ -38,15 +36,34 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
         name: TestScreen.name,
         path: '/test',
-        builder: (context, state) =>  AlarmTest()),
+        builder: (context, state) => const AlarmTest()),
     GoRoute(
         name: CalendarScreen.name,
         path: '/calendar',
         builder: (context, state) => const CalendarScreen()),
     GoRoute(
-        name: MoreScreen.name,
-        path: '/more',
-        builder: (context, state) => const MoreScreen()),
+      
+      path: '/more',
+      builder: (context, state) => const MoreView(),
+      routes: [
+        GoRoute(
+            name: NewsScreen.name,
+            path: 'news',
+            builder: (context, state) => const NewsScreen()),
+        GoRoute(
+            name: GamesScreen.name,
+            path: 'games',
+            builder: (context, state) => const GamesScreen()),
+        GoRoute(
+            name: BoardScreen.name,
+            path: 'boards',
+            builder: (context, state) => const BoardScreen()),
+        GoRoute(
+            name: ProductivityScreen.name,
+            path: 'productivity',
+            builder: (context, state) => const ProductivityScreen()),
+      ],
+    ),
     GoRoute(
         name: AccountScreen.name,
         path: '/account',
@@ -90,7 +107,7 @@ final GoRouter appRouter = GoRouter(
         name: AppearanceScreen.name,
         path: '/appearance',
         builder: (context, state) => const AppearanceScreen()),
-         GoRoute(
+    GoRoute(
         name: MoreFunctionsScreen.name,
         path: '/more_functions',
         builder: (context, state) => const MoreFunctionsScreen()),

@@ -23,32 +23,14 @@ class AppearanceScreen extends ConsumerWidget {
     final bottomVisibility = ref.watch(bottomVisibilityProvider);
     final categoriesVisibility = ref.watch(categoriesVisibilityProvider);
     final appBarVisibility = ref.watch(appBarVisibilityProvider);
-    final buttonMicrophone= ref.watch(buttonMicrophoneVisibilityProvider);
-    final buttonNewNote= ref.watch(buttonNewNoteVisibilityProvider);
-    
+    final buttonMicrophone = ref.watch(buttonMicrophoneVisibilityProvider);
+    final buttonNewNote = ref.watch(buttonNewNoteVisibilityProvider);
 
     final size = MediaQuery.of(context).size;
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        " Tema de aplicación ",
-                        style: textStyle.displaySmall,
-                      ),
-                      const Expanded(child: Divider())
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
             // Padding(
             //   padding: const EdgeInsets.symmetric(horizontal: 20),
             //   child: Row(
@@ -75,197 +57,175 @@ class AppearanceScreen extends ConsumerWidget {
             // ),
 
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Column(
                 children: [
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    // mainAxisSize: MainAxisSize.max,
                     children: [
-                       Text("Modo Oscuro",style: textStyle.titleLarge,),
-                      Switch(
-                        value: isDarkMode,
-                        onChanged: (value) {
-                          ref
-                              .read(themeNotifierProvider.notifier)
-                              .toogleDarkMode();
-                          ref
-                              .read(isDarkmodeProvider.notifier)
-                              .update((darkmode) => !darkmode);
-                        },
+                      Text(
+                        " Tema de aplicación",
+                        style: textStyle.displaySmall,
                       ),
+                      const Expanded(child: Divider())
                     ],
                   ),
-                ],
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    // mainAxisSize: MainAxisSize.max,
-                    children: [
-                       Text("Fondo personalizado",style: textStyle.titleLarge,),
-                      Switch(
-                        value: customBack,
-                        onChanged: (value) {
-                          ref
-                              .read(customBackground.notifier)
-                              .update((customBack) => !customBack);
-                        },
-                      ),
-                    ],
+                  SwitchListTile(
+                    title: Text(
+                      "Modo Oscuro",
+                      style: textStyle.titleLarge,
+                    ),
+                    value: isDarkMode,
+                    onChanged: (value) {
+                      ref.read(themeNotifierProvider.notifier).toogleDarkMode();
+                      ref
+                          .read(isDarkmodeProvider.notifier)
+                          .update((darkmode) => !darkmode);
+                    },
                   ),
-                  Visibility(
-                    visible: customBack,
-                    child: Row(
-                      children: [
-                        const Text("Opacidad"),
-                        Expanded(
-                          child: Slider(
-                            value: opacity,
-                            min: 0.0,
-                            max: 1.0,
-                            onChanged: (newValue) {
-                              ref
-                                  .read(opacityProvider.notifier)
-                                  .updateOpacity(newValue);
-                            },
+                  SwitchListTile(
+                    title: Text(
+                      "Fondo personalizado",
+                      style: textStyle.titleLarge,
+                    ),
+                    value: customBack,
+                    onChanged: (value) {
+                      ref
+                          .read(customBackground.notifier)
+                          .update((customBack) => !customBack);
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal:20.0),
+                    child: Visibility(
+                      visible: customBack,
+                      child: Row(
+                        children: [
+                          Text(
+                            "Opacidad",
+                            style: textStyle.titleLarge,
                           ),
-                        ),
-                      ],
+                          Expanded(
+                            child: Slider(
+                              value: opacity,
+                              min: 0.0,
+                              max: 1.0,
+                              onChanged: (newValue) {
+                                ref
+                                    .read(opacityProvider.notifier)
+                                    .updateOpacity(newValue);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    // mainAxisSize: MainAxisSize.max,
-                    children: [
-                       Text("Barra de funciones",style: textStyle.titleLarge,),
-                      Switch(
-                        value: appBarVisibility,
-                        onChanged: (value) {
-                          ref
-                              .read(appBarVisibilityProvider.notifier)
-                              .update((appBarVisibility) => !appBarVisibility);
-                              ref
-                              .read(buttonActionVisibilityProvider.notifier)
-                              .update((buttonAction) => !buttonAction);
-                        },
-                      ),
-                    ],
+                  SwitchListTile(
+                    title: Text(
+                      "Barra de funciones",
+                      style: textStyle.titleLarge,
+                    ),
+                    value: appBarVisibility,
+                    onChanged: (value) {
+                      ref
+                          .read(appBarVisibilityProvider.notifier)
+                          .update((appBarVisibility) => !appBarVisibility);
+                      ref
+                          .read(buttonActionVisibilityProvider.notifier)
+                          .update((buttonAction) => !buttonAction);
+                    },
                   ),
-                  Visibility(
-                    visible: !appBarVisibility,
-                    child:  Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      // mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Text(
-                            "Se agregará un botón de acción",style: TextStyle(color: colors.error,fontSize: 20),),
-                      ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal:20.0),
+                    child: Visibility(
+                      visible: !appBarVisibility,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        // mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Text(
+                            "Se agregará un botón de acción",
+                            style: TextStyle(color: colors.error, fontSize: 20),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    // mainAxisSize: MainAxisSize.max,
-                    children: [
-                       Text("Selector de categoría",style: textStyle.titleLarge,),
-                      Switch(
-                        value: categoriesVisibility,
-                        onChanged: (value) {
-                          ref
-                              .read(categoriesVisibilityProvider.notifier)
-                              .update((categoriesVisibility) =>
-                                  !categoriesVisibility);
-                          ref
-                              .watch(categoryProvider.notifier)
-                              .update((state) => "Todos");
-                          ref
-                              .watch(indexCategoryProvider.notifier)
-                              .update((state) => 0);
-                        },
-                      ),
-                    ],
+                  SwitchListTile(
+                    title: Text(
+                      "Selector de categoría",
+                      style: textStyle.titleLarge,
+                    ),
+                    value: categoriesVisibility,
+                    onChanged: (value) {
+                      ref.read(categoriesVisibilityProvider.notifier).update(
+                          (categoriesVisibility) => !categoriesVisibility);
+                      ref
+                          .watch(categoryProvider.notifier)
+                          .update((state) => "Todos");
+                      ref
+                          .watch(indexCategoryProvider.notifier)
+                          .update((state) => 0);
+                    },
                   ),
-                  Visibility(
-                    visible: !categoriesVisibility,
-                    child:  Text(
-                        "Los recordatorios nuevos se agregaran a 'Sin Categoría'",style: TextStyle(color: colors.error,fontSize: 20),),
-                  ),
-                  
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    // mainAxisSize: MainAxisSize.max,
-                    children: [
-                       Text("Mensaje de bienvenida",style: textStyle.titleLarge,),
-                      Switch(
-                        value: clockVisibility,
-                        onChanged: (value) {
-                          ref
-                              .read(clockVisibilityProvider.notifier)
-                              .update((clockVisibility) => !clockVisibility);
-                        },
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal:20.0),
+                    child: Visibility(
+                      visible: !categoriesVisibility,
+                      child: Text(
+                        "Los recordatorios nuevos se agregaran a 'Sin Categoría'",
+                        style: TextStyle(color: colors.error, fontSize: 20),
                       ),
-                    ],
+                    ),
                   ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    // mainAxisSize: MainAxisSize.max,
-                    children: [
-                       Text("Botón Comando de Voz",style: textStyle.titleLarge,),
-                      Switch(
-                        value: buttonMicrophone,
-                        onChanged: (value) {
-                          ref
-                              .read(buttonMicrophoneVisibilityProvider.notifier)
-                              .update((buttonMicrophone) => !buttonMicrophone);
-                        },
-                      ),
-                    ],
+                  SwitchListTile(
+                    title: Text(
+                      "Mensaje de bienvenida",
+                      style: textStyle.titleLarge,
+                    ),
+                    value: clockVisibility,
+                    onChanged: (value) {
+                      ref
+                          .read(clockVisibilityProvider.notifier)
+                          .update((clockVisibility) => !clockVisibility);
+                    },
                   ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    // mainAxisSize: MainAxisSize.max,
-                    children: [
-                       Text("Botón de nueva nota",style: textStyle.titleLarge,),
-                      Switch(
-                        value: buttonNewNote,
-                        onChanged: (value) {
-                          ref
-                              .read(buttonNewNoteVisibilityProvider.notifier)
-                              .update((buttonNewNote) => !buttonNewNote);
-                          
-                          
-                        },
-                      ),
-                    ],
+                  SwitchListTile(
+                    title: Text(
+                      "Botón Comando de Voz",
+                      style: textStyle.titleLarge,
+                    ),
+                    value: buttonMicrophone,
+                    onChanged: (value) {
+                      ref
+                          .read(buttonMicrophoneVisibilityProvider.notifier)
+                          .update((buttonMicrophone) => !buttonMicrophone);
+                    },
                   ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    // mainAxisSize: MainAxisSize.max,
-                    children: [
-                       Text("Botones de pantalla",style: textStyle.titleLarge,),
-                      Switch(
-                        value: bottomVisibility,
-                        onChanged: (value) {
-                          ref
-                              .read(bottomVisibilityProvider.notifier)
-                              .update((bottomVisibility) => !bottomVisibility);
-                        },
-                      ),
-                    ],
+                  SwitchListTile(
+                    title: Text(
+                      "Botón de nueva nota",
+                      style: textStyle.titleLarge,
+                    ),
+                    value: buttonNewNote,
+                    onChanged: (value) {
+                      ref
+                          .read(buttonNewNoteVisibilityProvider.notifier)
+                          .update((buttonNewNote) => !buttonNewNote);
+                    },
+                  ),
+                  SwitchListTile(
+                    title: Text(
+                      "Botones de pantalla",
+                      style: textStyle.titleLarge,
+                    ),
+                    value: bottomVisibility,
+                    onChanged: (value) {
+                      ref
+                          .read(bottomVisibilityProvider.notifier)
+                          .update((bottomVisibility) => !bottomVisibility);
+                    },
                   ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -284,9 +244,12 @@ class AppearanceScreen extends ConsumerWidget {
                 ],
               ),
             ),
-
+            
             Center(
               child: Container(
+                decoration: BoxDecoration(
+                    border:
+                        Border.all(color: colors.secondary.withOpacity(0.5))),
                 width: size.width * 0.5,
                 height: size.height * 0.5,
                 child: FittedBox(
@@ -303,14 +266,17 @@ class AppearanceScreen extends ConsumerWidget {
               ),
             ),
 
-             Padding(
+            Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 // mainAxisSize: MainAxisSize.max,
                 children: [
-                  Text("Color de aplicación",style: textStyle.titleLarge,),
+                  Text(
+                    "Color de aplicación",
+                    style: textStyle.titleLarge,
+                  ),
                 ],
               ),
             ),

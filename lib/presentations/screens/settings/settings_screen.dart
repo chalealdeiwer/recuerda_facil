@@ -35,7 +35,7 @@ class SettingsScreen extends ConsumerWidget {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Column(
               children: [
                 Row(
@@ -120,171 +120,143 @@ class SettingsScreen extends ConsumerWidget {
                     const Expanded(child: Divider())
                   ],
                 ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  // mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Text("Activar texto a voz", style: textStyle.titleLarge),
-                    Switch(
-                      value: textToSpeech,
-                      onChanged: (textToSpeech) {
-                        ref
-                            .read(onTestToSpeechProvider.notifier)
-                            .update((textToSpeech) => !textToSpeech);
-                        ref
-                            .read(ttsTitleProvider.notifier)
-                            .update((textToSpeech) => true);
-                        ref
-                            .read(ttsCategoryProvider.notifier)
-                            .update((textToSpeech) => false);
-                        ref
-                            .read(ttsContentProvider.notifier)
-                            .update((textToSpeech) => false);
-                        ref
-                            .read(ttsCategorySelectorProvider.notifier)
-                            .update((textToSpeech) => false);
-
-                        ref
-                            .read(ttsButtonsScreenProvider.notifier)
-                            .update((textToSpeech) => false);
-                        ref
-                            .read(ttsWelcomeMessageProvider.notifier)
-                            .update((textToSpeech) => false);
-                      },
-                    ),
-                  ],
+                SwitchListTile(
+                  title: Text(
+                    "Activar texto a voz",
+                    style: textStyle.titleLarge,
+                  ),
+                  value: textToSpeech,
+                  onChanged: (value) {
+                    ref
+                        .read(onTestToSpeechProvider.notifier)
+                        .update((textToSpeech) => !textToSpeech);
+                    ref
+                        .read(ttsTitleProvider.notifier)
+                        .update((textToSpeech) => true);
+                    ref
+                        .read(ttsCategoryProvider.notifier)
+                        .update((textToSpeech) => false);
+                    ref
+                        .read(ttsContentProvider.notifier)
+                        .update((textToSpeech) => false);
+                    ref
+                        .read(ttsCategorySelectorProvider.notifier)
+                        .update((textToSpeech) => false);
+                    ref
+                        .read(ttsButtonsScreenProvider.notifier)
+                        .update((textToSpeech) => false);
+                    ref
+                        .read(ttsWelcomeMessageProvider.notifier)
+                        .update((textToSpeech) => false);
+                  },
                 ),
                 Visibility(
                   visible: textToSpeech,
                   child: Column(
                     children: [
-                      Text("Para activar la lectura toca el recordatorio",
-                          style: textStyle.titleLarge!
-                              .copyWith(color: colors.error)),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        // mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Text("Título Recordatorio",
-                              style: textStyle.titleLarge),
-                          Switch(
-                            value: ttsTitle,
-                            onChanged: (ttsTitle) {
-                              ref
-                                  .read(ttsTitleProvider.notifier)
-                                  .update((ttsTitle) => !ttsTitle);
-                            },
-                          ),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal:20.0),
+                        child: Text("Para activar la lectura toca el recordatorio",
+                            style: textStyle.titleLarge!
+                                .copyWith(color: colors.error)),
                       ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        // mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Text("Descripción Recordatorio",
-                              style: textStyle.titleLarge),
-                          Switch(
-                            value: ttsContent,
-                            onChanged: (ttsContent) {
-                              ref
-                                  .read(ttsContentProvider.notifier)
-                                  .update((ttsContent) => !ttsContent);
-                            },
-                          ),
-                        ],
+                      SwitchListTile(
+                        title: Text(
+                          "Título Recordatorio",
+                          style: textStyle.titleLarge,
+                        ),
+                        value: ttsTitle,
+                        onChanged: (value) {
+                          ref
+                              .read(ttsTitleProvider.notifier)
+                              .update((ttsTitle) => !ttsTitle);
+                        },
                       ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        // mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Text("Categoría Recordatorio",
-                              style: textStyle.titleLarge),
-                          Switch(
-                            value: ttsCategory,
-                            onChanged: (ttsCategory) {
-                              ref
-                                  .read(ttsCategoryProvider.notifier)
-                                  .update((ttsCategory) => !ttsCategory);
-                            },
-                          ),
-                        ],
+                      SwitchListTile(
+                        title: Text(
+                          "Descripción Recordatorio",
+                          style: textStyle.titleLarge,
+                        ),
+                        value: ttsContent,
+                        onChanged: (value) {
+                          ref
+                              .read(ttsContentProvider.notifier)
+                              .update((ttsContent) => !ttsContent);
+                        },
                       ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        // mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Text("Categoría Selector",
-                              style: textStyle.titleLarge),
-                          Switch(
-                            value: ttsCategorySelector,
-                            onChanged: (ttsCategorySelector) {
-                              ref
-                                  .read(ttsCategorySelectorProvider.notifier)
-                                  .update((ttsCategorySelector) =>
-                                      !ttsCategorySelector);
-                            },
-                          ),
-                        ],
+                      SwitchListTile(
+                        title: Text(
+                          "Categoría Recordatorio",
+                          style: textStyle.titleLarge,
+                        ),
+                        value: ttsCategory,
+                        onChanged: (value) {
+                          ref
+                              .read(ttsCategoryProvider.notifier)
+                              .update((ttsCategory) => !ttsCategory);
+                        },
                       ),
-                      Visibility(
-                          visible: ttsCategorySelector,
-                          child: Text(
-                              "Se escuchará cada vez que se selecciones una categoría",
-                              style: textStyle.titleLarge!
-                                  .copyWith(color: colors.error))),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        // mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Text("Botones de pantalla",
-                              style: textStyle.titleLarge),
-                          Switch(
-                            value: ttsButtonsScreen,
-                            onChanged: (ttsButtonsScreen) {
-                              ref
-                                  .read(ttsButtonsScreenProvider.notifier)
-                                  .update(
-                                      (ttsButtonsScreen) => !ttsButtonsScreen);
-                            },
-                          ),
-                        ],
+                      SwitchListTile(
+                        title: Text(
+                          "Categoría Selector",
+                          style: textStyle.titleLarge,
+                        ),
+                        value: ttsCategorySelector,
+                        onChanged: (value) {
+                          ref.read(ttsCategorySelectorProvider.notifier).update(
+                              (ttsCategorySelector) => !ttsCategorySelector);
+                        },
                       ),
-                      Visibility(
-                          visible: ttsButtonsScreen,
-                          child: Text(
-                              "Se escuchará cada vez que cambies de pantalla",
-                              style: textStyle.titleLarge!
-                                  .copyWith(color: colors.error))),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        // mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Text("Mensaje de bienvenida",
-                              style: textStyle.titleLarge),
-                          Switch(
-                            value: ttsWelcomeMessage,
-                            onChanged: (ttsWelcomeMessage) {
-                              ref
-                                  .read(ttsWelcomeMessageProvider.notifier)
-                                  .update((ttsWelcomeMessage) =>
-                                      !ttsWelcomeMessage);
-                            },
-                          ),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Visibility(
+                            visible: ttsCategorySelector,
+                            child: Text(
+                                "Se escuchará cada vez que se selecciones una categoría",
+                                style: textStyle.titleLarge!
+                                    .copyWith(color: colors.error))),
                       ),
-                      Visibility(
-                          visible: ttsWelcomeMessage,
-                          child: Text(
-                              "Para escuchar, toca el mensaje de bienvenida",
-                              style: textStyle.titleLarge!
-                                  .copyWith(color: colors.error))),
+                      SwitchListTile(
+                        title: Text(
+                          "Botones de pantalla",
+                          style: textStyle.titleLarge,
+                        ),
+                        value: ttsButtonsScreen,
+                        onChanged: (value) {
+                          ref
+                              .read(ttsButtonsScreenProvider.notifier)
+                              .update((ttsButtonsScreen) => !ttsButtonsScreen);
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal:20.0),
+                        child: Visibility(
+                            visible: ttsButtonsScreen,
+                            child: Text(
+                                "Se escuchará cada vez que cambies de pantalla",
+                                style: textStyle.titleLarge!
+                                    .copyWith(color: colors.error))),
+                      ),
+                      SwitchListTile(
+                        title: Text(
+                          "Mensaje de bienvenida",
+                          style: textStyle.titleLarge,
+                        ),
+                        value: ttsWelcomeMessage,
+                        onChanged: (value) {
+                          ref.read(ttsWelcomeMessageProvider.notifier).update(
+                              (ttsWelcomeMessage) => !ttsWelcomeMessage);
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Visibility(
+                            visible: ttsWelcomeMessage,
+                            child: Text(
+                                "Para escuchar, toca el mensaje de bienvenida",
+                                style: textStyle.titleLarge!
+                                    .copyWith(color: colors.error))),
+                      ),
                     ],
                   ),
                 ),

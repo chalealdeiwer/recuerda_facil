@@ -1,4 +1,6 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class MoreView extends StatelessWidget {
   const MoreView({super.key});
@@ -34,56 +36,70 @@ class MoreView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: colors.primary.withOpacity(0.2),
-                      ),
-                      width: 150,
-                      height: 150,
-                      child: Column(
-                        children: [
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          const Icon(
-                            Icons.newspaper,
-                            size: 100,
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            "Noticias",
-                            style: textStyle.titleLarge,
-                          )
-                        ],
+                    GestureDetector(
+                      onTap: () {
+                        context.push('/more/news');
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: colors.primary.withOpacity(0.2),
+                        ),
+                        width: 150,
+                        height: 150,
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            FadeInLeft(
+                              child: const Icon(
+                                Icons.newspaper,
+                                size: 100,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "Noticias",
+                              style: textStyle.titleLarge,
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: colors.primary.withOpacity(0.2),
-                      ),
-                      width: 150,
-                      height: 150,
-                      child: Column(
-                        children: [
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          const Icon(
-                            Icons.gamepad_outlined,
-                            size: 100,
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            "Mini juegos",
-                            style: textStyle.titleLarge,
-                          )
-                        ],
+                    GestureDetector(
+                      onTap: () {
+                        context.push('/more/games');
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: colors.primary.withOpacity(0.2),
+                        ),
+                        width: 150,
+                        height: 150,
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            FadeInRight(
+                              child: const Icon(
+                                Icons.gamepad_outlined,
+                                size: 100,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "Mini juegos",
+                              style: textStyle.titleLarge,
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -95,50 +111,60 @@ class MoreView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: colors.primary.withOpacity(0.2),
-                      ),
-                      width: 150,
-                      height: 150,
-                      child: Column(
-                        children: [
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          const Icon(Icons.table_view, size: 100),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            "Tableros",
-                            style: textStyle.titleLarge,
-                          )
-                        ],
+                    GestureDetector(
+                      onTap:() {
+                        context.push('/more/boards');
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: colors.primary.withOpacity(0.2),
+                        ),
+                        width: 150,
+                        height: 150,
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            FadeInLeft(child: const Icon(Icons.table_view, size: 100)),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "Tableros",
+                              style: textStyle.titleLarge,
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: colors.primary.withOpacity(0.2),
-                      ),
-                      width: 150,
-                      height: 150,
-                      child: Column(
-                        children: [
-                          const SizedBox(
-                            height: 10,
-                          ),
-                        const Icon(Icons.timer, size: 100),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            "Productividad",
-                            style: textStyle.titleLarge,
-                          )
-                        ],
+                    GestureDetector(
+                      onTap:(){
+                        context.push('/more/productivity');
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: colors.primary.withOpacity(0.2),
+                        ),
+                        width: 150,
+                        height: 150,
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            FadeInRight(child: const Icon(Icons.timer, size: 100)),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "Productividad",
+                              style: textStyle.titleLarge,
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ],
