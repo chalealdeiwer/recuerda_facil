@@ -1,7 +1,5 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:avatar_glow/avatar_glow.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,12 +9,8 @@ import 'package:recuerda_facil/config/notes/app_notes.dart';
 import 'package:recuerda_facil/presentations/views/notes/calendar_view.dart';
 import 'package:recuerda_facil/presentations/views/notes/home_view.dart';
 import 'package:recuerda_facil/presentations/views/notes/more_view.dart';
-import 'package:recuerda_facil/presentations/widgets/categories_selector.dart';
-import 'package:recuerda_facil/presentations/widgets/clock_home.dart';
-import 'package:recuerda_facil/presentations/widgets/side_menu.dart';
 import 'package:recuerda_facil/presentations/widgets/widgets.dart';
 import 'package:recuerda_facil/services/permissions.dart';
-import 'package:recuerda_facil/presentations/widgets/modal_new_note.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 import '../../providers/providers.dart';
@@ -59,17 +53,39 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     await flutterTts.speak(text);
   }
 
+  void notPermissions() async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            "Información",
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          ),
+          content: const Text("No se concedieron permisos"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                context.pop(); // Cierra el AlertDialog
+              },
+              child: const Text('Cerrar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isListeningProv = ref.watch(isListeningProvider);
     final textProv = ref.watch(textProvider);
     final user = ref.watch(userProvider);
-    final categoy = ref.watch(categoryProvider);
+    final category = ref.watch(categoryProvider);
     final isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
     final scaffoldKey = GlobalKey<ScaffoldState>();
     final AppNotes noteProvider = ref.watch(noteNotifierProvider);
     final colors = Theme.of(context).colorScheme;
-    final size = MediaQuery.of(context).size;
     final customBack = ref.watch(customBackground);
     final opacity = ref.watch(opacityProvider);
     final bottomVisibility = ref.watch(bottomVisibilityProvider);
@@ -78,9 +94,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final buttonAction = ref.watch(buttonActionVisibilityProvider);
     final ttsButtonsScreen = ref.watch(ttsButtonsScreenProvider);
     final openMenu = ref.watch(openMenuProvider);
-    final showButton=ref.watch(buttonPageChangeProvider);
+    final showButton = ref.watch(buttonPageChangeProvider);
     String viewRouteSpeechText = "";
-    PageController _pageController = PageController(
+    PageController pageController = PageController(
       initialPage: widget.pageIndex,
       keepPage: true,
     );
@@ -139,8 +155,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         decoration: const BoxDecoration(
                           color: Colors.black,
                           image: DecorationImage(
-                            image: NetworkImage(
-                                'https://images.unsplash.com/photo-1537824598505-99ee03483384?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8NXx8fGVufDB8fHx8fA%3D%3D&w=1000&q=80'), // Cambia la URL por la de tu imagen
+                            image: AssetImage(
+                                "assets/backgrounds/background_5.jpg"),
                             fit: BoxFit
                                 .cover, // Esto hará que la imagen cubra toda la pantalla
                           ),
@@ -152,31 +168,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 //     index: widget.pageIndex, children: widget.viewRoutes),
 
                 PageView(
-                    controller: _pageController,
+                    controller: pageController,
                     children: widget.viewRoutes,
                     onPageChanged: (value) {
                       if (value == 1) {
-                        ref.read(buttonPageChangeProvider.notifier).update(
-                            (showButton) => true)
-                            ;
+                        ref
+                            .read(buttonPageChangeProvider.notifier)
+                            .update((showButton) => true);
                       } else {
-                        ref.read(buttonPageChangeProvider.notifier).update(
-                            (showButton) => false)
-                            ;
+                        ref
+                            .read(buttonPageChangeProvider.notifier)
+                            .update((showButton) => false);
                       }
 
                       if (ttsButtonsScreen) {
                         if (widget.viewRoutes[value].toString() ==
                             "CalendarView") {
-                          print("1");
                           viewRouteSpeechText = "Pantalla, calendario";
                         } else if (widget.viewRoutes[value].toString() ==
                             "HomeView") {
-                          print("2");
                           viewRouteSpeechText = "Pantalla, Mi día";
                         } else if (widget.viewRoutes[value].toString() ==
                             "MoreView") {
-                          print("3");
                           viewRouteSpeechText = "Pantalla, más recursos";
                         }
                         _speak(viewRouteSpeechText);
@@ -191,10 +204,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             floatingActionButton: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                if (buttonAction&&showButton)
+                if (buttonAction && showButton)
                   Column(
                     children: [
-                      if (openMenu&&showButton)
+                      if (openMenu && showButton)
                         Builder(
                           builder: (context) => FadeInUp(
                             duration: const Duration(milliseconds: 500),
@@ -215,13 +228,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       const SizedBox(
                         height: 10,
                       ),
-                      if (openMenu && !buttonNewNote&&showButton)
+                      if (openMenu && !buttonNewNote && showButton)
                         FadeInUp(
                           duration: const Duration(milliseconds: 500),
                           child: FloatingActionButton(
                             heroTag: null,
                             onPressed: () {
-                              showNewNote(context, categoy);
+                              showNewNote(context, category, user!.uid);
                             },
                             child: const Icon(Icons.add),
                           ),
@@ -245,7 +258,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       )
                     ],
                   ),
-                if (buttonMicrophone&&showButton)
+                if (buttonMicrophone && showButton)
                   AvatarGlow(
                     endRadius: 70.0,
                     animate: isListeningProv,
@@ -265,48 +278,32 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   .update((isListening) => !isListening);
                               widget.speech.listen(
                                 onResult: (result) {
+                                  
                                   ref.read(textProvider.notifier).update(
                                       (state) => result.recognizedWords);
                                 },
                               );
                             } else {
-                              print(
-                                  "The user has denied the use of speech recognition.");
+                              // print(
+                              //     "The user has denied the use of speech recognition.");
                             }
                             // some time later...
                           }
                         } else {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text(
-                                  "Información",
-                                  style: TextStyle(
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                content:
-                                    const Text("No se concedieron permisos"),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      context.pop(); // Cierra el AlertDialog
-                                    },
-                                    child: const Text('Cerrar'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
+                          notPermissions();
+                          return;
                         }
                       },
                       onTapUp: (details) async {
+                        if(isListeningProv==false) return;
                         ref
                             .read(isListeningProvider.notifier)
                             .update((isListening) => !isListening);
 
                         widget.speech.stop();
+                        if(textProv=="") return;
+                        if(textProv=="cancelar") return;
+                        if(textProv=="Mantén presionado el botón para iniciar el reconocimiento de voz") return;
                         await noteProvider
                             .addNote(
                                 textProv,
@@ -314,11 +311,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 user!.uid,
                                 DateTime.now(),
                                 false,
-                                categoy,
-                                DateTime.now(),
-                                DateTime.now(),
+                                category,
+                                DateTime(1,1,1,0,0),
+                                DateTime(1,1,1,0,0),
+                                
                                 Icons.alarm.codePoint.toString())
                             .then((value) {
+                          ref
+                              .read(textProvider.notifier)
+                              .update((state) => "Mantén presionado el botón para iniciar el reconocimiento de voz");
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               duration: const Duration(milliseconds: 2000),
                               action: SnackBarAction(
@@ -331,7 +332,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "¡Recordatorio agregado correctamente!",
+                                    "¡Recordatorio agregado!",
                                     style: TextStyle(color: Colors.black),
                                   ),
                                   Icon(Icons.add_alert_sharp)
@@ -349,7 +350,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ),
                     ),
                   ),
-                if (buttonNewNote&&showButton)
+                if (buttonNewNote && showButton)
                   AvatarGlow(
                     endRadius: 70.0,
                     animate: true,
@@ -360,7 +361,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     showTwoGlows: true,
                     child: FloatingActionButton(
                       onPressed: () {
-                        showNewNote(context, categoy);
+                        showNewNote(context, category, user!.uid);
                       },
                       backgroundColor: colors.primary.withOpacity(0.8),
                       child: Icon(
@@ -374,7 +375,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 }
 
-void showNewNote(BuildContext context, category) {
+void showNewNote(BuildContext context, category, user) {
   showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -389,7 +390,7 @@ void showNewNote(BuildContext context, category) {
                 )
             ],
           ),
-          content: const ModalNewNote(),
+          content: ModalNewNote(user: user),
         );
       });
 }

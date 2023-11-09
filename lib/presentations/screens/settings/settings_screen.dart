@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:recuerda_facil/presentations/screens/home/home_screen.dart';
 import 'package:recuerda_facil/services/notification_service.dart';
 import 'package:recuerda_facil/services/permissions.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 import '../../providers/providers.dart';
 
@@ -135,19 +133,19 @@ class SettingsScreen extends ConsumerWidget {
                         .update((textToSpeech) => true);
                     ref
                         .read(ttsCategoryProvider.notifier)
-                        .update((textToSpeech) => false);
+                        .update((textToSpeech) => true);
                     ref
                         .read(ttsContentProvider.notifier)
-                        .update((textToSpeech) => false);
+                        .update((textToSpeech) => true);
                     ref
                         .read(ttsCategorySelectorProvider.notifier)
-                        .update((textToSpeech) => false);
+                        .update((textToSpeech) => true);
                     ref
                         .read(ttsButtonsScreenProvider.notifier)
-                        .update((textToSpeech) => false);
+                        .update((textToSpeech) => true);
                     ref
                         .read(ttsWelcomeMessageProvider.notifier)
-                        .update((textToSpeech) => false);
+                        .update((textToSpeech) => true);
                   },
                 ),
                 Visibility(

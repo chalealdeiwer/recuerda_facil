@@ -1,8 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final onTestToSpeechProvider = StateProvider<bool>((ref) {
-  return false ;
-});
+final onTestToSpeechProvider = StateProvider((ref) => false);
 final ttsTitleProvider= StateProvider((ref) => false);
 final ttsContentProvider= StateProvider((ref) => false);
 final ttsCategoryProvider= StateProvider((ref) => false);

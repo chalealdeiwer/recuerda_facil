@@ -37,7 +37,6 @@ class _CustomBottomNavigationState
   @override
   Widget build(BuildContext context) {
     String viewRouteSpeechText = "";
-    final buttonPageChange = ref.watch(buttonPageChangeProvider);
     final colors = Theme.of(context).colorScheme;
     final ttsButtonsScreen = ref.watch(ttsButtonsScreenProvider);
 

@@ -1,20 +1,19 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final textProvider = StateProvider<String>((ref) => 'Mantén presionado el botón para iniciar el reconocimiento de voz');
 final isListeningProvider = StateProvider<bool>((ref) => false);
 
-final miStreamProvider = StreamProvider.autoDispose<List>((ref) {
-  final container = ProviderContainer();
-  ref.onDispose(() {
-    container.dispose();
-  });
+// final miStreamProvider = StreamProvider.autoDispose<List>((ref) {
+//   final container = ProviderContainer();
+//   ref.onDispose(() {
+//     container.dispose();
+//   });
 
-  return container.read(getNotesStreamProvider(FirebaseAuth.instance.currentUser!.uid.toString(), "Sin Categoría"));
-});
+//   return container.read(getNotesStreamProvider(FirebaseAuth.instance.currentUser!.uid.toString(), "Sin Categoría"));
+// });
 
 Provider<Stream<List>> getNotesStreamProvider(String user, String category) {
   return Provider<Stream<List>>((ref) {
@@ -28,8 +27,8 @@ Provider<Stream<List>> getNotesStreamProvider(String user, String category) {
       .snapshots()
       .listen((querySnapshot) {
         List notes = [];
-        querySnapshot.docs.forEach((element) {
-          final data = element.data() as Map<String, dynamic>;
+        for (var element in querySnapshot.docs) {
+          final data = element.data();
           final Timestamp timestamp = data['date_create'];
           final Timestamp timestamp2 = data['date_finish'];
           final datec = timestamp.toDate();
@@ -45,7 +44,7 @@ Provider<Stream<List>> getNotesStreamProvider(String user, String category) {
             "category": data['category']
           };
           notes.add(note);
-        });
+        }
         controller.add(notes);
       });
 

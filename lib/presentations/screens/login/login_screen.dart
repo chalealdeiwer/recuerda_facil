@@ -5,7 +5,6 @@ import 'package:flutter_signin_button/button_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:recuerda_facil/presentations/screens/home/home_screen.dart';
-import 'package:recuerda_facil/services/user_services.dart';
 
 class LoginScreen extends StatefulWidget {
   static const  name="login_screen";
@@ -31,7 +30,7 @@ class LoginScreenState extends State<LoginScreen> {
         }
         if(snapshot.connectionState==ConnectionState.active){
           if(snapshot.data==null){
-            return logiin();
+            return login2();
           }
           else{
             // return LoginPage();
@@ -47,7 +46,7 @@ class LoginScreenState extends State<LoginScreen> {
     
   }
 
-  Widget logiin(){
+  Widget login2(){
     return Scaffold(
       body: Column(
         mainAxisSize: MainAxisSize.max,
@@ -81,16 +80,16 @@ class LoginScreenState extends State<LoginScreen> {
             padding: const EdgeInsets.all(8),
             child: formulario(),
           ),
-          botonLogin(),
+          buttonLogin(),
           newUser(),
           buildOrLine(),
-          BotonesGoogle()
+          buttonsGoogle()
         ],
       ),
     );
   }
 
-  Widget BotonesGoogle() {
+  Widget buttonsGoogle() {
     return Column(
       children: [
         SignInButton(
@@ -160,20 +159,20 @@ class LoginScreenState extends State<LoginScreen> {
         key: _formkey,
         child: Column(
           children: [
-            builEmail(),
+            buildEmail(),
             const Padding(padding: EdgeInsets.only(top: 12)),
-            builPassword()
+            buildPassword()
           ],
         ));
   }
 
-  Widget builEmail() {
+  Widget buildEmail() {
     return TextFormField(
       decoration: InputDecoration(
           labelText: "Correo",
           border: OutlineInputBorder(
-              borderRadius: new BorderRadius.circular(8),
-              borderSide: new BorderSide(color: Colors.black))),
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.black))),
       keyboardType: TextInputType.emailAddress,
       validator: (value) {
         if (value!.isEmpty) {
@@ -187,13 +186,13 @@ class LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget builPassword() {
+  Widget buildPassword() {
     return TextFormField(
       decoration: InputDecoration(
           labelText: "Contraseña",
           border: OutlineInputBorder(
-              borderRadius: new BorderRadius.circular(8),
-              borderSide: new BorderSide(color: Colors.black))),
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.black))),
       obscureText: true,
       validator: (value) {
         if (value!.isEmpty) {
@@ -207,7 +206,7 @@ class LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget botonLogin() {
+  Widget buttonLogin() {
     return FractionallySizedBox(
       widthFactor: 0.6,
       child: ElevatedButton(
@@ -218,10 +217,7 @@ class LoginScreenState extends State<LoginScreen> {
               if (credenciales != null) {
                 if (credenciales.user != null) {
                   if (credenciales.user!.emailVerified) {
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomeScreen(pageIndex: 0,)),
-                        (route) => false);
+                    
                   } else {
                     setState(() {
                       error = "Debes verificar tu correo antes de acceder";
@@ -254,6 +250,7 @@ class LoginScreenState extends State<LoginScreen> {
         });
       }
     }
+    return null;
   }
 
 }

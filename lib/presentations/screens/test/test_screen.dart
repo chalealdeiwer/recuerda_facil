@@ -6,6 +6,8 @@ import '../../providers/providers.dart';
 class TestScreen extends ConsumerWidget {
   static const name = 'test_screen';
 
+  const TestScreen({super.key});
+
   @override
   Widget build(BuildContext context,  ref) {
     final connectionStatus = ref.watch(connectionStatusProvider).state;

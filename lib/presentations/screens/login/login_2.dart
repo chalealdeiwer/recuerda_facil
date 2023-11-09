@@ -18,7 +18,6 @@ class Login2Screen extends ConsumerStatefulWidget {
 }
 
 class _Login2ScreenState extends ConsumerState<Login2Screen> {
-  @override
   late String email, password;
   final _formkey = GlobalKey<FormState>();
   String error = '';
@@ -29,16 +28,16 @@ class _Login2ScreenState extends ConsumerState<Login2Screen> {
 
   }
 
+  @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
-    final  size = MediaQuery.of(context).size;
 
 
     // Usa el método watch directamente dentro del método build
-    return user != null ? HomeScreen(pageIndex: 1,) : logiin(user);
+    return user != null ? HomeScreen(pageIndex: 1,) : login(user);
   }
 
-  Widget logiin(User? user) {
+  Widget login(User? user) {
     final isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
     final colors = Theme.of(context).colorScheme;
     return Scaffold(
@@ -124,7 +123,7 @@ class _Login2ScreenState extends ConsumerState<Login2Screen> {
               padding: const EdgeInsets.all(8),
               child: formulario(),
             ),
-            botonLogin(),
+            buttonLogin(),
             buildOrLine(),
             buttonGoogle(),
             const Padding(
@@ -142,7 +141,7 @@ class _Login2ScreenState extends ConsumerState<Login2Screen> {
     );
   }
 
-  Widget botonLogin() {
+  Widget buttonLogin() {
     return FractionallySizedBox(
       widthFactor: 0.6,
       child: FilledButton(
@@ -243,7 +242,6 @@ class _Login2ScreenState extends ConsumerState<Login2Screen> {
             
             Buttons.Google, onPressed: () async {
           ref.read(userProvider.notifier).signInWithGoogle();
-          final user = ref.watch(userProvider);
 
           // if (user!= null) {
           //   if( await searchUserUid(user.uid)){
@@ -270,22 +268,22 @@ class _Login2ScreenState extends ConsumerState<Login2Screen> {
         key: _formkey,
         child: Column(
           children: [
-            builEmail(),
+            buildEmail(),
             const Padding(padding: EdgeInsets.only(top: 12)),
-            builPassword()
+            buildPassword()
           ],
         ));
   }
 
-  Widget builEmail() {
+  Widget buildEmail() {
     return TextFormField(
       style: const TextStyle(fontSize: 30) ,
       decoration:  InputDecoration(
           labelText: "Correo",
           labelStyle: const TextStyle(fontSize: 25),
           border: OutlineInputBorder(
-              borderRadius: new BorderRadius.circular(8),
-              borderSide: new BorderSide(color: Colors.black)
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.black)
               )
               ),
       keyboardType: TextInputType.emailAddress,
@@ -301,7 +299,7 @@ class _Login2ScreenState extends ConsumerState<Login2Screen> {
     );
   }
 
-  Widget builPassword() {
+  Widget buildPassword() {
     return TextFormField(
       style: const TextStyle(fontSize: 30),
       decoration: InputDecoration(
@@ -309,8 +307,8 @@ class _Login2ScreenState extends ConsumerState<Login2Screen> {
           labelStyle: const TextStyle(fontSize: 25),
 
           border: OutlineInputBorder(
-              borderRadius: new BorderRadius.circular(8),
-              borderSide: new BorderSide(color: Colors.black))),
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.black))),
       obscureText: true,
       validator: (value) {
         if (value!.isEmpty) {

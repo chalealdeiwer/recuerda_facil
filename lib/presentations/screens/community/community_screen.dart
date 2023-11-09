@@ -1,9 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:recuerda_facil/config/notes/app_notes.dart';
 import 'package:recuerda_facil/models/user_account.dart';
-import 'package:recuerda_facil/presentations/providers/notes_provider2.dart';
 import 'package:recuerda_facil/services/user_services.dart';
 
 import '../../providers/user_provider.dart';
@@ -76,7 +73,7 @@ class _TestScreenState extends ConsumerState<CommunityScreen> {
                           title: Text(user.displayName ?? 'Sin nombre',style: textStyle.titleLarge,),
 
                           subtitle: (user.uid == userActive!.uid.toString())
-                              ? Text("Tú (${user.email})" ?? 'Sin email',style: textStyle.titleMedium,)
+                              ? Text("Tú (${user.email})",style: textStyle.titleMedium,)
                               : const Text(""),
 
                           // subtitle: Text(user['email'] ?? 'Sin email'),
@@ -88,6 +85,7 @@ class _TestScreenState extends ConsumerState<CommunityScreen> {
               ),
             ),
           ],
-        ));
+        )
+        );
   }
 }

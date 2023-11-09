@@ -4,14 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:recuerda_facil/config/notes/app_notes.dart';
-import 'package:recuerda_facil/services/user_services.dart';
 
-import '../providers/notes_provider2.dart';
 import '../providers/providers.dart';
 
 class ModalNewNote extends ConsumerStatefulWidget {
+  final String user;
   const ModalNewNote({
     super.key,
+    required this.user,
   });
 
   @override
@@ -67,12 +67,12 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
                             child: const Text("Sin fecha")),
                       dateButton(context, "Hoy", DateTime.now()),
                       dateButton(context, "Mañana",
-                          DateTime.now().add(Duration(days: 1))),
+                          DateTime.now().add(const Duration(days: 1))),
                       dateButton(context, "En 3 días",
-                          DateTime.now().add(Duration(days: 3))),
+                          DateTime.now().add(const Duration(days: 3))),
                       dateButton(
                           context, "Este sábado", nextSaturday(DateTime.now())),
-                          dateButton(
+                      dateButton(
                           context, "Este domingo", nextSunday(DateTime.now())),
                       dateButton(
                           context, "Próximo lunes", nextMonday(DateTime.now())),
@@ -121,22 +121,28 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
   }
 
   DateTime nextSaturday(DateTime date) {
-  int daysUntilSaturday = (DateTime.saturday - date.weekday + 7) % 7;
-  daysUntilSaturday = daysUntilSaturday == 0 ? 7 : daysUntilSaturday; // Si hoy es sábado, se selecciona el próximo sábado
-  return date.add(Duration(days: daysUntilSaturday));
-}
+    int daysUntilSaturday = (DateTime.saturday - date.weekday + 7) % 7;
+    daysUntilSaturday = daysUntilSaturday == 0
+        ? 7
+        : daysUntilSaturday; // Si hoy es sábado, se selecciona el próximo sábado
+    return date.add(Duration(days: daysUntilSaturday));
+  }
 
-DateTime nextSunday(DateTime date) {
-  int daysUntilSunday = (DateTime.sunday - date.weekday + 7) % 7;
-  daysUntilSunday = daysUntilSunday == 0 ? 7 : daysUntilSunday; // Si hoy es domingo, se selecciona el próximo domingo
-  return date.add(Duration(days: daysUntilSunday));
-}
+  DateTime nextSunday(DateTime date) {
+    int daysUntilSunday = (DateTime.sunday - date.weekday + 7) % 7;
+    daysUntilSunday = daysUntilSunday == 0
+        ? 7
+        : daysUntilSunday; // Si hoy es domingo, se selecciona el próximo domingo
+    return date.add(Duration(days: daysUntilSunday));
+  }
 
-DateTime nextMonday(DateTime date) {
-  int daysUntilMonday = (DateTime.monday - date.weekday + 7) % 7;
-  daysUntilMonday = daysUntilMonday == 0 ? 7 : daysUntilMonday; // Si hoy es lunes, se selecciona el próximo lunes
-  return date.add(Duration(days: daysUntilMonday));
-}
+  DateTime nextMonday(DateTime date) {
+    int daysUntilMonday = (DateTime.monday - date.weekday + 7) % 7;
+    daysUntilMonday = daysUntilMonday == 0
+        ? 7
+        : daysUntilMonday; // Si hoy es lunes, se selecciona el próximo lunes
+    return date.add(Duration(days: daysUntilMonday));
+  }
 
   Widget dateButton(BuildContext context, String label, DateTime date) {
     return OutlinedButton(
@@ -190,7 +196,6 @@ DateTime nextMonday(DateTime date) {
                       hourButton(context, '6:00 PM', 18, 0),
                       hourButton(context, '7:00 PM', 19, 0),
 
-
                       // Agrega más opciones predeterminadas según sea necesario
                     ],
                   ),
@@ -241,44 +246,10 @@ DateTime nextMonday(DateTime date) {
     );
   }
 
-  // void getCategories() async {
-  //   final categoriess = await getUserCategories(currentUserUID);
-  //   if (mounted) {
-
-  //       userCategories = categoriess;
-
-  //   }
-  // }
-
-  // Widget categories() {
-  //   getCategories();
-  //   return Column(
-  //     children: <Widget>[
-  //       DropdownButton<String>(
-  //         value: selectedCategory,
-  //         onChanged: (String? newValue) {
-
-  //             selectedCategory = newValue!;
-  //             print(selectedCategory);
-
-  //           selectedCategory = newValue!;
-  //         },
-  //         items: userCategories.map((String category) {
-  //           return DropdownMenuItem<String>(
-  //             value: category,
-  //             child: Text(category),
-  //           );
-  //         }).toList(),
-  //       ),
-  //     ],
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     final AppNotes noteProvider = ref.watch(noteNotifierProvider);
-    final categoy = ref.watch(categoryProvider);
-    
+    final category = ref.watch(categoryProvider);
 
     return Form(
       key: _formKey,
@@ -366,22 +337,22 @@ DateTime nextMonday(DateTime date) {
                             0, // Si hourInput es null, se usará el minuto 0
                       );
                       if (_formKey.currentState!.validate()) {
+                        
                         await noteProvider
                             .addNote(
                                 _titleController.text,
                                 _contentController.text,
-                                FirebaseAuth.instance.currentUser!.uid
-                                    .toString(),
+                                widget.user,
                                 DateTime.now(),
                                 false,
-                                categoy,
+                                category,
                                 DateTime(1, 1, 1, 0, 0),
                                 combinedDateTime,
                                 Icons.note.codePoint.toString())
                             .then((value) => {
-                              ref.refresh(remindersProvider(currentUserUID)),
-                                  if(mounted)
-                                  context.pop(),
+                                  if (mounted) context.pop(),
+                                  ref.refresh(
+                                      remindersProvider(currentUserUID)),
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                           action: SnackBarAction(
@@ -402,7 +373,7 @@ DateTime nextMonday(DateTime date) {
                                             children: [
                                               Icon(Icons.add_alert_sharp),
                                               Text(
-                                                "¡Recordatorio agregado correctamente!",
+                                                "¡Recordatorio agregado!",
                                                 style: TextStyle(
                                                     color: Colors.black),
                                               ),

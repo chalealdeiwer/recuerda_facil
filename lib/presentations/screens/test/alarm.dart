@@ -1,4 +1,3 @@
-import 'dart:isolate';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
@@ -7,15 +6,15 @@ import '../../../services/services.dart';
 
 @pragma('vm:entry-point')
 void printHello() {
-  final DateTime now = DateTime.now();
-  final int isolateId = Isolate.current.hashCode;
-  print("[$now] Hola mundo! isolate=${isolateId} function='$printHello'");
+  // final DateTime now = DateTime.now();
+  // final int isolateId = Isolate.current.hashCode;
+  // print("[$now] Hola mundo! isolate=$isolateId function='$printHello'");
   showNotification2("Tomar agua todos los días");
 }
 void primeraAlarma() {
-  final DateTime now = DateTime.now();
-  final int isolateId = Isolate.current.hashCode;
-  print("[$now] Hola mundo! isolate=${isolateId} function='$printHello'");
+  // final DateTime now = DateTime.now();
+  // final int isolateId = Isolate.current.hashCode;
+  // print("[$now] Hola mundo! isolate=$isolateId function='$printHello'");
   showNotification2("Mi segunda alarma xd");
   showNotificationWithImage();
 }
@@ -49,8 +48,6 @@ class AlarmTest extends StatelessWidget {
           children: [
             TextButton(
                 onPressed: () async {
-                  print("se activo la alarma");
-                  final int helloAlarmID = 0;
                   // await AndroidAlarmManager.periodic(
                   //     const Duration(seconds: 5), helloAlarmID, printHello);
                   await AndroidAlarmManager.oneShot(
@@ -66,7 +63,7 @@ class AlarmTest extends StatelessWidget {
                 },
 
                 child: const Text("alarma")),
-                DateTimePickerWidget()
+                const DateTimePickerWidget()
           ],
         ),
       ),
@@ -75,11 +72,13 @@ class AlarmTest extends StatelessWidget {
 }
 
 class DateTimePickerWidget extends StatefulWidget {
+  const DateTimePickerWidget({super.key});
+
   @override
-  _DateTimePickerWidgetState createState() => _DateTimePickerWidgetState();
+  DateTimePickerWidgetState createState() => DateTimePickerWidgetState();
 }
 
-class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
+class DateTimePickerWidgetState extends State<DateTimePickerWidget> {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
 
@@ -90,10 +89,11 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
-    if (pickedDate != null && pickedDate != selectedDate)
+    if (pickedDate != null && pickedDate != selectedDate) {
       setState(() {
         selectedDate = pickedDate;
       });
+    }
   }
 
   Future<void> _selectTime(BuildContext context) async {
@@ -101,10 +101,11 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
       context: context,
       initialTime: selectedTime,
     );
-    if (pickedTime != null && pickedTime != selectedTime)
+    if (pickedTime != null && pickedTime != selectedTime) {
       setState(() {
         selectedTime = pickedTime;
       });
+    }
   }
 
   @override
@@ -115,7 +116,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
         ListTile(
           title: Text(
               "${selectedDate.toLocal().toString().split(' ')[0]} ${selectedTime.format(context)}"),
-          trailing: Icon(Icons.calendar_today),
+          trailing: const Icon(Icons.calendar_today),
           onTap: () async {
             await _selectDate(context);
             await _selectTime(context);
@@ -137,7 +138,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
 }
 void programNotification(DateTime targetTime) async {
     final initialDuration = targetTime.isBefore(DateTime.now())
-        ? targetTime.add(Duration(days: 1)).difference(DateTime.now())
+        ? targetTime.add(const Duration(days: 1)).difference(DateTime.now())
         : targetTime.difference(DateTime.now());
   
     await AndroidAlarmManager.oneShot(

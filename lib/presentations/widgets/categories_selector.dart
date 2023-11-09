@@ -6,9 +6,10 @@ import 'package:go_router/go_router.dart';
 import 'package:recuerda_facil/presentations/providers/providers.dart';
 import 'package:recuerda_facil/services/user_services.dart';
 
-import '../providers/user_account_provider.dart';
 
 class CategorySelector extends ConsumerStatefulWidget {
+  const CategorySelector({super.key});
+
   @override
   ConsumerState<CategorySelector> createState() => _CategorySelectorState();
 }
@@ -29,7 +30,9 @@ class _CategorySelectorState extends ConsumerState<CategorySelector> {
 
   @override
   Widget build(BuildContext context) {
+    
     final user = ref.watch(userProvider);
+    
     final userAcc = ref.watch(userProviderr(user!.uid));
     final ttsCategorySelector = ref.watch(ttsCategorySelectorProvider);
     final List<String> categories;
@@ -47,11 +50,13 @@ class _CategorySelectorState extends ConsumerState<CategorySelector> {
     int selectedIndex = ref.watch(indexCategoryProvider.notifier).state;
 
     final colors = Theme.of(context).colorScheme;
-    final _controller = TextEditingController();
-    final _formKey = GlobalKey<FormState>();
+    final controller = TextEditingController();
+    final formKey = GlobalKey<FormState>();
     String categorySpeechText = "";
 
-    return ListView.builder(
+    return 
+    
+    ListView.builder(
       scrollDirection: Axis.horizontal,
       itemCount: categories.length + 1,
       itemBuilder: (BuildContext context, int index) {
@@ -67,11 +72,11 @@ class _CategorySelectorState extends ConsumerState<CategorySelector> {
                     title: const Text('Agregar nueva categoría'),
                     content: Form(
                       key:
-                          _formKey, // Asegúrate de inicializar esta clave en tu clase de estado
+                          formKey, // Asegúrate de inicializar esta clave en tu clase de estado
                       child: TextFormField(
                         maxLength: 30,
                         controller:
-                            _controller, // Controlador para manejar el texto ingresado
+                            controller, // Controlador para manejar el texto ingresado
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Por favor, introduce una categoría';
@@ -95,11 +100,11 @@ class _CategorySelectorState extends ConsumerState<CategorySelector> {
                       FilledButton(
                         child: const Text('Agregar'),
                         onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
+                          if (formKey.currentState!.validate()) {
                             // Verificar si pasa las validaciones
                             await addUserCategory(
                                     FirebaseAuth.instance.currentUser!.uid,
-                                    _controller.text)
+                                    controller.text)
                                 .then((value) {
                               context.pop();
                             });

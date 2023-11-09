@@ -54,11 +54,11 @@ Stream<List<Note>> getNotesStream(String user, String category) {
         notes.add(note);
       }
       controller.add(notes);
-      print("notas cargadas");  // Agrega la lista de notas al stream
+      // print("notas cargadas");  // Agrega la lista de notas al stream
     },
     onError: (error) {
       // Opcional: manejar errores
-      print('Error al obtener las notas: $error');
+      // print('Error al obtener las notas: $error');
       controller.addError(error);
     },
   );
@@ -86,10 +86,10 @@ Future<void> addNote(String title, String content, String user, DateTime dateCre
       "date_remember": dateRemember,
       "icon": icon,
     });
-    print("Nota añadida con éxito");
+    // print("Nota añadida con éxito");
   } catch (error) {
-    print("Error al añadir nota: $error");
-    throw error; // Lanza el error nuevamente para que pueda ser manejado por el código que llama a esta función
+    // print("Error al añadir nota: $error");
+    throw Exception(); // Lanza el error nuevamente para que pueda ser manejado por el código que llama a esta función
   }
 }
 
@@ -99,7 +99,7 @@ Future<void> addUserNote(String user) async {
   // Obtener la instancia actual de Firebase Auth y el usuario actual
   final currentUser = FirebaseAuth.instance.currentUser;
   if (currentUser == null) {
-    print('No user is signed in.');
+    // print('No user is signed in.');
     return;
   }
 
@@ -134,15 +134,15 @@ Future<void> addUserNote(String user) async {
         await userDocRef.update({"categories": userCategories});
       }
     } else {
-      print('User document not found');
+      // print('User document not found');
     }
   }
 }
 
 
 //actualizar en la base de datos
-Future<void> updateNote(String uid,String newnote, String newcontent,) async{
-await db.collection("notes").doc(uid).update({"title": newnote, "content":newcontent});
+Future<void> updateNote(String uid,String newNote, String newContent,) async{
+await db.collection("notes").doc(uid).update({"title": newNote, "content":newContent});
 }
 Future<void> toggleNoteState(String uid, bool currentState) async {
   await db.collection("notes").doc(uid).update({"stateDone": !currentState});
@@ -155,10 +155,10 @@ await db.collection("notes").doc(uid).update({"date_finish":dateFinish,});
 Future<void> deleteNote(String uid) async {
   try {
     await db.collection("notes").doc(uid).delete();
-    print("Nota eliminada con éxito");
+    // print("Nota eliminada con éxito");
   } catch (error) {
-    print("Error al eliminar nota: $error");
-    throw error; // Lanza el error nuevamente para que pueda ser manejado por el código que llama a esta función
+    // print("Error al eliminar nota: $error");
+    rethrow; // Lanza el error nuevamente para que pueda ser manejado por el código que llama a esta función
   }
 }
 

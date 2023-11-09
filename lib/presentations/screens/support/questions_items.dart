@@ -23,7 +23,7 @@ List<Question> questions = [
   ),
   Question(
     title: '¿Cómo puedo editar o eliminar una actividad programada?',
-    answer: 'Pulsa sobre la actividad que deseas editar o eliminar, luego selecciona la opción correspondiente.',
+    answer: 'Mantén pulsado sobre la actividad que deseas editar y para eliminar desliza hacia la izquierda.',
     icon: Icons.edit,
     dateAdded: DateTime(2023, 9, 15),
   ),
@@ -47,13 +47,13 @@ List<Question> questions = [
   ),
   Question(
     title: '¿Cómo puedo cambiar el tema de la app?',
-    answer: 'Ve a la sección de "Tema" en la configuración de la app y selecciona tu preferencia.',
+    answer: 'Ve a la sección de "Apariencia" en la configuración de la app y selecciona tu preferencia.',
     icon: Icons.color_lens,
     dateAdded: DateTime(2023, 5, 10),
   ),
   Question(
     title: '¿Puedo compartir mis actividades con otros?',
-    answer: 'Sí, simplemente selecciona la actividad y pulsa en el botón de compartir.',
+    answer: 'Sí, simplemente selecciona la opción de compartir en el menu desplegable.',
     icon: Icons.share,
     dateAdded: DateTime(2023, 4, 8),
   ),
@@ -71,7 +71,7 @@ List<Question> questions = [
   ),
   Question(
     title: '¿Cómo puedo categorizar mis actividades?',
-    answer: 'Al crear o editar una actividad, selecciona una categoría del menú desplegable.',
+    answer: 'Al crear o editar una actividad, selecciona una categoría del menú deslizable.',
     icon: Icons.category,
     dateAdded: DateTime(2023, 1, 6),
   ),
@@ -113,7 +113,7 @@ List<Question> questions = [
   ),
   Question(
     title: '¿Cómo puedo cerrar sesión en la app?',
-    answer: 'Pulsa en el icono de perfil en el menú principal y luego en "Cerrar sesión".',
+    answer: 'Entra en el menu desplegable y luego en "Cerrar sesión".',
     icon: Icons.logout,
     dateAdded: DateTime(2022, 6, 30),
   ),

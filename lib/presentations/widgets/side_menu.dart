@@ -20,11 +20,9 @@ class SideMenu extends ConsumerStatefulWidget {
 }
 
 class _SideMenuState extends ConsumerState<SideMenu> {
-  
   int navDrawerIndex = 0;
   @override
-  Widget build(BuildContext context) 
-  {
+  Widget build(BuildContext context) {
     final textStyle = Theme.of(context).textTheme;
 
     final userAcc =
@@ -32,9 +30,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
     // final hasNotch = MediaQuery.of(context).viewPadding.top > 35;
     final colors = Theme.of(context).colorScheme;
     return NavigationDrawer(
-
       backgroundColor: colors.background,
-
       selectedIndex: navDrawerIndex,
       onDestinationSelected: (value) {
         setState(() {
@@ -60,14 +56,14 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                   child: ClipRRect(
                     child: CircleAvatar(
                       backgroundColor: const Color.fromARGB(0, 0, 0, 0),
-              
+
                       radius: 50,
                       backgroundImage: NetworkImage(userAcc.when(
                         data: (data) {
                           return data!.photoURL.toString();
                         },
                         error: (error, stackTrace) {
-                          return "errror";
+                          return "error";
                         },
                         loading: () {
                           return "loading";
@@ -79,54 +75,69 @@ class _SideMenuState extends ConsumerState<SideMenu> {
               ),
             ),
             const SizedBox(height: 10),
-           Text(
-                    userAcc.when(
-                      data: (data) {
-                        return data!.displayName.toString();
-                      },
-                      error: (error, stackTrace) {
-                        return "errror";
-                      },
-                      loading: () {
-                        return "loading";
-                      },
-                    ),
-                    style: const TextStyle(fontSize: 30),)
+            Text(
+              userAcc.when(
+                data: (data) {
+                  return data!.displayName.toString();
+                },
+                error: (error, stackTrace) {
+                  return "error";
+                },
+                loading: () {
+                  return "loading";
+                },
+              ),
+              style: const TextStyle(fontSize: 30),
+            )
           ],
         ),
-         Padding(
-          padding: EdgeInsets.fromLTRB(28, 16, 28, 10),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(28, 16, 28, 10),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: Text("Principal",style: textStyle.bodyLarge,),
+                padding: const EdgeInsets.only(right: 10),
+                child: Text(
+                  "Principal",
+                  style: textStyle.bodyLarge,
+                ),
               ),
-              Expanded(child: Divider()),
+              const Expanded(child: Divider()),
             ],
           ),
         ),
         ...appMenuItems.sublist(0, 3).map((e) => NavigationDrawerDestination(
-            icon: Icon(e.icon), label: Text(e.title,style: textStyle.titleLarge,))),
+            icon: Icon(e.icon),
+            label: Text(
+              e.title,
+              style: textStyle.titleLarge,
+            ))),
         const Padding(
           padding: EdgeInsets.fromLTRB(28, 16, 28, 10),
         ),
-         Padding(
-          padding: EdgeInsets.fromLTRB(28, 16, 28, 10),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(28, 16, 28, 10),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: Text("Más Opciones",style: textStyle.bodyLarge,),
+                padding: const EdgeInsets.only(right: 10),
+                child: Text(
+                  "Más Opciones",
+                  style: textStyle.bodyLarge,
+                ),
               ),
-              Expanded(child: Divider()),
+              const Expanded(child: Divider()),
             ],
           ),
         ),
         ...appMenuItems.sublist(3).map((e) => NavigationDrawerDestination(
-            icon: Icon(e.icon), label: Text(e.title,style: textStyle.titleLarge,))),
+            icon: Icon(e.icon),
+            label: Text(
+              e.title,
+              style: textStyle.titleLarge,
+            ))),
         Padding(
           padding: const EdgeInsets.only(left: 17.0),
           child: TextButton(
@@ -143,9 +154,9 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                     Icons.close,
                     color: colors.error,
                   ),
-                  Text(
-                    "   Cerrar sesión",style: textStyle.titleLarge!.copyWith(color: colors.error)),
-                  
+                  Text("   Cerrar sesión",
+                      style:
+                          textStyle.titleLarge!.copyWith(color: colors.error)),
                 ],
               )),
         ),

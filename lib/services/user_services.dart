@@ -1,22 +1,48 @@
-import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:recuerda_facil/models/note.dart';
-import 'package:recuerda_facil/models/user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:recuerda_facil/models/user_account.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
 Future<List<UserAccount>> getUsers() async {
   List<UserAccount> users = [];
-  QuerySnapshot queryusers = await db.collection("users").get();
+  QuerySnapshot queryUsers = await db.collection("users").get();
 
-  queryusers.docs.forEach((element) {
+  for (var element in queryUsers.docs) {
     final Map<String, dynamic> data = element.data() as Map<String, dynamic>;
     final UserAccount user = UserAccount.fromMap(data);
     users.add(user);
-  });
+  }
   return users;
+}
+Future<List<UserAccount>> getUsersCarer(List<String> usersCarer) async {
+  List<UserAccount> users = [];
+  QuerySnapshot queryUsers = await db.collection("users").get();
+
+  for (var element in queryUsers.docs) {
+    final Map<String, dynamic> data = element.data() as Map<String, dynamic>;
+    final UserAccount user = UserAccount.fromMap(data);
+    if(usersCarer.contains(user.uid)){
+    users.add(user);
+    }
+  }
+  return users;
+}
+Future<void> removeUserCarer(String uid, String userToRemove) async {
+  final DocumentReference userDocRef = db.collection("users").doc(uid);
+  final DocumentSnapshot userDocSnapshot = await userDocRef.get();
+
+  if (userDocSnapshot.exists) {
+    final Map<String, dynamic> data =
+        userDocSnapshot.data() as Map<String, dynamic>;
+    List<dynamic> arrayUsersCarer = data['usersCarer'] ?? [];
+
+    if (arrayUsersCarer.contains(userToRemove)) {
+      arrayUsersCarer.remove(userToRemove);
+      await userDocRef.update({"usersCarer": arrayUsersCarer});
+    }
+  }
 }
 
 Future<void> addUserCategory(String uid, String newCategory) async {
@@ -30,7 +56,7 @@ Future<void> addUserCategory(String uid, String newCategory) async {
     arrayCategories.add(newCategory);
     await userDocRef.update({"categories": arrayCategories});
   } else {
-    print('User document not found');
+    // print('User document not found');
   }
 }
 
@@ -62,24 +88,23 @@ Future<void> removeUserCategory(String uid, String categoryToRemove) async {
 
     await Future.wait(updateOperations);
   } else {
-    print('User document not found');
+    // print('User document not found');
   }
 }
 
-// Future<UserAccount?> getUser(String uid) async {
-//  await Future.delayed(Duration(seconds: 2));
-//   try {
-//   final QuerySnapshot<Map<String,  dynamic>> userDoc = await db
-//         .collection("users")
-//         .where("uid", isEqualTo: uid)
-//         .get();
-//      final user= UserAccount.fromMap(userDoc.docs.first.data());
-//         return user;
-//   } catch (e) {
-//     print("Error al obtener los datos del usuario: $e");
-//     return null;
-//   }
-// }
+Future<UserAccount?> getUser(String uid) async {
+  try {
+  final QuerySnapshot<Map<String,  dynamic>> userDoc = await db
+        .collection("users")
+        .where("uid", isEqualTo: uid)
+        .get();
+     final user= UserAccount.fromMap(userDoc.docs.first.data());
+        return user;
+  } catch (e) {
+    // print("Error al obtener los datos del usuario: $e");
+    return null;
+  }
+}
 Stream<UserAccount?> getUserStream(String uid) {
   return db.collection("users").doc(uid).snapshots().map((snapshot) {
     if (snapshot.exists) {
@@ -182,7 +207,7 @@ Future<bool> getPrivate(String uid) async {
       return false;
     }
   } catch (e) {
-    print("Error al obtener los datos del usuario: $e");
+    // print("Error al obtener los datos del usuario: $e");
     return false;
   }
 }
@@ -202,19 +227,40 @@ Future<bool> searchUserUid(String uid) async {
     }
   } catch (error) {
     // Maneja cualquier error que pueda ocurrir durante la consulta
-    print('Error al buscar el usuario: $error');
+    // print('Error al buscar el usuario: $error');
     return false;
+  }
+}
+
+Future<bool> addUserCarer(String uid, String newUserCarer) async {
+  final DocumentReference userDocRef = db.collection("users").doc(uid);
+  final DocumentSnapshot userDocSnapshot = await userDocRef.get();
+
+  if (userDocSnapshot.exists) {
+    final Map<String, dynamic> data =
+        userDocSnapshot.data() as Map<String, dynamic>;
+    List<dynamic> arrayUsersCarer = data['usersCarer'] ?? [];
+
+    if (!arrayUsersCarer.contains(newUserCarer)) {
+      arrayUsersCarer.add(newUserCarer);
+      await userDocRef.update({"usersCarer": arrayUsersCarer});
+      return true; // Éxito al añadir el nuevo usuario Carer
+    } else {
+      return false; // El usuario Carer ya está en la lista
+    }
+  } else {
+    return false; // Documento de usuario no encontrado
   }
 }
 //actualizar en la base de datos
 
-//  Future<void> updateNote(String uid,String newnote, String newcontent) async{
-//  await db.collection("notes").doc(uid).set({"title": newnote, "content":newcontent});
+//  Future<void> updateNote(String uid,String newNote, String newContent) async{
+//  await db.collection("notes").doc(uid).set({"title": newNote, "content":newContent});
 //  }
 
 // Future<void> deleteNote(String uid) async{
 //   await db.collection("notes").doc(uid).delete();
-//   print("entra aqui??");
+//   print("entra aquí??");
 // }
 
 

@@ -1,11 +1,13 @@
 import 'package:go_router/go_router.dart';
 import 'package:recuerda_facil/presentations/screens/login/login_2.dart';
+import 'package:recuerda_facil/presentations/screens/more/more_games/games/tictac/tictactoe_game.dart';
+import 'package:recuerda_facil/presentations/screens/more_functions/carer/carer_list.dart';
 import 'package:recuerda_facil/presentations/screens/screens.dart';
 import 'package:recuerda_facil/presentations/screens/test/alarm.dart';
 import 'package:recuerda_facil/presentations/views/notes/more_view.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/login',
+  initialLocation: '/splashScreen',
   routes: [
     GoRoute(
         name: HomeScreen.name,
@@ -42,7 +44,6 @@ final GoRouter appRouter = GoRouter(
         path: '/calendar',
         builder: (context, state) => const CalendarScreen()),
     GoRoute(
-      
       path: '/more',
       builder: (context, state) => const MoreView(),
       routes: [
@@ -53,7 +54,13 @@ final GoRouter appRouter = GoRouter(
         GoRoute(
             name: GamesScreen.name,
             path: 'games',
-            builder: (context, state) => const GamesScreen()),
+            builder: (context, state) => const GamesScreen(),
+            routes: [
+              GoRoute(
+                  name: TicTacToeScreen.name,
+                  path: 'tic_tac_toe',
+                  builder: (context, state) =>  TicTacToeScreen()),
+            ]),
         GoRoute(
             name: BoardScreen.name,
             path: 'boards',
@@ -111,5 +118,30 @@ final GoRouter appRouter = GoRouter(
         name: MoreFunctionsScreen.name,
         path: '/more_functions',
         builder: (context, state) => const MoreFunctionsScreen()),
+    GoRoute(
+        name: CarerScreen.name,
+        path: '/carer',
+        builder: (context, state) => const CarerScreen()),
+    GoRoute(
+        name: CarerListStream.name,
+        path: '/carer_list/:user',
+        builder: (context, state) {
+          final user = state.pathParameters['user'] ?? '0';
+          return CarerListStream(category: 'Todos', user: user);
+        }),
+    GoRoute(
+        name: SetCarer.name,
+        path: '/set_carer',
+        builder: (context, state) => const SetCarer()),
+    GoRoute(
+        name: AddPersonCareScreen.name,
+        path: '/add_person_care',
+        builder: (context, state) => const AddPersonCareScreen()),
+    GoRoute(
+        name: SplashScreen.name,
+        path: '/splashScreen',
+        builder: (context, state) => SplashScreen(
+              loading: true,
+            )),
   ],
 );

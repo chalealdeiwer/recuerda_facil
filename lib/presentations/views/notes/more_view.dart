@@ -64,6 +64,7 @@ class MoreView extends StatelessWidget {
                             Text(
                               "Noticias",
                               style: textStyle.titleLarge,
+                              textScaleFactor: 1,
                             )
                           ],
                         ),
@@ -97,6 +98,8 @@ class MoreView extends StatelessWidget {
                             Text(
                               "Mini juegos",
                               style: textStyle.titleLarge,
+                              textScaleFactor: 1,
+
                             )
                           ],
                         ),
@@ -134,6 +137,9 @@ class MoreView extends StatelessWidget {
                             Text(
                               "Tableros",
                               style: textStyle.titleLarge,
+                              textScaleFactor: 1,
+                              
+
                             )
                           ],
                         ),
@@ -162,6 +168,8 @@ class MoreView extends StatelessWidget {
                             Text(
                               "Productividad",
                               style: textStyle.titleLarge,
+                              textScaleFactor: 1,
+
                             )
                           ],
                         ),

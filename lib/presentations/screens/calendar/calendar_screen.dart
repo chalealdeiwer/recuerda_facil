@@ -54,7 +54,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         child: Column(
           children: [
             const SizedBox(height: 80,),
-            Text("Calendario", style: textStyle.headline4,),
+            Text("Calendario", style: textStyle.headlineMedium,),
             Container(  // Agregado un contenedor para cambiar el color de fondo
               color: colors.surface,
               child: TableCalendar(
@@ -81,7 +81,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               ),
             ),
             const SizedBox(height: 20,),
-            Text("Lista de Recordatorios", style: textStyle.headline5,),
+            Text("Lista de Recordatorios", style: textStyle.headlineSmall,),
             Expanded(
               child: ListView.builder(
                 itemCount: _getEventsForDay(_selectedDay!).length,

@@ -12,7 +12,7 @@ class AboutScreen extends StatelessWidget {
           showAboutDialog( 
             
             context: context);
-        }, child: Text("Licencias de uso")),
+        }, child: const Text("Licencias de uso")),
       ),
     );
   }

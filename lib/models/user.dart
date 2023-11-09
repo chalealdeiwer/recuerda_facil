@@ -9,7 +9,6 @@ class User {
   final String? displayName;
   final String? photoURL;
   final String? phoneNumber;
-  
 
   User({
     required this.uid,
@@ -18,19 +17,16 @@ class User {
     this.displayName,
     this.photoURL,
     this.phoneNumber,
-    
   });
 
   factory User.fromFirebase(auth.User user) {
     return User(
-     
       uid: user.uid,
       email: user.email,
       emailVerified: user.emailVerified,
       displayName: user.displayName,
       photoURL: user.photoURL,
       phoneNumber: user.phoneNumber,
-
     );
   }
 }

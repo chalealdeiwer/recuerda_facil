@@ -40,27 +40,23 @@ class UserNotifier extends StateNotifier<User?> {
               'Aniversarios',
               'Personal'
             ],
+            "usersCarer":[],  
             "photoURL": user.photoURL,
             "private": false,
             "uid": user.uid
           });
-          print("usuario añadido a la base de datos");
+          // print("usuario añadido a la base de datos");
         } else {
-          print("el usuario ya esta en la base de datos");
+          // print("el usuario ya esta en la base de datos");
         }
       }
     });
   }
 
   Future<void> signInWithGoogle() async {
-    try {
+    
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-      if (googleUser == null) {
-        // El usuario canceló la operación de inicio de sesión
-        // No hacemos nada y retornamos silenciosamente
-        return;
-      }
+      if (googleUser == null) return;
 
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
@@ -70,11 +66,9 @@ class UserNotifier extends StateNotifier<User?> {
       );
 
       await _firebaseAuth.signInWithCredential(credential);
+      
       // El estado se actualizará automáticamente a través del authStateChanges listener
-    } catch (e) {
-      // Aquí puedes manejar cualquier otro tipo de error que pueda ocurrir
-      print('Error al iniciar sesión con Google: $e');
-    }
+    
   }
 
   Future<void> signInWithEmailPassword(String email, String password) async {
@@ -84,7 +78,6 @@ class UserNotifier extends StateNotifier<User?> {
       // El estado se actualizará automáticamente a través del authStateChanges listener
     } catch (e) {
       // Gestiona el error
-      print(e);
     }
   }
 
@@ -95,7 +88,6 @@ class UserNotifier extends StateNotifier<User?> {
       // Aquí puedes agregar un método para enviar un correo de verificación si es necesario
     } catch (e) {
       // Gestiona el error
-      print(e);
     }
   }
 
@@ -103,6 +95,5 @@ class UserNotifier extends StateNotifier<User?> {
     await _firebaseAuth.signOut();
     // El estado se actualizará automáticamente a través del authStateChanges listener
   }
-
   // Agregar otros métodos según sea necesario, como restablecer la contraseña, verificar el correo electrónico, etc.
 }

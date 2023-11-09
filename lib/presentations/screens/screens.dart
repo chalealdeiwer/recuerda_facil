@@ -1,3 +1,4 @@
+
 export 'package:recuerda_facil/presentations/screens/about/about_screen.dart';
 export 'package:recuerda_facil/presentations/screens/account/account_screen.dart';
 export 'package:recuerda_facil/presentations/screens/appearance/appearance_screen.dart';
@@ -20,3 +21,8 @@ export 'package:recuerda_facil/presentations/screens/support/faq_screen.dart';
 export 'package:recuerda_facil/presentations/screens/support/support_screen.dart';
 export 'package:recuerda_facil/presentations/screens/test/test_screen.dart';
 export 'package:recuerda_facil/presentations/screens/users_guide/users_guide_screen.dart';
+export 'package:recuerda_facil/presentations/screens/splash_screen/splash_screen.dart';
+export 'package:recuerda_facil/presentations/screens/more_functions/carer/carer_screen.dart';
+export 'package:recuerda_facil/presentations/screens/more_functions/carer/set_carer.dart';
+export 'package:recuerda_facil/presentations/screens/more_functions/carer/add_person_care.dart';
+  

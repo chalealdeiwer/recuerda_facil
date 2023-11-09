@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:recuerda_facil/models/user_account.dart';
 import 'package:recuerda_facil/presentations/providers/user_account_provider.dart';
-import 'package:recuerda_facil/services/user_services.dart';
 
 import '../../../services/services.dart';
 import '../../providers/user_provider.dart';
@@ -43,7 +41,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
     final colors = Theme.of(context).colorScheme;
     final textStyle = Theme.of(context).textTheme;
     final size = MediaQuery.of(context).size;
-    File? imagen_to_upload;
+    File? imagenToUpload;
     // final bool private =
 
     return Scaffold(
@@ -67,7 +65,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                           return data!.coverPhotoURL.toString();
                         },
                         error: (error, stackTrace) {
-                          return "errror";
+                          return "error";
                         },
                         loading: () {
                           return "loading";
@@ -88,9 +86,9 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                           onTap: () async {
                             final imagen = await getImage();
                             if (imagen == null) return;
-                            imagen_to_upload = File(imagen.path);
+                            imagenToUpload = File(imagen.path);
         
-                            await uploadCoverPhoto(user.uid, imagen_to_upload!);
+                            await uploadCoverPhoto(user.uid, imagenToUpload!);
                           },
                           child: const Icon(
                             Icons.camera_alt,
@@ -122,7 +120,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                         return data!.displayName.toString();
                       },
                       error: (error, stackTrace) {
-                        return "errror";
+                        return "error";
                       },
                       loading: () {
                         return "loading";
@@ -131,7 +129,9 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                     style: textStyle.displaySmall,
                   )
 
+
                   ),
+                  
                   //email
                   Positioned(
                   top: size.width * 0.73,
@@ -142,7 +142,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                         return "(${data!.email.toString()})";
                       },
                       error: (error, stackTrace) {
-                        return "errror";
+                        return "error";
                       },
                       loading: () {
                         return "loading";
@@ -169,9 +169,9 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                       onTap: () async {
                         final imagen = await getImage();
                         if (imagen == null) return;
-                        imagen_to_upload = File(imagen!.path);
+                        imagenToUpload = File(imagen!.path);
         
-                        await uploadProfilePhoto(user.uid, imagen_to_upload!);
+                        await uploadProfilePhoto(user.uid, imagenToUpload!);
                       },
                       child: Stack(
                         children: [
@@ -182,7 +182,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                                   return data!.photoURL.toString();
                                 },
                                 error: (error, stackTrace) {
-                                  return "errror";
+                                  return "error";
                                 },
                                 loading: () {
                                   return "loading";
@@ -219,7 +219,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                   child: Text(
                     userAcc.when(
                       data: (data) {
-                        return "Unido desde:  ${DateFormat('MMMM yyyy').format(data!.created!)}";
+                        return "Desde:  ${DateFormat('MMMM yyyy').format(data!.created!)}";
                       },
                       error: (error, stackTrace) {
                         return "error";
@@ -270,13 +270,13 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
 class SwitchWidget extends StatefulWidget {
   final bool isEnabled;
 
-  SwitchWidget({required this.isEnabled});
+  const SwitchWidget({super.key, required this.isEnabled});
 
   @override
-  _SwitchWidgetState createState() => _SwitchWidgetState();
+  SwitchWidgetState createState() => SwitchWidgetState();
 }
 
-class _SwitchWidgetState extends State<SwitchWidget> {
+class SwitchWidgetState extends State<SwitchWidget> {
   late bool isEnabled;
 
   @override

@@ -8,11 +8,13 @@ import 'package:intl/intl.dart';
 import '../providers/providers.dart';
 
 class ClockWidget extends ConsumerStatefulWidget {
+  const ClockWidget({super.key});
+
   @override
-  _ClockWidgetState createState() => _ClockWidgetState();
+  ClockWidgetState createState() => ClockWidgetState();
 }
 
-class _ClockWidgetState extends ConsumerState<ClockWidget> {
+class ClockWidgetState extends ConsumerState<ClockWidget> {
   late DateTime _dateTime;
   late String _greeting;
   late String _mm;
@@ -64,7 +66,6 @@ class _ClockWidgetState extends ConsumerState<ClockWidget> {
     mes = mes[0].toUpperCase() + mes.substring(1);
     var ano= DateFormat.y('es').format(_dateTime);
     String time = DateFormat('h:mm').format(_dateTime);
-    final opacity=ref.watch(opacityProvider);
     final textStyle = Theme.of(context).textTheme;
     final ttsWelcomeMessage = ref.watch(ttsWelcomeMessageProvider);
 
@@ -92,7 +93,10 @@ class _ClockWidgetState extends ConsumerState<ClockWidget> {
               ),
               Text(
                 _greeting,
-                style: textStyle.displaySmall,
+                style: textStyle.titleLarge!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25
+                )
                 //  textAlign: TextAlign.left,
               ),
               Text(

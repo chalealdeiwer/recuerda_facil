@@ -10,9 +10,7 @@ import 'package:recuerda_facil/firebase_options.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:recuerda_facil/presentations/providers/theme_provider.dart';
 import 'package:recuerda_facil/services/notification_service.dart';
-import 'package:velocity_x/velocity_x.dart';
 import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 
 

@@ -8,6 +8,8 @@ class UserAccount {
   final String? displayName;
   final DateTime? created; // Cambiado a DateTime
   final List<String>? categories;
+  final List<String>? usersCarer;
+
   final String? email;
   final String? coverPhotoURL;
 
@@ -19,6 +21,7 @@ class UserAccount {
     this.displayName = 'Sin nombre de Usuario',
     this.created,  // Fecha arbitraria
     this.categories = const [],
+    this.usersCarer = const [],
     this.email = 'Sin email',
     this.coverPhotoURL = 'https://i.pinimg.com/736x/e8/9b/a4/e89ba41407fb258daa464ba2e7aa27e2.jpg',
   });
@@ -32,6 +35,7 @@ class UserAccount {
         displayName = map['displayName'] ?? 'Sin nombre de usuario',
         created = (map['created'] as Timestamp?)?.toDate() ?? DateTime(2000, 1, 1),  // Fecha arbitraria
         categories = List<String>.from(map['categories'] ?? const []),
+        usersCarer=List<String>.from(map['usersCarer'] ?? const []),
         email = map['email'] ?? 'Sin email',
         coverPhotoURL = map['coverPhotoURL'] ?? 'https://i.pinimg.com/736x/e8/9b/a4/e89ba41407fb258daa464ba2e7aa27e2.jpg';
 

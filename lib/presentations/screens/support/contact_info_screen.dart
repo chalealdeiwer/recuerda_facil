@@ -55,7 +55,7 @@ class ContactInfoScreen extends StatelessWidget {
                           "recuerdafacil2024@gmail.com",
                           style: TextStyle(fontSize: 20),
                         )),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Text(

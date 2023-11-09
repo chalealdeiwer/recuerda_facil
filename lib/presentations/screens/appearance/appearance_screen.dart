@@ -13,8 +13,6 @@ class AppearanceScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     var isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
-    Brightness brightness = MediaQuery.of(context).platformBrightness;
-    bool isautodark = true;
     final colors = Theme.of(context).colorScheme;
     final textStyle = Theme.of(context).textTheme;
     final customBack = ref.watch(customBackground);
@@ -64,6 +62,8 @@ class AppearanceScreen extends ConsumerWidget {
                     children: [
                       Text(
                         " Tema de aplicación",
+                        textScaleFactor: 1,
+                        maxLines: 2,
                         style: textStyle.displaySmall,
                       ),
                       const Expanded(child: Divider())
@@ -80,6 +80,8 @@ class AppearanceScreen extends ConsumerWidget {
                       ref
                           .read(isDarkmodeProvider.notifier)
                           .update((darkmode) => !darkmode);
+                      PreferencesUser()
+                          .setValue<bool>('isDarkmode', !isDarkMode);
                     },
                   ),
                   SwitchListTile(
@@ -92,10 +94,12 @@ class AppearanceScreen extends ConsumerWidget {
                       ref
                           .read(customBackground.notifier)
                           .update((customBack) => !customBack);
+                      PreferencesUser()
+                          .setValue<bool>('customBackground', !customBack);
                     },
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal:20.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Visibility(
                       visible: customBack,
                       child: Row(
@@ -133,10 +137,14 @@ class AppearanceScreen extends ConsumerWidget {
                       ref
                           .read(buttonActionVisibilityProvider.notifier)
                           .update((buttonAction) => !buttonAction);
+                      PreferencesUser().setValue<bool>(
+                          'buttonActionVisibility', !value);
+                      PreferencesUser().setValue<bool>(
+                          'appBarVisibility', !appBarVisibility);
                     },
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal:20.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Visibility(
                       visible: !appBarVisibility,
                       child: Row(
@@ -146,6 +154,7 @@ class AppearanceScreen extends ConsumerWidget {
                         children: [
                           Text(
                             "Se agregará un botón de acción",
+                            textScaleFactor: 1,
                             style: TextStyle(color: colors.error, fontSize: 20),
                           ),
                         ],
@@ -167,10 +176,12 @@ class AppearanceScreen extends ConsumerWidget {
                       ref
                           .watch(indexCategoryProvider.notifier)
                           .update((state) => 0);
+                      PreferencesUser().setValue<bool>(
+                          'categoriesVisibility', !categoriesVisibility);
                     },
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal:20.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Visibility(
                       visible: !categoriesVisibility,
                       child: Text(
@@ -185,10 +196,12 @@ class AppearanceScreen extends ConsumerWidget {
                       style: textStyle.titleLarge,
                     ),
                     value: clockVisibility,
-                    onChanged: (value) {
+                    onChanged: (value) async {
                       ref
                           .read(clockVisibilityProvider.notifier)
                           .update((clockVisibility) => !clockVisibility);
+                      PreferencesUser()
+                          .setValue<bool>('clockVisibility', !clockVisibility);
                     },
                   ),
                   SwitchListTile(
@@ -201,6 +214,8 @@ class AppearanceScreen extends ConsumerWidget {
                       ref
                           .read(buttonMicrophoneVisibilityProvider.notifier)
                           .update((buttonMicrophone) => !buttonMicrophone);
+                      PreferencesUser().setValue<bool>(
+                          'buttonMicrophoneVisibility', !buttonMicrophone);
                     },
                   ),
                   SwitchListTile(
@@ -213,6 +228,8 @@ class AppearanceScreen extends ConsumerWidget {
                       ref
                           .read(buttonNewNoteVisibilityProvider.notifier)
                           .update((buttonNewNote) => !buttonNewNote);
+                      PreferencesUser().setValue<bool>(
+                          'buttonNewNoteVisibility', !buttonNewNote);
                     },
                   ),
                   SwitchListTile(
@@ -225,6 +242,8 @@ class AppearanceScreen extends ConsumerWidget {
                       ref
                           .read(bottomVisibilityProvider.notifier)
                           .update((bottomVisibility) => !bottomVisibility);
+                      PreferencesUser().setValue<bool>(
+                          'bottomVisibility', !bottomVisibility);
                     },
                   ),
                   Row(
@@ -244,7 +263,7 @@ class AppearanceScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            
+
             Center(
               child: Container(
                 decoration: BoxDecoration(
@@ -292,16 +311,16 @@ class AppearanceScreen extends ConsumerWidget {
         title: const Text("Apariencia"),
         leading: IconButton(
             onPressed: () {
-              context.pop();
+              context.push('/home/1');
             },
             icon: const Icon(Icons.arrow_back)),
-        // actions: [
-        //   IconButton(
-        //       onPressed: () {
-        //         context.pop();
-        //       },
-        //       icon: const Icon(Icons.save))
-        // ],
+        actions: [
+          IconButton(
+              onPressed: () {
+                context.push('/home/1');
+              },
+              icon: const Icon(Icons.save))
+        ],
       ),
     );
   }
@@ -327,6 +346,8 @@ class _ThemeChangerView extends ConsumerWidget {
         return GestureDetector(
           onTap: () {
             ref.read(themeNotifierProvider.notifier).changeColorIndex(index);
+            ref.read(selectedColorProvider.notifier).state = index;
+            PreferencesUser().setValue<int>('selectedColor', index);
           },
           child: Container(
             margin: const EdgeInsets.all(8.0),

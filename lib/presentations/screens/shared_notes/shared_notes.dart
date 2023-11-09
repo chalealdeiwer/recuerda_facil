@@ -20,25 +20,25 @@ class SharedNotesScreen extends ConsumerStatefulWidget {
 
 class _SharedNotesScreenState extends ConsumerState<SharedNotesScreen> {
   String data = FirebaseAuth.instance.currentUser!.uid.toString();
-  String qrValue = "Codigo Qr";
+  String qrValue = "Código Qr";
 
   Future<void> scanQr(noteProvider) async {
     if (await requestCameraPermission()) {
-      scannertrue(noteProvider);
+      scannerTrue(noteProvider);
     } else {
-      showwAlertDialog(
+      showAlertDialog(
           context, "Información", "No se concedieron permisos para la Cámara ");
     }
   }
 
-  Future<void> scannertrue(noteProvider) async {
+  Future<void> scannerTrue(noteProvider) async {
     try {
       String? cameraScanResult = await scanner.scan();
 
       if (cameraScanResult != null) {
         if (cameraScanResult.toString() ==
             FirebaseAuth.instance.currentUser!.uid.toString()) {
-          showwAlertDialog(
+          showAlertDialog(
               context, "Información", "No se puede escanear usted mismo");
           setState(() {
             qrValue = "Escaneo así mismo";
@@ -49,26 +49,26 @@ class _SharedNotesScreenState extends ConsumerState<SharedNotesScreen> {
               qrValue = cameraScanResult.toString();
             });
             await noteProvider.addUserNote(qrValue);
-            context.push('/home');
-            showwAlertDialog(context, "Información", "El usuario se ha encontrado y se cargaron los recordatorios correctamente");
+            context.push('/home/1');
+            showAlertDialog(context, "Información", "El usuario se ha encontrado y se cargaron los recordatorios correctamente");
           }else{
-            showwAlertDialog(context, "Información", "El usuario NO se ha econtrado");
+            showAlertDialog(context, "Información", "El usuario NO se ha econtrado");
           }
         }
       } else {
+        
         setState(() {
           qrValue = "Nada Escaneado";
         });
       }
     } catch (e) {
-      print('Error durante el escaneo: $e');
-      showwAlertDialog(
+      showAlertDialog(
           context, "Error", "No se pudo escanear, intenta de nuevo: $e");
     }
   }
   
 
-  void showwAlertDialog(BuildContext context, String title, String content) {
+  void showAlertDialog(BuildContext context, String title, String content) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -116,7 +116,7 @@ class _SharedNotesScreenState extends ConsumerState<SharedNotesScreen> {
             Container(
               color: Colors.white,
               child: Center(child: QrImageView(data: data))),
-            dividerorline(),
+            dividerOrLine(),
             ElevatedButton(
                 onPressed: () {
                   scanQr(noteProvider);
@@ -132,7 +132,7 @@ class _SharedNotesScreenState extends ConsumerState<SharedNotesScreen> {
     );
   }
 
-  Widget dividerorline() {
+  Widget dividerOrLine() {
     return const Row(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,

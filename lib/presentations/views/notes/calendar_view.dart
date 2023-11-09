@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:recuerda_facil/models/models.dart';
 import 'package:recuerda_facil/presentations/providers/providers.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -71,7 +70,6 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
     final textStyle = Theme.of(context).textTheme;
     final userAcc = ref.watch(userProvider);
     final reminder = ref.watch(remindersProvider(userAcc!.uid));
-      ref.refresh(remindersProvider(userAcc.uid));
     if (!_remindersAdded) {
       // Comprobación para asegurarse de que los recordatorios se añadan una sola vez
       reminder.whenData((notes) {

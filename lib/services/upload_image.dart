@@ -23,7 +23,6 @@ Future<bool> uploadProfilePhoto(String uid, File image) async {
       return false;
     }
   } catch (e) {
-    print('Error: $e');
     return false;
   }
 }
@@ -46,7 +45,6 @@ Future<bool> uploadCoverPhoto(String uid, File image) async {
       return false;
     }
   } catch (e) {
-    print('Error: $e');
     return false;
   }
 }

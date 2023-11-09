@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:recuerda_facil/presentations/screens/support/questions_items.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class FAQScreen extends StatelessWidget {
   const FAQScreen({super.key});
@@ -8,9 +7,7 @@ class FAQScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
     final textStyle = Theme.of(context).textTheme;
-    final size = MediaQuery.of(context).size;
 
     return Scaffold(
   appBar: AppBar(),

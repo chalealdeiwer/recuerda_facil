@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../services/services.dart';
 import '../../providers/providers.dart';
@@ -18,7 +17,7 @@ class PrivacyScreen extends ConsumerWidget {
     final isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
     final TextStyle titleStyle = TextStyle(
         fontWeight: FontWeight.bold, fontSize: textStyle.titleLarge!.fontSize);
-    final TextStyle textStyle2 = TextStyle(fontSize: 22);
+    const TextStyle textStyle2 = TextStyle(fontSize: 22);
 
     return Scaffold(
       appBar: AppBar(),
@@ -83,20 +82,20 @@ class PrivacyScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text("1. Introducción", style: titleStyle),
-                        Text(
+                        const Text(
                           """Esta Declaración de Tratamiento de Datos y Privacidad explica cómo "Recuerda Fácil", un proyecto de grado de la Universidad de Nariño, maneja la información personal de los usuarios. 
 Estamos comprometidos a proteger tu privacidad conforme a la Ley 1581 de 2012 y su decreto reglamentario en Colombia.""",
                           style: textStyle2,
                         ),
                         Text("2.Responsable del Tratamiento de Datos",
                             style: titleStyle),
-                        Text(
+                        const Text(
                           """"Recuerda Fácil" es el encargado de gestionar los datos personales recogidos a través de nuestra aplicación.""",
                           style: textStyle2,
                         ),
                         Text("3.Finalidad del Tratamiento de Datos",
                             style: titleStyle),
-                        Text(
+                        const Text(
                           """Usamos los datos personales para ofrecerte una experiencia personalizada, facilitando a los adultos mayores la programación y recordatorio de actividades especiales.""",
                           style: textStyle2,
                         ),
@@ -104,7 +103,7 @@ Estamos comprometidos a proteger tu privacidad conforme a la Ley 1581 de 2012 y 
                           "4.Datos Personales Recopilados ",
                           style: titleStyle,
                         ),
-                        Text(
+                        const Text(
                           """Recopilamos información como nombre, dirección de correo electrónico y número de teléfono. Explicamos claramente cómo y por qué se utilizan estos datos para garantizar la transparencia.""",
                           style: textStyle2,
                         ),
@@ -112,7 +111,7 @@ Estamos comprometidos a proteger tu privacidad conforme a la Ley 1581 de 2012 y 
                           "5.Consentimiento del Usuario ",
                           style: titleStyle,
                         ),
-                        Text(
+                        const Text(
                           """Tu consentimiento se solicitará explícitamente. Tendrás la opción de revocarlo en cualquier momento, accediendo a las configuraciones de la aplicación.""",
                           style: textStyle2,
                         ),
@@ -120,7 +119,7 @@ Estamos comprometidos a proteger tu privacidad conforme a la Ley 1581 de 2012 y 
                           "6.Uso de los Datos Personales",
                           style: titleStyle,
                         ),
-                        Text(
+                        const Text(
                           """Tus datos permiten la programación y recordatorio de actividades, el envío de notificaciones relacionadas y la mejora continua de la aplicación.""",
                           style: textStyle2,
                         ),
@@ -128,7 +127,7 @@ Estamos comprometidos a proteger tu privacidad conforme a la Ley 1581 de 2012 y 
                           "7.Cambios en la Declaración de Privacidad",
                           style: titleStyle,
                         ),
-                        Text(
+                        const Text(
                           """Te notificaremos sobre cualquier cambio en esta política para asegurarnos de que siempre estás informado sobre cómo se manejan tus datos.""",
                           style: textStyle2,
                         ),
@@ -136,7 +135,7 @@ Estamos comprometidos a proteger tu privacidad conforme a la Ley 1581 de 2012 y 
                           "8.Contacto ",
                           style: titleStyle,
                         ),
-                        Text(
+                        const Text(
                           """Para consultas sobre privacidad, contáctenos en: """,
                           style: textStyle2,
                         ),
@@ -152,7 +151,7 @@ Estamos comprometidos a proteger tu privacidad conforme a la Ley 1581 de 2012 y 
                           "9.Ley Aplicable y Jurisdicción ",
                           style: titleStyle,
                         ),
-                        Text(
+                        const Text(
                           """Esta política se rige por las leyes colombianas y cualquier disputa se someterá a la jurisdicción de los tribunales de Colombia.""",
                           style: textStyle2,
                         ),
@@ -160,7 +159,7 @@ Estamos comprometidos a proteger tu privacidad conforme a la Ley 1581 de 2012 y 
                           "10.Fecha de la Declaración de Privacidad ",
                           style: titleStyle,
                         ),
-                        Text(
+                        const Text(
                           """Última actualización: 1 de septiembre de 2023.""",
                           style: textStyle2,
                         ),
@@ -176,7 +175,7 @@ Estamos comprometidos a proteger tu privacidad conforme a la Ley 1581 de 2012 y 
                                 value = !value!;
                               },
                             ),
-                            Text(
+                            const Text(
                               """ Acepto la Declaración de 
  Tratamiento de Datos 
  3D Privacidad.""",

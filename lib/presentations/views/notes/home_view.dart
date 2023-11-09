@@ -41,25 +41,32 @@ class _HomeViewState extends ConsumerState<HomeView>
               color: colors.surfaceVariant.withOpacity(0.5),
             ),
             margin: EdgeInsets.symmetric(horizontal: size.width * 0.2),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "Recuerda ",
-                  style: TextStyle(
-                      fontFamily: 'SpicyRice-Regular',
-                      fontSize: 35,
-                      color: colors.primary),
-                ),
-                Text(
-                  "Fácil",
-                  style: TextStyle(
-                      fontFamily: 'SpicyRice-Regular',
-                      fontSize: 30,
-                      color: colors.secondary),
-                ),
-              ],
+            child: GestureDetector(
+              onTap: () {
+                Scaffold.of(context).openDrawer();
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Recuerda ",
+                    style: TextStyle(
+                        fontFamily: 'SpicyRice-Regular',
+                        fontSize: 35,
+                        color: colors.primary),
+                        textScaleFactor: 1,
+                  ),
+                  Text(
+                    "Fácil",
+                    style: TextStyle(
+                        fontFamily: 'SpicyRice-Regular',
+                        fontSize: 30,
+                        color: colors.secondary),
+                        textScaleFactor: 1,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -72,11 +79,11 @@ class _HomeViewState extends ConsumerState<HomeView>
             if (categoriesVisibility)
               SizedBox(
                   height: MediaQuery.of(context).size.height * 0.050,
-                  child: CategorySelector()),
+                  child: const CategorySelector()),
             const SizedBox(
               height: 2,
             ),
-            if (clockVisibility) ClockWidget(),
+            if (clockVisibility) const ClockWidget(),
           ],
         ),
       ),
@@ -103,33 +110,31 @@ class _HomeViewState extends ConsumerState<HomeView>
       ),
       SliverToBoxAdapter(
           child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 2),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: colors.surfaceVariant.withOpacity(0.5)),
-            
-            child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                
-                child: Text("Recordatorios Pendientes",
-                    style: textStyle.titleLarge!
-                        .copyWith(fontWeight: FontWeight.bold))),
-          )),
-      StreamListWidget(done: true),
+        margin: const EdgeInsets.symmetric(vertical: 2),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: colors.surfaceVariant.withOpacity(0.5)),
+        child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text("Recordatorios Pendientes",
+                style: textStyle.titleLarge!
+                    .copyWith(fontWeight: FontWeight.bold))),
+      )),
+      const StreamListWidget(done: true),
       SliverToBoxAdapter(
           child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 2),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: colors.surfaceVariant.withOpacity(0.5)
-            ),
-            child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text("Recordatorios finalizados",
-              style: textStyle.titleLarge!.copyWith(fontWeight: FontWeight.bold)),
-                ),
-          )),
-      StreamListWidget(done: false),
+        margin: const EdgeInsets.symmetric(vertical: 2),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: colors.surfaceVariant.withOpacity(0.5)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text("Recordatorios finalizados",
+              style:
+                  textStyle.titleLarge!.copyWith(fontWeight: FontWeight.bold)),
+        ),
+      )),
+      const StreamListWidget(done: false),
       const SliverToBoxAdapter(
         child: SizedBox(
           height: 500,
