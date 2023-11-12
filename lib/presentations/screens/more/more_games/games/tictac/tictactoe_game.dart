@@ -3,7 +3,7 @@ import 'package:recuerda_facil/presentations/screens/more/more_games/games/ticta
 
 class TicTacToeScreen extends StatefulWidget {
   static const name = 'tictac_screen';
-  TicTacToeScreen({Key? key}) : super(key: key);
+  const TicTacToeScreen({Key? key}) : super(key: key);
 
   @override
   State<TicTacToeScreen> createState() => _TicTacToeScreenState();
@@ -35,17 +35,17 @@ class _TicTacToeScreenState extends State<TicTacToeScreen> {
     return Scaffold(
         appBar: (AppBar(
           elevation: 0,
-          title: Text('Tic Tac Toe'),
-          backgroundColor: Color(0xff3b2763),
+          title: const Text('Tic Tac Toe'),
+          backgroundColor: const Color(0xff3b2763),
           actions: [
             IconButton(
                 onPressed: () {
                   clearBoard();
                 },
-                icon: Icon(Icons.refresh_rounded))
+                icon: const Icon(Icons.refresh_rounded))
           ],
         )),
-        backgroundColor: Color(0xff20123c),
+        backgroundColor: const Color(0xff20123c),
         body: Column(
           children: [_points(), _board(), _turns()],
           // children: [_points(), _board(), _turns()],
@@ -54,47 +54,45 @@ class _TicTacToeScreenState extends State<TicTacToeScreen> {
 
   Widget _points() {
     return Expanded(
-        child: Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              children: [
-                Text(
-                  'Jugador O',
-                  style: customStyle(fontSize: 30, fontWeight: FontWeight.w800),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Text(scoreO.toString(),
-                    style:
-                        customStyle(fontSize: 40, fontWeight: FontWeight.bold)),
-              ],
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                  Text(
+                    'Jugador O',
+                    style: customStyle(fontSize: 30, fontWeight: FontWeight.w800),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(scoreO.toString(),
+                      style:
+                          customStyle(fontSize: 40, fontWeight: FontWeight.bold)),
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              children: [
-                Text(
-                  'Jugador X',
-                  style: customStyle(fontSize: 30, fontWeight: FontWeight.w800),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Text(scoreX.toString(),
-                    style:
-                        customStyle(fontSize: 40, fontWeight: FontWeight.bold)),
-              ],
-            ),
-          )
-        ],
-      ),
-    ));
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                  Text(
+                    'Jugador X',
+                    style: customStyle(fontSize: 30, fontWeight: FontWeight.w800),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(scoreX.toString(),
+                      style:
+                          customStyle(fontSize: 40, fontWeight: FontWeight.bold)),
+                ],
+              ),
+            )
+          ],
+        ));
   }
 
   Widget _board() {
@@ -127,13 +125,12 @@ class _TicTacToeScreenState extends State<TicTacToeScreen> {
   }
 
   Widget _turns() {
-    return Container(
-        child: Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              turnOf ? 'Turno de O' : 'Turno de X',
-              style: customStyle(color: Colors.white, fontSize: 40),
-            )));
+    return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Text(
+          turnOf ? 'Turno de O' : 'Turno de X',
+          style: customStyle(color: Colors.white, fontSize: 40),
+        ));
   }
 
   void checkWinner() {

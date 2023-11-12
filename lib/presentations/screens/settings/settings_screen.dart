@@ -125,27 +125,49 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                   value: textToSpeech,
                   onChanged: (value) {
-                    ref
+                    final tts = ref
                         .read(onTestToSpeechProvider.notifier)
                         .update((textToSpeech) => !textToSpeech);
-                    ref
-                        .read(ttsTitleProvider.notifier)
-                        .update((textToSpeech) => true);
-                    ref
-                        .read(ttsCategoryProvider.notifier)
-                        .update((textToSpeech) => true);
-                    ref
-                        .read(ttsContentProvider.notifier)
-                        .update((textToSpeech) => true);
-                    ref
-                        .read(ttsCategorySelectorProvider.notifier)
-                        .update((textToSpeech) => true);
-                    ref
-                        .read(ttsButtonsScreenProvider.notifier)
-                        .update((textToSpeech) => true);
-                    ref
-                        .read(ttsWelcomeMessageProvider.notifier)
-                        .update((textToSpeech) => true);
+
+                    if (tts) {
+                      ref
+                          .read(ttsTitleProvider.notifier)
+                          .update((textToSpeech) => true);
+                      ref
+                          .read(ttsCategoryProvider.notifier)
+                          .update((textToSpeech) => true);
+                      ref
+                          .read(ttsContentProvider.notifier)
+                          .update((textToSpeech) => true);
+                      ref
+                          .read(ttsCategorySelectorProvider.notifier)
+                          .update((textToSpeech) => true);
+                      ref
+                          .read(ttsButtonsScreenProvider.notifier)
+                          .update((textToSpeech) => true);
+                      ref
+                          .read(ttsWelcomeMessageProvider.notifier)
+                          .update((textToSpeech) => true);
+                    } else {
+                      ref
+                          .read(ttsTitleProvider.notifier)
+                          .update((textToSpeech) => false);
+                      ref
+                          .read(ttsCategoryProvider.notifier)
+                          .update((textToSpeech) => false);
+                      ref
+                          .read(ttsContentProvider.notifier)
+                          .update((textToSpeech) => false);
+                      ref
+                          .read(ttsCategorySelectorProvider.notifier)
+                          .update((textToSpeech) => false);
+                      ref
+                          .read(ttsButtonsScreenProvider.notifier)
+                          .update((textToSpeech) => false);
+                      ref
+                          .read(ttsWelcomeMessageProvider.notifier)
+                          .update((textToSpeech) => false);
+                    }
                   },
                 ),
                 Visibility(
@@ -153,8 +175,9 @@ class SettingsScreen extends ConsumerWidget {
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal:20.0),
-                        child: Text("Para activar la lectura toca el recordatorio",
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Text(
+                            "Para activar la lectura toca el recordatorio",
                             style: textStyle.titleLarge!
                                 .copyWith(color: colors.error)),
                       ),
@@ -227,7 +250,7 @@ class SettingsScreen extends ConsumerWidget {
                         },
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal:20.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: Visibility(
                             visible: ttsButtonsScreen,
                             child: Text(

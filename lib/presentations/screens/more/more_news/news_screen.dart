@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class NewsScreen extends StatelessWidget {
   static const name = 'news_screen';

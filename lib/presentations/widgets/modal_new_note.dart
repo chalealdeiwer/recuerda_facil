@@ -100,7 +100,9 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
                         lastDate: lastDate,
                       );
                       if (selectedDate != null) {
-                        Navigator.of(context).pop(selectedDate);
+                        if (mounted) {
+                          Navigator.of(context).pop(selectedDate);
+                        }
                       }
                     }),
                 const SizedBox(
@@ -215,7 +217,9 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
                         initialTime: TimeOfDay.now(),
                       );
                       if (selectedTime != null) {
-                        Navigator.of(context).pop(selectedTime);
+                        if (mounted) {
+                          Navigator.of(context).pop(selectedTime);
+                        }
                       }
                     }),
                 const SizedBox(
@@ -337,7 +341,6 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
                             0, // Si hourInput es null, se usará el minuto 0
                       );
                       if (_formKey.currentState!.validate()) {
-                        
                         await noteProvider
                             .addNote(
                                 _titleController.text,

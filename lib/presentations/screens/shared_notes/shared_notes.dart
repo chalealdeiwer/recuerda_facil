@@ -11,7 +11,7 @@ import 'package:recuerda_facil/services/user_services.dart';
 import '../../providers/notes_provider2.dart';
 
 class SharedNotesScreen extends ConsumerStatefulWidget {
-  static const  name="shared_notes_screen";
+  static const name = "shared_notes_screen";
   const SharedNotesScreen({super.key});
 
   @override
@@ -27,7 +27,7 @@ class _SharedNotesScreenState extends ConsumerState<SharedNotesScreen> {
       scannerTrue(noteProvider);
     } else {
       showAlertDialog(
-          context, "Información", "No se concedieron permisos para la Cámara ");
+          "Información", "No se concedieron permisos para la Cámara ");
     }
   }
 
@@ -38,8 +38,7 @@ class _SharedNotesScreenState extends ConsumerState<SharedNotesScreen> {
       if (cameraScanResult != null) {
         if (cameraScanResult.toString() ==
             FirebaseAuth.instance.currentUser!.uid.toString()) {
-          showAlertDialog(
-              context, "Información", "No se puede escanear usted mismo");
+          showAlertDialog("Información", "No se puede escanear usted mismo");
           setState(() {
             qrValue = "Escaneo así mismo";
           });
@@ -49,26 +48,27 @@ class _SharedNotesScreenState extends ConsumerState<SharedNotesScreen> {
               qrValue = cameraScanResult.toString();
             });
             await noteProvider.addUserNote(qrValue);
-            context.push('/home/1');
-            showAlertDialog(context, "Información", "El usuario se ha encontrado y se cargaron los recordatorios correctamente");
-          }else{
-            showAlertDialog(context, "Información", "El usuario NO se ha econtrado");
+
+            showAlertDialog("Información",
+                "El usuario se ha encontrado y se cargaron los recordatorios correctamente");
+            if (mounted) {
+              context.push('/home/1');
+            }
+          } else {
+            showAlertDialog("Información", "El usuario NO se ha encontrado");
           }
         }
       } else {
-        
         setState(() {
           qrValue = "Nada Escaneado";
         });
       }
     } catch (e) {
-      showAlertDialog(
-          context, "Error", "No se pudo escanear, intenta de nuevo: $e");
+      showAlertDialog("Error", "No se pudo escanear, intenta de nuevo: $e");
     }
   }
-  
 
-  void showAlertDialog(BuildContext context, String title, String content) {
+  void showAlertDialog(String title, String content) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -102,7 +102,9 @@ class _SharedNotesScreenState extends ConsumerState<SharedNotesScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 40,),
+            const SizedBox(
+              height: 40,
+            ),
             Text(
               FirebaseAuth.instance.currentUser!.displayName.toString(),
               style: const TextStyle(fontSize: 40),
@@ -111,11 +113,10 @@ class _SharedNotesScreenState extends ConsumerState<SharedNotesScreen> {
               "Comparta sus recordatorios",
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
-            const Divider(
-            ),
+            const Divider(),
             Container(
-              color: Colors.white,
-              child: Center(child: QrImageView(data: data))),
+                color: Colors.white,
+                child: Center(child: QrImageView(data: data))),
             dividerOrLine(),
             ElevatedButton(
                 onPressed: () {
@@ -138,16 +139,14 @@ class _SharedNotesScreenState extends ConsumerState<SharedNotesScreen> {
       mainAxisSize: MainAxisSize.max,
       children: [
         Expanded(
-          child: Divider(
-          ),
+          child: Divider(),
         ),
         Text(
           "  ó  ",
           style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
         ),
         Expanded(
-          child: Divider(
-          ),
+          child: Divider(),
         )
       ],
     );

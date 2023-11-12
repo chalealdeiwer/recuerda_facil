@@ -14,7 +14,7 @@ class CommentsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     TextEditingController controllerName = TextEditingController();
     TextEditingController controllerComment = TextEditingController();
-    int ratingA;
+    int ratingA=4;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Comentarios"),
@@ -93,7 +93,7 @@ class CommentsScreen extends StatelessWidget {
                   final comment = controllerComment.text;
 
                   if (validateFields(name, comment)) {
-                    saveComment(name, comment, 6, DateTime.now());
+                    saveComment(name, comment, ratingA, DateTime.now());
                     controllerComment.clear();
                     controllerName.clear();
                     

@@ -1,7 +1,5 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:recuerda_facil/models/models.dart';
 import 'package:recuerda_facil/presentations/screens/more/more_productivity/bar_chart.dart';
 import 'package:recuerda_facil/presentations/screens/more/more_productivity/pie_chart.dart';
 

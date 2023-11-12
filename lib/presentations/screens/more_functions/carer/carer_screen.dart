@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -68,7 +67,6 @@ class _CarerScreenState extends ConsumerState<CarerScreen> {
               future: getUser(user!.uid), builder: (context, snapshot) {
 
               if(snapshot.hasData){
-                print(snapshot.data);
                 UserAccount userAccount=snapshot.data as UserAccount;
                 final List<String>? listUsersCarer=userAccount.usersCarer;
                 return Expanded(

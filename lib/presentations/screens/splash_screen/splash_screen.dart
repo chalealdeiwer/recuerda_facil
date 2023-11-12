@@ -9,10 +9,10 @@ import 'package:recuerda_facil/presentations/screens/login/login_2.dart';
 import '../../providers/providers.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
-   static const String name = '/splashScreen';
+  static const String name = '/splashScreen';
   bool loading;
 
-  SplashScreen({Key? key, this.loading = true}) : super(key: key);
+  SplashScreen({Key? key, required this.loading}) : super(key: key);
 
   @override
   SplashScreenState createState() => SplashScreenState();
@@ -65,7 +65,7 @@ class SplashScreenState extends ConsumerState<SplashScreen>
 
     return user != null
         ? const Login2Screen()
-        : _viewSplash(
+        : ViewSplash(
             size: size,
             animation: _animation,
             colors: colors,
@@ -73,10 +73,11 @@ class SplashScreenState extends ConsumerState<SplashScreen>
   }
 }
 
-class _viewSplash extends StatelessWidget {
-  var loading;
+class ViewSplash extends StatelessWidget {
+  final bool loading;
 
-  _viewSplash({
+  const ViewSplash({
+    super.key,
     required this.size,
     required Animation<double> animation,
     required this.colors,
@@ -190,7 +191,10 @@ class _viewSplash extends StatelessWidget {
                   onPressed: () {
                     context.pushReplacement('/login');
                   },
-                  child: const Text("Iniciar",style: TextStyle(fontSize: 30),)),
+                  child: const Text(
+                    "Iniciar",
+                    style: TextStyle(fontSize: 30),
+                  )),
             )
         ],
       ),

@@ -104,8 +104,9 @@ class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
                             ),
                             backgroundColor: Colors.red[200],
                           ));
-                          noteProvider.deleteNote(notes2[index].key);
-                          ref.refresh(remindersProvider(user.uid));
+                          noteProvider.deleteNote(notes2[index].key).then(
+                              (value) =>
+                                  ref.refresh(remindersProvider(user.uid)));
 
                           notes2.removeAt(index);
                         },

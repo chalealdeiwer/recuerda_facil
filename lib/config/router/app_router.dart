@@ -59,7 +59,7 @@ final GoRouter appRouter = GoRouter(
               GoRoute(
                   name: TicTacToeScreen.name,
                   path: 'tic_tac_toe',
-                  builder: (context, state) =>  TicTacToeScreen()),
+                  builder: (context, state) =>  const TicTacToeScreen()),
             ]),
         GoRoute(
             name: BoardScreen.name,
