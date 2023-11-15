@@ -34,31 +34,37 @@ class CustomTextFormField extends StatelessWidget {
     
 
 
-    return TextFormField(
-      onChanged: onChanged,
-      validator: validator,
-      onFieldSubmitted: onFieldSubmitted,
-      obscureText: obscureText,
-      keyboardType: keyboardType,
-      style: const TextStyle( fontSize: 30, ),
-      decoration: InputDecoration(
-        floatingLabelStyle:  TextStyle(color: colors.primary, fontSize: 35),
-        // enabledBorder: border,
-        // focusedBorder: border,
-        // errorBorder: border.copyWith( borderSide: const BorderSide( color: Colors.transparent )),
-        // focusedErrorBorder: border.copyWith( borderSide:const  BorderSide( color: Colors.transparent )),
-        isDense: true,
-        label: label != null ? Text(label!) : null,
-        labelStyle: const TextStyle(fontSize: 30),
-        hintText: hint,
-        errorText: errorMessage,
-        errorStyle: const TextStyle(fontSize: 20, ),
-        focusColor: colors.primary,
-        border:  OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Colors.black))),
-        // icon: Icon( Icons.supervised_user_circle_outlined, color: colors.primary, )
-      
+    return Container(
+      decoration:  const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(20))
+      ),
+      child: TextFormField(
+        onChanged: onChanged,
+        validator: validator,
+        onFieldSubmitted: onFieldSubmitted,
+        obscureText: obscureText,
+        keyboardType: keyboardType,
+        style: const TextStyle( fontSize: 30, ),
+        decoration: InputDecoration(
+          floatingLabelStyle:  TextStyle(color: colors.primary, fontSize: 35),
+          // enabledBorder: border,
+          // focusedBorder: border,
+          // errorBorder: border.copyWith( borderSide: const BorderSide( color: Colors.transparent )),
+          // focusedErrorBorder: border.copyWith( borderSide:const  BorderSide( color: Colors.transparent )),
+          isDense: true,
+          label: label != null ? Text(label!) : null,
+          labelStyle: const TextStyle(fontSize: 30,color: Colors.black),
+          hintText: hint,
+          errorText: errorMessage,
+          errorStyle: const TextStyle(fontSize: 20, ),
+          focusColor: colors.primary,
+          border:  OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+              borderSide: const BorderSide(color: Colors.black))),
+          // icon: Icon( Icons.supervised_user_circle_outlined, color: colors.primary, )
+        
+      ),
     );
   }
 }

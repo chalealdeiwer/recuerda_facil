@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:recuerda_facil/features/auth/infrastructure/errors/auth_errors.dart';
 import 'package:recuerda_facil/models/models.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 
@@ -102,6 +104,16 @@ class AuthDataSourceImpl extends AuthDataSource {
           // print("el usuario ya esta en la base de datos");
         }
       }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        throw CustomError("Usuario No encontrado");
+      }
+      if (e.code == 'wrong-password') {
+        throw CustomError("Contraseña Incorrecta");
+      }
+      if (e.code == 'user-disabled') {
+        throw CustomError("Usuario deshabilitado");
+      }
     } catch (e) {
       // Gestiona el error
     }
@@ -133,9 +145,11 @@ class AuthDataSourceImpl extends AuthDataSource {
   Future<UserAccount> loginWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
+      if (googleUser == null) {
+        return throw CustomError("Ingreso de sesión cancelado");
+      }
       final GoogleSignInAuthentication googleAuth =
-          await googleUser!.authentication;
+          await googleUser.authentication;
       final access = auth.GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -184,14 +198,14 @@ class AuthDataSourceImpl extends AuthDataSource {
             return user;
           } catch (e) {
             // print("Error al obtener los datos del usuario: $e");
-            throw Exception();
+            throw CustomError("Error por aquí $e");
           }
         }
       }
     } catch (e) {
-      throw Exception();
+      throw CustomError("Inicio de sesión cancelado");
     }
-    throw Exception();
+    throw CustomError("Error desconocido con google");
   }
 
   @override

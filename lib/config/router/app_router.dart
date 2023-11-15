@@ -150,14 +150,16 @@ final goRouterProvider = Provider((ref) {
       final isGoingTo = state.matchedLocation;
       final authStatus = goRouterNotifier.authStatus;
       // if (authStatus == AuthStatus.checking) return '/splashScreen';
+      if(isGoingTo == '/splashScreen' && authStatus == AuthStatus.authenticated) return '/home/1';
+      if(isGoingTo=='/createUser'&& authStatus==AuthStatus.notAuthenticated)return '/createUser';
+      if(isGoingTo=='/privacy'&& authStatus==AuthStatus.notAuthenticated)return '/privacy';
       if (isGoingTo == '/login' && authStatus == AuthStatus.authenticated) {
         return '/home/1';
       } else if (isGoingTo != '/login' &&
           authStatus == AuthStatus.notAuthenticated) {
         return '/login';
       }
-      if(isGoingTo == '/splashScreen' && authStatus == AuthStatus.authenticated) return '/home/1';
-
+      
       return null;
     },
   );

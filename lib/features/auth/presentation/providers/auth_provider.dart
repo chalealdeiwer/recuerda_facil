@@ -33,7 +33,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     } on CustomError catch (e) {
       logout(e.message);
     } catch (e) {
-      logout("Error desconocido");
+      logout("Error desconocido $e");
     }
   }
 
@@ -42,7 +42,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final user = await authRepository.loginWithGoogle();
       _setLoggedUser(user);
     } catch (e) {
-      logout("Error desconocido");
+      logout("Cancelado");
     }
   }
 

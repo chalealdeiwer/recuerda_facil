@@ -50,12 +50,9 @@ class MyApp extends ConsumerWidget {
       // ],
       // locale: const Locale('es', 'ES'),
 
-      title: 'Material App',
+      title: 'Recuerda Fácil',
       //custom theme
       theme: appTheme.getTheme(),
-
-    
-
       debugShowCheckedModeBanner: false,
     );
   }
