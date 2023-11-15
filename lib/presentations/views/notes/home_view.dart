@@ -31,44 +31,11 @@ class _HomeViewState extends ConsumerState<HomeView>
           ? const CustomAppbar()
           : SliverToBoxAdapter(
               child: SizedBox(
-              height: size.height * 0.06,
+              height: size.height * 0.05,
             )),
       if (!appBarVisibility)
         SliverToBoxAdapter(
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: colors.surfaceVariant.withOpacity(0.5),
-            ),
-            margin: EdgeInsets.symmetric(horizontal: size.width * 0.2),
-            child: GestureDetector(
-              onTap: () {
-                Scaffold.of(context).openDrawer();
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "Recuerda ",
-                    style: TextStyle(
-                        fontFamily: 'SpicyRice-Regular',
-                        fontSize: 35,
-                        color: colors.primary),
-                        textScaleFactor: 1,
-                  ),
-                  Text(
-                    "Fácil",
-                    style: TextStyle(
-                        fontFamily: 'SpicyRice-Regular',
-                        fontSize: 30,
-                        color: colors.secondary),
-                        textScaleFactor: 1,
-                  ),
-                ],
-              ),
-            ),
-          ),
+          child: customTitle(context, title1: "Recuerda ", size1: 35, title2: "Fácil", size2: 30)
         ),
       SliverToBoxAdapter(
         child: Column(

@@ -6,6 +6,8 @@ import 'package:go_router/go_router.dart';
 import 'package:recuerda_facil/presentations/providers/providers.dart';
 import 'package:recuerda_facil/services/user_services.dart';
 
+import '../../features/auth/presentation/providers/providers_auth.dart';
+
 
 class CategorySelector extends ConsumerStatefulWidget {
   const CategorySelector({super.key});
@@ -30,10 +32,10 @@ class _CategorySelectorState extends ConsumerState<CategorySelector> {
 
   @override
   Widget build(BuildContext context) {
+    final userUid = ref.watch(authProvider).user!.uid;
     
-    final user = ref.watch(userProvider);
-    
-    final userAcc = ref.watch(userProviderr(user!.uid));
+    final userAcc = ref.watch(userProviderr(userUid!));
+  
     final ttsCategorySelector = ref.watch(ttsCategorySelectorProvider);
     final List<String> categories;
     categories = userAcc.when(
@@ -177,6 +179,7 @@ class _CategorySelectorState extends ConsumerState<CategorySelector> {
                             // Por favor verifica este widget, no es estándar en Flutter y podría causar un error
                             child: const Text('Eliminar'),
                             onPressed: () async {
+                              if(mounted){
                               ref
                                   .watch(categoryProvider.notifier)
                                   .update((state) => categories[1]);
@@ -189,14 +192,7 @@ class _CategorySelectorState extends ConsumerState<CategorySelector> {
                                   .then((value) {
                                 context.pop();
                               });
-                              // Recargar las categorías o actualizar la UI como sea necesario
-                              //  await _loadCategories().then((value) =>{
-                              //   if(mounted)
-                              //  setState(() {}),
-
-                              //   context.pop()
-                              //  });
-                              // Cerrar el cuadro de diálogo
+                              }
                             },
                           ),
                         ],

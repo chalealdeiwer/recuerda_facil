@@ -1,6 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:recuerda_facil/models/user_account.dart';
+import 'package:recuerda_facil/features/auth/domain/entities/user_account.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:recuerda_facil/models/user_account.dart';
+import 'package:recuerda_facil/features/auth/domain/entities/user_account.dart';
+import 'package:recuerda_facil/features/auth/presentation/providers/providers_auth.dart';
 import 'package:recuerda_facil/services/user_services.dart';
 
-import '../../providers/user_provider.dart';
 
 class CommunityScreen extends ConsumerStatefulWidget {
   static const name = 'community_screen';
@@ -17,7 +17,7 @@ class _TestScreenState extends ConsumerState<CommunityScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final userActive = ref.watch(userProvider);
+    final userActive= ref.watch(authProvider).user;
     final textStyle = Theme.of(context).textTheme;
 
     return Scaffold(

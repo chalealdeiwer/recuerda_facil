@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:recuerda_facil/presentations/widgets/widgets.dart';
 
 class MoreView extends StatelessWidget {
   const MoreView({super.key});
@@ -15,11 +16,7 @@ class MoreView extends StatelessWidget {
           const SizedBox(
             height: 50,
           ),
-          Text(
-            "Más Recursos",
-            style:
-                textStyle.displaySmall!.copyWith(fontWeight: FontWeight.bold),
-          ),
+          customTitle(context, title1: "Más ", size1: 35,title2: "Recursos", size2: 30),
           const SizedBox(
             height: 30,
           ),

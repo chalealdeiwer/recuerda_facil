@@ -13,7 +13,7 @@ class AppNoteNotifier extends StateNotifier<AppNotes> {
   AppNoteNotifier() : super(AppNotes());
 
 }
-final remindersProvider = FutureProvider.family<List<Note>, String>((ref, userId) async {
+final remindersProvider = FutureProvider.family.autoDispose<List<Note>, String>((ref, userId) async {
   final notesService = ref.read(notesServiceProvider);
   return await notesService.getRemindersOfUser(userId);
 });

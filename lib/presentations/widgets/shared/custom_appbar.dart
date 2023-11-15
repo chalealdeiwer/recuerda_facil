@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:recuerda_facil/features/auth/presentation/providers/providers_auth.dart';
 import 'package:recuerda_facil/presentations/screens/screens.dart';
 
 import '../../../services/services.dart';
@@ -15,7 +16,7 @@ class CustomAppbar extends ConsumerWidget {
     final isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
     final size = MediaQuery.of(context).size;
     final colors = Theme.of(context).colorScheme;
-    final user= ref.watch(userProvider);
+    final user= ref.watch(authProvider).user;
     return SliverAppBar(
       expandedHeight: size.height * 0.06,
       backgroundColor: colors.surfaceVariant.withOpacity(0.5),

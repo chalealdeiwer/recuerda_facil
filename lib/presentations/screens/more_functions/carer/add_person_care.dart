@@ -52,8 +52,9 @@ class _SharedNotesScreenState extends ConsumerState<AddPersonCareScreen> {
                 FirebaseAuth.instance.currentUser!.uid, qrValue)) {
               showAlertDialogCustom("Información",
                   "El usuario se ha encontrado y se asigno a personas a cuidar");
+              final user = await getUser(qrValue);
               if (mounted) {
-                context.push('/carer_list/$qrValue');
+                context.push('/carer_list/$qrValue', extra: user);
               }
             } else {
               showAlertDialogCustom("Información",

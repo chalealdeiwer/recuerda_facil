@@ -4,6 +4,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:recuerda_facil/config/notes/app_notes.dart';
+import 'package:recuerda_facil/features/auth/presentation/providers/providers_auth.dart';
 
 import '../providers/providers.dart';
 
@@ -31,7 +32,7 @@ class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
   @override
   Widget build(BuildContext context) {
     final category = ref.watch(categoryProvider.notifier).state;
-    final user = ref.watch(userProvider);
+    final user = ref.watch(authProvider).user;
     final isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
     final colors = Theme.of(context).colorScheme;
     final textStyle = Theme.of(context).textTheme;
@@ -104,9 +105,7 @@ class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
                             ),
                             backgroundColor: Colors.red[200],
                           ));
-                          noteProvider.deleteNote(notes2[index].key).then(
-                              (value) =>
-                                  ref.refresh(remindersProvider(user.uid)));
+                          noteProvider.deleteNote(notes2[index].key);
 
                           notes2.removeAt(index);
                         },

@@ -3,45 +3,40 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:go_router/go_router.dart';
-import 'package:recuerda_facil/models/user.dart';
-import 'package:recuerda_facil/presentations/screens/screens.dart';
-import '../../../services/services.dart';
-import '../../providers/providers.dart';
+import '../../../../../presentations/providers/providers.dart';
+import '../../../shared/widgets/custom_text_form_field.dart';
+import '../../providers/providers_auth.dart';
 
-class Login2Screen extends ConsumerStatefulWidget {
+class Login2Screen extends StatelessWidget {
   static const name = "login_screen";
-
   const Login2Screen({Key? key}) : super(key: key);
-
-  @override
-  ConsumerState<Login2Screen> createState() => _Login2ScreenState();
-}
-
-class _Login2ScreenState extends ConsumerState<Login2Screen> {
-  late String email, password;
-  final _formkey = GlobalKey<FormState>();
-  String error = '';
-  @override
-  void initState() {
-    super.initState();
-      showNotification();
-
-  }
-
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(userProvider);
+    return const _LoginForm();
+  }
+}
 
-
-    // Usa el método watch directamente dentro del método build
-    return user != null ? HomeScreen(pageIndex: 1,) : login(user);
+class _LoginForm extends ConsumerWidget {
+  const _LoginForm();
+  void showSnackbar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(message),
+      backgroundColor: Colors.red,
+    ));
   }
 
-  Widget login(User? user) {
+  @override
+  Widget build(BuildContext context, ref) {
     final isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
     final colors = Theme.of(context).colorScheme;
+    final loginForm = ref.watch(loginFormProvider);
+    ref.listen(authProvider, (previous, next) {
+      if (next.errorMessage!.isEmpty) return;
+      showSnackbar(context, next.errorMessage!);
+    });
+
     return Scaffold(
-      
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -85,12 +80,16 @@ class _Login2ScreenState extends ConsumerState<Login2Screen> {
                           ),
                         ],
                       ),
-                      const SizedBox(width: 10,),
+                      const SizedBox(
+                        width: 10,
+                      ),
                       SizedBox(
                         height: 90,
                         width: 90,
                         child: Image.asset(
-                          isDarkMode ? "assets/circleLogoWhite.png" : "assets/circleLogo.png",
+                          isDarkMode
+                              ? "assets/circleLogoWhite.png"
+                              : "assets/circleLogo.png",
                           fit: BoxFit.cover,
                         ),
                       )
@@ -105,73 +104,62 @@ class _Login2ScreenState extends ConsumerState<Login2Screen> {
                         style: TextStyle(
                           fontFamily: 'SpicyRice-Regular',
                           fontSize: 28,
-                        )
-                        )
-                        )
-                        ),
-            Offstage(
-              offstage: error == '',
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  error,
-                  style: const TextStyle(color: Colors.red, fontSize: 16),
-                ),
-              ),
-            ),
+                        )))),
             Padding(
               padding: const EdgeInsets.all(8),
-              child: formulario(),
+              child: formulario(ref, loginForm),
             ),
-            buttonLogin(),
+            buttonLogin(ref, loginForm),
             buildOrLine(),
-            buttonGoogle(),
+            buttonGoogle(ref),
             const Padding(
-              padding:  EdgeInsets.symmetric(horizontal:16.0),
-              child:  Divider(),
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: Divider(),
             ),
-            newUser(),
-            privacy(),
-
-            const SizedBox(height: 100,),
-
+            newUser(context),
+            privacy(context),
+            const SizedBox(
+              height: 100,
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget buttonLogin() {
+  Widget buttonLogin(WidgetRef ref, loginForm) {
     return FractionallySizedBox(
       widthFactor: 0.6,
       child: FilledButton(
-          onPressed: () async {
-            if (_formkey.currentState!.validate()) {
-              _formkey.currentState!.save();
-              
-              // UserCredential? credenciales = await login(email, password);
-              // if (credenciales != null) {
-              //   if (credenciales.user != null) {
-              //     if (credenciales.user!.emailVerified) {
-              //       Navigator.pushAndRemoveUntil(
-              //           context,
-              //           MaterialPageRoute(builder: (context) => HomeScreen()),
-              //           (route) => false);
-              //     } else {
-              //       setState(() {
-              //         error = "Debes verificar tu correo antes de acceder";
-              //       });
-              //     }
-                // }
-              // }
 
-            }
-          },
-          child: const Text("Ingresar",style: TextStyle(fontSize: 25),)),
+          // UserCredential? credenciales = await login(email, password);
+          // if (credenciales != null) {
+          //   if (credenciales.user != null) {
+          //     if (credenciales.user!.emailVerified) {
+          //       Navigator.pushAndRemoveUntil(
+          //           context,
+          //           MaterialPageRoute(builder: (context) => HomeScreen()),
+          //           (route) => false);
+          //     } else {
+          //       setState(() {
+          //         error = "Debes verificar tu correo antes de acceder";
+          //       });
+          //     }
+          // }
+          // }
+          onPressed: loginForm.isPosting
+              ? null
+              : () {
+                  ref.read(loginFormProvider.notifier).onFormSubmit();
+                },
+          child: const Text(
+            "Ingresar",
+            style: TextStyle(fontSize: 25),
+          )),
     );
   }
 
-  Widget privacy(){
+  Widget privacy(BuildContext context) {
     return Wrap(
       alignment: WrapAlignment.center,
       crossAxisAlignment: WrapCrossAlignment.center,
@@ -186,17 +174,16 @@ class _Login2ScreenState extends ConsumerState<Login2Screen> {
             },
             child: const Text(
               "Política de Privacidad",
-              style: TextStyle(fontSize: 18,color: Colors.blue),
+              style: TextStyle(fontSize: 18, color: Colors.blue),
             ))
       ],
     );
   }
 
-  Widget newUser() {
+  Widget newUser(BuildContext context) {
     return Wrap(
       alignment: WrapAlignment.center,
       crossAxisAlignment: WrapCrossAlignment.center,
-      
       children: [
         const Text(
           "¿Nuevo Aquí?",
@@ -216,8 +203,8 @@ class _Login2ScreenState extends ConsumerState<Login2Screen> {
 
   Widget buildOrLine() {
     return const Padding(
-      padding:  EdgeInsets.symmetric(horizontal:16.0),
-      child:  Row(
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
         children: [
@@ -232,16 +219,16 @@ class _Login2ScreenState extends ConsumerState<Login2Screen> {
     );
   }
 
-  Widget buttonGoogle() {
+  Widget buttonGoogle(WidgetRef ref) {
     return Column(
       children: [
         SignInButton(
             padding: const EdgeInsets.only(left: 40),
             // mini: true,
             text: "Entrar con Google",
-            
             Buttons.Google, onPressed: () async {
-          ref.read(userProvider.notifier).signInWithGoogle();
+          ref.read(loginFormProvider.notifier).signInGoogle();
+          // ref.read(userProvider.notifier).signInWithGoogle();
 
           // if (user!= null) {
           //   if( await searchUserUid(user.uid)){
@@ -263,62 +250,36 @@ class _Login2ScreenState extends ConsumerState<Login2Screen> {
     );
   }
 
-  Widget formulario() {
+  Widget formulario(WidgetRef ref, loginForm) {
     return Form(
-        key: _formkey,
         child: Column(
-          children: [
-            buildEmail(),
-            const Padding(padding: EdgeInsets.only(top: 12)),
-            buildPassword()
-          ],
-        ));
+      children: [
+        buildEmail(ref, loginForm),
+        const Padding(padding: EdgeInsets.only(top: 12)),
+        buildPassword(ref, loginForm)
+      ],
+    ));
   }
 
-  Widget buildEmail() {
-    return TextFormField(
-      style: const TextStyle(fontSize: 30) ,
-      decoration:  InputDecoration(
-          labelText: "Correo",
-          labelStyle: const TextStyle(fontSize: 25),
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Colors.black)
-              )
-              ),
+  Widget buildEmail(WidgetRef ref, loginForm) {
+    return CustomTextFormField(
+      label: 'Correo',
       keyboardType: TextInputType.emailAddress,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return "Este campo es obligatorio";
-        }
-        return null;
-      },
-      onSaved: (String? value) {
-        email = value!;
-      },
+      onChanged: ref.read(loginFormProvider.notifier).onEmailChange,
+      errorMessage:
+          loginForm.isFormPosted ? loginForm.email.errorMessage : null,
     );
   }
 
-  Widget buildPassword() {
-    return TextFormField(
-      style: const TextStyle(fontSize: 30),
-      decoration: InputDecoration(
-          labelText: "Contraseña",
-          labelStyle: const TextStyle(fontSize: 25),
-
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Colors.black))),
-      obscureText: true,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return "Este campo es obligatorio";
-        }
-        return null;
-      },
-      onSaved: (String? value) {
-        password = value!;
-      },
-    );
+  Widget buildPassword(WidgetRef ref, loginForm) {
+    return CustomTextFormField(
+        label: 'Contraseña',
+        obscureText: true,
+        onChanged: ref.read(loginFormProvider.notifier).onPasswordChange,
+        onFieldSubmitted: (_) {
+          ref.read(loginFormProvider.notifier).onFormSubmit();
+        },
+        errorMessage:
+            loginForm.isFormPosted ? loginForm.password.errorMessage : null);
   }
 }

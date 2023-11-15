@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:recuerda_facil/services/services.dart';
 
 import '../../../../config/notes/app_notes.dart';
+import '../../../../models/models.dart';
 import '../../home/home_screen.dart';
 
 class CarerListStream extends StatelessWidget {
@@ -13,6 +13,7 @@ class CarerListStream extends StatelessWidget {
   static const name = 'carer_list_stream';
   @override
   Widget build(BuildContext context) {
+      final user2 = GoRouterState.of(context).extra! as UserAccount;
     final colors = Theme.of(context).colorScheme;
     final textStyle = Theme.of(context).textTheme;
     final AppNotes noteProvider = AppNotes();
@@ -29,23 +30,9 @@ class CarerListStream extends StatelessWidget {
         body: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  FutureBuilder(
-                    future: getUser(user),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return Text(
-                          "Recordatorios de ${snapshot.data!.displayName}",
-                          style: textStyle.titleLarge,
-                        );
-                      } else {
-                        return const LinearProgressIndicator();
-                      }
-                    },
-                  )
-                ],
-              ),
+              child: Text(
+                          "Recordatorios de ${user2.displayName}",
+                          style: textStyle.titleLarge,),
             ),
             StreamBuilder<List>(
               stream: noteProvider.getNotesStream(user.toString(), category),

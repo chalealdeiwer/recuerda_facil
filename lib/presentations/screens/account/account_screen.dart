@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:recuerda_facil/features/auth/presentation/providers/providers_auth.dart';
 import 'package:recuerda_facil/presentations/providers/user_account_provider.dart';
 
 import '../../../services/services.dart';
-import '../../providers/user_provider.dart';
 
 class AccountScreen extends ConsumerStatefulWidget {
   static const name = 'account_screen';
@@ -36,8 +36,9 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(userProvider);
-    final userAcc = ref.watch(userProviderr(user!.uid));
+    final userUid = ref.watch(authProvider).user!.uid;
+    
+    final userAcc = ref.watch(userProviderr(userUid!));
     final colors = Theme.of(context).colorScheme;
     final textStyle = Theme.of(context).textTheme;
     final size = MediaQuery.of(context).size;
@@ -88,7 +89,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                             if (imagen == null) return;
                             imagenToUpload = File(imagen.path);
         
-                            await uploadCoverPhoto(user.uid, imagenToUpload!);
+                            await uploadCoverPhoto(userUid, imagenToUpload!);
                           },
                           child: const Icon(
                             Icons.camera_alt,
@@ -171,7 +172,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                         if (imagen == null) return;
                         imagenToUpload = File(imagen!.path);
         
-                        await uploadProfilePhoto(user.uid, imagenToUpload!);
+                        await uploadProfilePhoto(userUid, imagenToUpload!);
                       },
                       child: Stack(
                         children: [

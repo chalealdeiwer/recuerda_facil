@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:recuerda_facil/features/auth/presentation/providers/providers_auth.dart';
 import 'package:recuerda_facil/presentations/providers/providers.dart';
+import 'package:recuerda_facil/presentations/widgets/widgets.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarView extends ConsumerStatefulWidget {
@@ -15,8 +17,8 @@ class Event {
   final String content;
   final bool stateDone;
   final String category;
-  
-  const Event(this.title,this.content,this.stateDone,this.category);
+
+  const Event(this.title, this.content, this.stateDone, this.category);
 
   @override
   String toString() => title;
@@ -43,6 +45,7 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
   @override
   void initState() {
     super.initState();
+
     _selectedDay = _focusedDay;
     _events = {
       // DateTime.utc(_focusedDay.year, _focusedDay.month, _focusedDay.day): [
@@ -68,15 +71,19 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final textStyle = Theme.of(context).textTheme;
-    final userAcc = ref.watch(userProvider);
-    final reminder = ref.watch(remindersProvider(userAcc!.uid));
+    final userAcc= ref.watch(authProvider).user;
+      
+    
+    final reminder = ref.watch(remindersProvider(userAcc!.uid!));
+
     if (!_remindersAdded) {
       // Comprobación para asegurarse de que los recordatorios se añadan una sola vez
       reminder.whenData((notes) {
         for (var note in notes) {
           var date = note.dateRemember.toUtc();
           var dateKey = DateTime.utc(date.year, date.month, date.day);
-          _events.putIfAbsent(dateKey, () => []).add(Event(note.title,note.content,note.stateDone,note.category));
+          _events.putIfAbsent(dateKey, () => []).add(
+              Event(note.title, note.content, note.stateDone, note.category));
         }
         _remindersAdded = true; // Marcar los recordatorios como añadidos
       });
@@ -88,11 +95,7 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
           const SizedBox(
             height: 40,
           ),
-          Text(
-            "Calendario",
-            style:
-                textStyle.displaySmall!.copyWith(fontWeight: FontWeight.bold),
-          ),
+          customTitle(context, title1: "Calendario", size1: 35),
           Container(
             margin: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -126,11 +129,10 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
                   )),
               calendarStyle: CalendarStyle(
                 selectedDecoration: BoxDecoration(
-
                   color: colors.primary,
                   shape: BoxShape.circle,
                 ),
-              
+
                 defaultDecoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(color: colors.primary),
@@ -161,7 +163,8 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
                   border: Border.all(color: colors.primary),
                 ),
                 weekNumberTextStyle: const TextStyle(fontSize: 22),
-                selectedTextStyle: const TextStyle(fontSize: 25,color: Colors.black),
+                selectedTextStyle:
+                    const TextStyle(fontSize: 25, color: Colors.black),
                 defaultTextStyle: const TextStyle(fontSize: 22),
                 weekendTextStyle: const TextStyle(fontSize: 22),
               ),
@@ -195,7 +198,6 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
           ),
           SizedBox(
             height: 500,
-
             child: ListView.builder(
               itemCount: _getEventsForDay(_selectedDay!).length,
               itemBuilder: (context, index) {
@@ -203,56 +205,52 @@ class _CalendarViewState extends ConsumerState<CalendarView> {
                 return Container(
                   margin: const EdgeInsets.all(3),
                   decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: colors.surfaceVariant.withOpacity(0.7),
-
+                    borderRadius: BorderRadius.circular(20),
+                    color: colors.surfaceVariant.withOpacity(0.7),
                   ),
                   child: ListTile(
-                    onTap: () {
-                      
-                    },
+                    onTap: () {},
                     title: Text(event.title),
                     subtitle: SizedBox(
-                          height: 50,
-                          child: Column(
+                      height: 50,
+                      child: Column(
+                        children: [
+                          Wrap(
+                            alignment: WrapAlignment.start,
                             children: [
-                              Wrap(
-                                alignment: WrapAlignment.start,
-                                children: [
-                                  Text(event.content, maxLines: 1),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  if (event.category != '')
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0,
-                                          vertical:
-                                              4.0), // Ajusta el padding según necesites
-                                      decoration: BoxDecoration(
-                                        color: colors
-                                            .surfaceVariant, // Define el color de fondo
-                                        borderRadius: BorderRadius.circular(
-                                            20), // Define el borderRadius
-                                      ),
-                                      child: Text(event
-                                          .category), // Tu widget Text
-                                    ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                ],
-                              ),
+                              Text(event.content, maxLines: 1),
                               const SizedBox(
-                                height: 10,
+                                width: 5,
                               ),
-                              
+                              if (event.category != '')
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0,
+                                      vertical:
+                                          4.0), // Ajusta el padding según necesites
+                                  decoration: BoxDecoration(
+                                    color: colors
+                                        .surfaceVariant, // Define el color de fondo
+                                    borderRadius: BorderRadius.circular(
+                                        20), // Define el borderRadius
+                                  ),
+                                  child: Text(event.category), // Tu widget Text
+                                ),
+                              const SizedBox(
+                                width: 10,
+                              ),
                             ],
                           ),
-                        ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                        ],
+                      ),
+                    ),
                     trailing: const Icon(Icons.event),
-                    leading: event.stateDone? const Icon(Icons.done):const Icon(Icons.close),
-                
+                    leading: event.stateDone
+                        ? const Icon(Icons.done)
+                        : const Icon(Icons.close),
                   ),
                 );
               },

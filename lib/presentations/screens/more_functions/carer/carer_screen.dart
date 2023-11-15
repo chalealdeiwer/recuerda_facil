@@ -82,18 +82,18 @@ class _CarerScreenState extends ConsumerState<CarerScreen> {
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return const Center(child: Text('No hay personas a cargo.'));
                   } else {
-                    List users = snapshot.data!.toList();
+                    List<UserAccount> users = snapshot.data!.toList();
 
                     return ListView.builder(
                       itemCount: users.length,
                       itemBuilder: (context, index) {
-                        var user = users[index];
+                        UserAccount user = users[index];
                         String? photoURL = user.photoURL;
                         return ListTile(
                           onTap: () {
                             
                           
-                            context.push('/carer_list/${user.uid}');
+                            context.push('/carer_list/${user.uid}',extra: user);
                           
 
                           },

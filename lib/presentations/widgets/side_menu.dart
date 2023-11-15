@@ -1,13 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:recuerda_facil/config/menu/menu_items.dart';
 import 'package:animate_do/animate_do.dart';
-
+import '../../features/auth/presentation/providers/providers_auth.dart';
 import '../providers/providers.dart';
 
 class SideMenu extends ConsumerStatefulWidget {
@@ -24,9 +22,12 @@ class _SideMenuState extends ConsumerState<SideMenu> {
   @override
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context).textTheme;
-
+    if(FirebaseAuth.instance.currentUser==null){
+      return const CircularProgressIndicator();
+    }
+    final userUid=ref.watch(authProvider).user!.uid;
     final userAcc =
-        ref.watch(userProviderr(FirebaseAuth.instance.currentUser!.uid));
+        ref.watch(userProviderr(userUid!));
     // final hasNotch = MediaQuery.of(context).viewPadding.top > 35;
     final colors = Theme.of(context).colorScheme;
     return NavigationDrawer(
@@ -142,11 +143,8 @@ class _SideMenuState extends ConsumerState<SideMenu> {
           padding: const EdgeInsets.only(left: 17.0),
           child: TextButton(
               onPressed: () async {
-                await FirebaseFirestore.instance.terminate();
-                await GoogleSignIn().signOut();
-                await FirebaseAuth.instance
-                    .signOut()
-                    .then((value) => {context.pushReplacement('/login')});
+          
+                ref.read(authProvider.notifier).logout();
               },
               child: Row(
                 children: [

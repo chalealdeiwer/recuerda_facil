@@ -354,8 +354,7 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
                                 Icons.note.codePoint.toString())
                             .then((value) => {
                                   if (mounted) context.pop(),
-                                  ref.refresh(
-                                      remindersProvider(currentUserUID)),
+                              
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                           action: SnackBarAction(

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:recuerda_facil/features/auth/presentation/providers/providers_auth.dart';
 import 'package:recuerda_facil/presentations/screens/more/more_productivity/bar_chart.dart';
 import 'package:recuerda_facil/presentations/screens/more/more_productivity/pie_chart.dart';
 
-import '../../../providers/providers.dart';
 
 class ProductivityScreen extends ConsumerWidget {
   static const name = 'productivity_screen';
@@ -14,7 +14,7 @@ class ProductivityScreen extends ConsumerWidget {
     BuildContext context,
     ref,
   ) {
-    final user = ref.watch(userProvider);
+    final user = ref.watch(authProvider).user;
     final colors = Theme.of(context).colorScheme;
     final textStyle = Theme.of(context).textTheme;
     final size = MediaQuery.of(context).size;

@@ -32,7 +32,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace "com.recuerdafacil.recuerda_facil"
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 33
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -53,10 +53,12 @@ android {
         applicationId "com.recuerdafacil.recuerda_facil"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion 21
-        targetSdkVersion flutter.targetSdkVersion
-        versionCode 2
-        versionName "1.0.1"
+        // minSdkVersion 21
+        // targetSdkVersion 30
+        minSdkVersion 26
+        targetSdkVersion 33
+        versionCode 3
+        versionName "1.0.2"
         multiDexEnabled true
     }
     signingConfigs {

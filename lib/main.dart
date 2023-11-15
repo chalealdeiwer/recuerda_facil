@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:recuerda_facil/config/router/app_router.dart';
 // import 'package:provider/provider.dart';
 import 'package:recuerda_facil/config/theme/app_theme.dart';
-import 'package:recuerda_facil/config/router/app_router.dart';
 import 'package:recuerda_facil/firebase_options.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:recuerda_facil/presentations/providers/theme_provider.dart';
@@ -15,6 +15,7 @@ import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 
 
 void main() async {
+  //formato de fechas en español
   await initializeDateFormatting('es_ES', null);
   Intl.defaultLocale = 'es_ES';
 
@@ -38,16 +39,16 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context,ref) {
     final AppTheme appTheme= ref.watch(themeNotifierProvider);
 
-    final FlutterLocalization localization = FlutterLocalization.instance;
+    // final FlutterLocalization localization = FlutterLocalization.instance;
     return MaterialApp.router(
-      routerConfig: appRouter,
+      routerConfig: ref.watch(goRouterProvider),
 
-      localizationsDelegates: localization.localizationsDelegates,
+      // localizationsDelegates: localization.localizationsDelegates,
 
-      supportedLocales: const [
-        Locale('es', 'ES'), // Español
-      ],
-      locale: const Locale('es', 'ES'),
+      // supportedLocales: const [
+      //   Locale('es', 'ES'), // Español
+      // ],
+      // locale: const Locale('es', 'ES'),
 
       title: 'Material App',
       //custom theme

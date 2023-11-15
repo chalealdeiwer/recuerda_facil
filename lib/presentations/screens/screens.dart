@@ -2,11 +2,10 @@
 export 'package:recuerda_facil/presentations/screens/about/about_screen.dart';
 export 'package:recuerda_facil/presentations/screens/account/account_screen.dart';
 export 'package:recuerda_facil/presentations/screens/appearance/appearance_screen.dart';
-export 'package:recuerda_facil/presentations/screens/calendar/calendar_screen.dart';
 export 'package:recuerda_facil/presentations/screens/community/community_screen.dart';
-export 'package:recuerda_facil/presentations/screens/create_user/create_user_screen.dart';
+export 'package:recuerda_facil/features/auth/presentation/screens/create_user/create_user_screen.dart';
 export 'package:recuerda_facil/presentations/screens/home/home_screen.dart';
-export 'package:recuerda_facil/presentations/screens/login/login_screen.dart';
+export 'package:recuerda_facil/features/auth/presentation/screens/login/login_screen.dart';
 export 'package:recuerda_facil/presentations/screens/more_functions/more_functions_screen.dart';
 export 'package:recuerda_facil/presentations/screens/more/more_board/board_screen.dart';
 export 'package:recuerda_facil/presentations/screens/more/more_games/games_screen.dart';

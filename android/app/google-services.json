@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "306515254042-rc86kmhtfgoed1468d57pu2ah4is3jbi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.recuerdafacil.recuerda_facil",
+            "certificate_hash": "fb2ed7e31f694ba8f11ab7a8949e89ac2912db61"
+          }
+        },
+        {
           "client_id": "306515254042-pfnr14h2jp264q00v4it81fdsg7ummgu.apps.googleusercontent.com",
           "client_type": 3
         }
