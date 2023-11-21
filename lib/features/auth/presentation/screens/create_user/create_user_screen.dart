@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../../presentations/providers/providers.dart';
+import '../../../../../services/services.dart';
 
 class CreateUserScreen extends ConsumerStatefulWidget {
   static const name = "create_user_screen";
@@ -224,16 +225,21 @@ class CreateUserScreenState extends ConsumerState<CreateUserScreen> {
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         const Text(
-          "Al registrarte aceptas el Tratamiento de Datos y ",
+          "Al registrarte aceptas nuestros ",
           style: TextStyle(fontSize: 18),
         ),
+        TextButton(onPressed: (){
+          launchUrlService("https://www.google.com/");
+        }, child: const Text("Términos de uso",style: TextStyle(fontSize: 18, color: Colors.blue, decoration: TextDecoration.underline, decorationColor: Colors.blue))),
+        const Text("y"),
         TextButton(
             onPressed: () {
-              context.push('/privacy');
+          launchUrlService("https://www.google.com/");
+              
             },
             child: const Text(
               "Política de Privacidad",
-              style: TextStyle(fontSize: 18, color: Colors.blue),
+              style: TextStyle(fontSize: 18, color: Colors.blue, decoration: TextDecoration.underline, decorationColor: Colors.blue),
             ))
       ],
     );

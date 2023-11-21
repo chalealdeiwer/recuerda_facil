@@ -4,7 +4,6 @@ import 'package:recuerda_facil/features/auth/presentation/providers/providers_au
 import 'package:recuerda_facil/presentations/screens/more/more_productivity/bar_chart.dart';
 import 'package:recuerda_facil/presentations/screens/more/more_productivity/pie_chart.dart';
 
-
 class ProductivityScreen extends ConsumerWidget {
   static const name = 'productivity_screen';
   const ProductivityScreen({super.key});
@@ -39,12 +38,13 @@ class ProductivityScreen extends ConsumerWidget {
                       width: 20,
                     ),
                     CircleAvatar(
-                        minRadius: 10,
-                        maxRadius: 40,
-                        child: Image.network(user!.photoURL.toString())),
-                    const SizedBox(
-                      width: 20,
+                      minRadius: 10,
+                      maxRadius: 50,
+                      backgroundColor: colors.secondary,
+                      backgroundImage:
+                          Image.network(user!.photoURL.toString()).image,
                     ),
+                    const SizedBox(width: 10,),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,

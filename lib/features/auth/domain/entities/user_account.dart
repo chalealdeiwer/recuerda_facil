@@ -12,6 +12,7 @@ class UserAccount {
 
   final String? email;
   final String? coverPhotoURL;
+  final bool? firstSignIn;
 
   UserAccount({
     this.uid = 'Sin nombre',
@@ -25,6 +26,7 @@ class UserAccount {
     this.email = 'Sin email',
     this.coverPhotoURL =
         'https://i.pinimg.com/736x/e8/9b/a4/e89ba41407fb258daa464ba2e7aa27e2.jpg',
+    this.firstSignIn = false,
   });
 
   // Constructor que crea un Usuario a partir de un mapa
@@ -40,5 +42,6 @@ class UserAccount {
         usersCarer = List<String>.from(map['usersCarer'] ?? const []),
         email = map['email'] ?? 'Sin email',
         coverPhotoURL = map['coverPhotoURL'] ??
-            'https://i.pinimg.com/736x/e8/9b/a4/e89ba41407fb258daa464ba2e7aa27e2.jpg';
+            'https://i.pinimg.com/736x/e8/9b/a4/e89ba41407fb258daa464ba2e7aa27e2.jpg',
+            firstSignIn = map['firstSignIn'] ?? false;
 }

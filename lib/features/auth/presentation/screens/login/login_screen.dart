@@ -234,24 +234,7 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
   Future<UserCredential?> login(String email, String passwd) async {
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
-      return userCredential;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        setState(() {
-          error = "Usuario No encontrado";
-        });
-      }
-      if (e.code == 'wrong-password') {
-        setState(() {
-          error = "Contraseña Incorrecta";
-        });
-      }
-    }
-    return null;
-  }
+   return null;
 
 }
-
+}

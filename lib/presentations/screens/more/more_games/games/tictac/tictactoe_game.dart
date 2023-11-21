@@ -12,9 +12,9 @@ class TicTacToeScreen extends StatefulWidget {
 class _TicTacToeScreenState extends State<TicTacToeScreen> {
   TextStyle customStyle(
           {double fontSize = 16.0,
-          Color color = Colors.white,
+          // Color color = Colors.white,
           FontWeight fontWeight = FontWeight.normal}) =>
-      TextStyle(fontSize: fontSize, color: color, fontWeight: fontWeight);
+      TextStyle(fontSize: fontSize, fontWeight: fontWeight);
   int scoreX = 0;
   int scoreO = 0;
   bool turnOf = true;
@@ -32,11 +32,13 @@ class _TicTacToeScreenState extends State<TicTacToeScreen> {
   ];
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Scaffold(
         appBar: (AppBar(
           elevation: 0,
           title: const Text('Tic Tac Toe'),
-          backgroundColor: const Color(0xff3b2763),
+          // backgroundColor: const Color(0xff3b2763),
+          backgroundColor: colors.surfaceVariant,
           actions: [
             IconButton(
                 onPressed: () {
@@ -45,7 +47,8 @@ class _TicTacToeScreenState extends State<TicTacToeScreen> {
                 icon: const Icon(Icons.refresh_rounded))
           ],
         )),
-        backgroundColor: const Color(0xff20123c),
+        // backgroundColor: const Color(0xff20123c),
+        backgroundColor: colors.surfaceVariant,
         body: Column(
           children: [_points(), _board(), _turns()],
           // children: [_points(), _board(), _turns()],
@@ -96,6 +99,7 @@ class _TicTacToeScreenState extends State<TicTacToeScreen> {
   }
 
   Widget _board() {
+    final colors = Theme.of(context).colorScheme;
     return Expanded(
       flex: 3,
       child: GridView.builder(
@@ -110,12 +114,12 @@ class _TicTacToeScreenState extends State<TicTacToeScreen> {
             },
             child: Container(
                 decoration:
-                    BoxDecoration(border: Border.all(color: Colors.white)),
+                    BoxDecoration(border: Border.all(width: 2)),
                 child: Center(
                     child: Text(
                   boxes[index],
                   style: TextStyle(
-                      color: boxes[index] == 'x' ? Colors.white : Colors.red,
+                      color: boxes[index] == 'x' ? colors.primary : colors.error,
                       fontSize: 100),
                 ))),
           );
@@ -129,7 +133,7 @@ class _TicTacToeScreenState extends State<TicTacToeScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Text(
           turnOf ? 'Turno de O' : 'Turno de X',
-          style: customStyle(color: Colors.white, fontSize: 40),
+          style: customStyle(fontSize: 40),
         ));
   }
 

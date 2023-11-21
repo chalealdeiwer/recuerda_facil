@@ -89,6 +89,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
                 },
               ),
               style: const TextStyle(fontSize: 30),
+              textAlign: TextAlign.center,
             )
           ],
         ),

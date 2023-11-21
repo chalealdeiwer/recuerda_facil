@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:recuerda_facil/features/auth/presentation/screens/first_sign_in/first_sign_in_screen.dart';
 import 'package:recuerda_facil/features/auth/presentation/screens/login/login_2.dart';
 import 'package:recuerda_facil/presentations/screens/more/more_games/games/tictac/tictactoe_game.dart';
 import 'package:recuerda_facil/presentations/screens/more_functions/carer/carer_list.dart';
 import 'package:recuerda_facil/presentations/screens/screens.dart';
-import 'package:recuerda_facil/presentations/screens/test/alarm.dart';
 import 'package:recuerda_facil/presentations/views/notes/more_view.dart';
 
 import '../../features/auth/presentation/providers/providers_auth.dart';
@@ -46,7 +46,7 @@ final goRouterProvider = Provider((ref) {
       GoRoute(
           name: TestScreen.name,
           path: '/test',
-          builder: (context, state) => const AlarmTest()),
+          builder: (context, state) => const SplashTest()),
       GoRoute(
         path: '/more',
         builder: (context, state) => const MoreView(),
@@ -145,21 +145,37 @@ final goRouterProvider = Provider((ref) {
           name: SplashScreen.name,
           path: '/splashScreen',
           builder: (context, state) => const SplashScreen()),
+      GoRoute(
+          name: FirstSignInScreen.name,
+          path: '/firstSignIn',
+          builder: (context, state) =>  FirstSignInScreen()),
     ],
     redirect: (context, state) {
       final isGoingTo = state.matchedLocation;
       final authStatus = goRouterNotifier.authStatus;
+      print("Is going to: $isGoingTo, authStatus: $authStatus");
       // if (authStatus == AuthStatus.checking) return '/splashScreen';
-      if(isGoingTo == '/splashScreen' && authStatus == AuthStatus.authenticated) return '/home/1';
-      if(isGoingTo=='/createUser'&& authStatus==AuthStatus.notAuthenticated)return '/createUser';
-      if(isGoingTo=='/privacy'&& authStatus==AuthStatus.notAuthenticated)return '/privacy';
+      if (isGoingTo=='/login'&& authStatus == AuthStatus.firstSignIn) {
+        return '/firstSignIn';
+      }
+      if (isGoingTo == '/splashScreen' && authStatus == AuthStatus.firstInit) {
+        return '/user_guide';
+      }
+      if (isGoingTo == '/firstSignIn' && authStatus == AuthStatus.authenticated) {
+        return '/home/1';
+      }
+      if (isGoingTo == '/splashScreen' &&
+          authStatus == AuthStatus.authenticated) return '/home/1';
+      if (isGoingTo == '/createUser' &&
+          authStatus == AuthStatus.notAuthenticated) return '/createUser';
+
       if (isGoingTo == '/login' && authStatus == AuthStatus.authenticated) {
         return '/home/1';
       } else if (isGoingTo != '/login' &&
           authStatus == AuthStatus.notAuthenticated) {
         return '/login';
       }
-      
+
       return null;
     },
   );

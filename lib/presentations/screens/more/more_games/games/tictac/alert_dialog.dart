@@ -30,12 +30,12 @@ Future<void> showAlert({
     barrierDismissible: false,
     context: context,
     builder: (context) => AlertDialog(
-      title: Text(title),
-      content: Text(message),
+      title: Text(title,style: const TextStyle(fontSize:35),),
+      content: Text(message,style: const TextStyle(fontSize: 25),),
       actions: [
         FilledButton(
           onPressed: () => onPressed(),
-          child: Text(buttonText),
+          child: Text(buttonText,style: const TextStyle(fontSize: 25),),
         )
       ],
     ),

@@ -27,5 +27,15 @@ class AuthRepositoryImpl extends AuthRepository{
   Future<UserAccount> loginWithGoogle() {
     return dataSource.loginWithGoogle();
   }
+  
+  @override
+  Future<UserAccount> createUserDefault() {
+    return dataSource.createUserDefault();
+  }
+  
+  @override
+  Future<UserAccount> createUser(UserAccount user) {
+    return dataSource.createUser(user);
+  }
 
 }

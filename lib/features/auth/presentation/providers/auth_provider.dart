@@ -3,25 +3,27 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:recuerda_facil/models/models.dart';
+import 'package:recuerda_facil/services/preferences_user.dart';
 
 import '../../domain/domain.dart';
 import '../../infrastructure/infrastructure.dart';
 
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   final authRepository = AuthRepositoryImpl();
-  // final keyValueStorageService= KeyValueStorageServiceImpl();
+  final firstInit = PreferencesUser();
   return AuthNotifier(
     authRepository: authRepository,
-    // keyValueStorageService: keyValueStorageService
+    firstInit: firstInit,
   );
 });
 
 class AuthNotifier extends StateNotifier<AuthState> {
   final AuthRepository authRepository;
+  final PreferencesUser firstInit;
   // final KeyValueStorageService  keyValueStorageService;
   AuthNotifier({
     required this.authRepository,
-    // required this.keyValueStorageService
+    required this.firstInit,
   }) : super(AuthState()) {
     checkAuthStatus();
   }
@@ -29,7 +31,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> loginUser(String email, String password) async {
     try {
       final user = await authRepository.login(email, password);
-      _setLoggedUser(user);
+      if(user.firstSignIn == true){
+        firstSignIn();}
+        else{
+          _setLoggedUser(user);
+        }
     } on CustomError catch (e) {
       logout(e.message);
     } catch (e) {
@@ -40,21 +46,39 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> loginUserWithGoogle() async {
     try {
       final user = await authRepository.loginWithGoogle();
-      _setLoggedUser(user);
+      if(user.firstSignIn == true){
+        firstSignIn();}
+        else{
+          _setLoggedUser(user);
+        }
+    
     } catch (e) {
-      logout("Cancelado");
+      logout("Fallido, intentar de nuevo");
     }
+
+  }
+  void defaultCreateUser()async{
+    final user = await authRepository.createUserDefault();
+    _setLoggedUser(user);
+  }
+  void createUser(UserAccount user)async{
+    final userS = await authRepository.createUser(user);
+    _setLoggedUser(userS);
   }
 
   void registerUser(String email, String password) async {}
 
   void checkAuthStatus() async {
-    try {
-      await authRepository.checkAuthStatus().then((user) {
+    final firstInitValue = await firstInit.getValue<bool>('firstInit');
+    if (firstInitValue == null) {
+      return firstInitApp();
+    } else {
+      try {
+        final user = await authRepository.checkAuthStatus();
         _setLoggedUser(user);
-      });
-    } catch (e) {
-      logout("Error al iniciar sesión");
+      } catch (e) {
+        logout("Error al iniciar sesión");
+      }
     }
   }
 
@@ -73,9 +97,26 @@ class AuthNotifier extends StateNotifier<AuthState> {
         user: null,
         errorMessage: errorMessage);
   }
+  Future<void> firstSignIn() async {
+
+    state = state.copyWith(authStatus: AuthStatus.firstSignIn);
+  }
+  
+
+  Future<void> firstInitApp() async {
+    await firstInit.setValue<bool>('firstInit', true);
+    state = state.copyWith(authStatus: AuthStatus.firstInit);
+  }
+
+  Future<void> endFirstInitApp() async {
+    await FirebaseFirestore.instance.terminate();
+    await GoogleSignIn().signOut();
+    await FirebaseAuth.instance.signOut();
+    state = state.copyWith(authStatus: AuthStatus.notAuthenticated);
+  }
 }
 
-enum AuthStatus { checking, authenticated, notAuthenticated }
+enum AuthStatus { checking, authenticated, notAuthenticated, firstInit,firstSignIn }
 
 class AuthState {
   final AuthStatus authStatus;

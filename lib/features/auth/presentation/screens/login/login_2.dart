@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:go_router/go_router.dart';
+import 'package:recuerda_facil/services/url_launcher_service.dart';
 import '../../../../../presentations/providers/providers.dart';
 import '../../../shared/widgets/custom_text_form_field.dart';
 import '../../providers/providers_auth.dart';
@@ -117,7 +118,7 @@ class _LoginForm extends ConsumerWidget {
               child: Divider(),
             ),
             newUser(context),
-            privacy(context),
+            privacy(),
             const SizedBox(
               height: 100,
             ),
@@ -159,22 +160,27 @@ class _LoginForm extends ConsumerWidget {
     );
   }
 
-  Widget privacy(BuildContext context) {
+  Widget privacy() {
     return Wrap(
       alignment: WrapAlignment.center,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         const Text(
-          "Al registrarte aceptas el Tratamiento de Datos y ",
+          "Al registrarte aceptas nuestros ",
           style: TextStyle(fontSize: 18),
         ),
+        TextButton(onPressed: (){
+          launchUrlService("https://www.google.com/");
+        }, child: const Text("Términos de uso",style: TextStyle(fontSize: 18, color: Colors.blue, decoration: TextDecoration.underline, decorationColor: Colors.blue))),
+        const Text("y"),
         TextButton(
             onPressed: () {
-              context.push('/privacy');
+          launchUrlService("https://www.google.com/");
+
             },
             child: const Text(
               "Política de Privacidad",
-              style: TextStyle(fontSize: 18, color: Colors.blue),
+              style: TextStyle(fontSize: 18, color: Colors.blue, decoration: TextDecoration.underline, decorationColor: Colors.blue),
             ))
       ],
     );

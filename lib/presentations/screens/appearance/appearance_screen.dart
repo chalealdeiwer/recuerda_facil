@@ -300,7 +300,7 @@ class AppearanceScreen extends ConsumerWidget {
               ),
             ),
 
-            const SizedBox(height: 70, child: _ThemeChangerView()),
+            const SizedBox(height: 70, child: ThemeChangerView()),
             const SizedBox(
               height: 30,
             )
@@ -326,8 +326,8 @@ class AppearanceScreen extends ConsumerWidget {
   }
 }
 
-class _ThemeChangerView extends ConsumerWidget {
-  const _ThemeChangerView({
+class ThemeChangerView extends ConsumerWidget {
+  const ThemeChangerView({
     Key? key,
   }) : super(key: key);
 

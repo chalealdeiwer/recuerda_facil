@@ -1,7 +1,9 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart'; // Importa el paquete
-import 'package:go_router/go_router.dart';
+
+import '../../../features/auth/presentation/providers/providers_auth.dart';
 
 class SlideInfo {
   final String title;
@@ -13,6 +15,10 @@ class SlideInfo {
 }
 
 final slides = <SlideInfo>[
+  SlideInfo(
+      title: "Bienvenido(a)",
+      caption: "Tu app diseñada para programar recordatorios",
+      imageUrl: 'assets/images/users_guide/titleRF.png'),
   SlideInfo(
       title: 'Planea tu día',
       caption:
@@ -32,24 +38,25 @@ final slides = <SlideInfo>[
   // Tus slides aquí...
 ];
 
-class UsersGuideScreen extends StatefulWidget {
+class UsersGuideScreen extends ConsumerStatefulWidget {
   static const String name = 'tutorial_screen';
 
   const UsersGuideScreen({Key? key}) : super(key: key);
 
   @override
-  State<UsersGuideScreen> createState() => _UsersGuideScreenState();
+  ConsumerState<UsersGuideScreen> createState() => _UsersGuideScreenState();
 }
 
-class _UsersGuideScreenState extends State<UsersGuideScreen> {
-  final PageController pageviewController = PageController();
+class _UsersGuideScreenState extends ConsumerState<UsersGuideScreen> {
+  final PageController pageViewController = PageController();
   bool endReached = false;
+  int index = 0;
 
   @override
   void initState() {
     super.initState();
-    pageviewController.addListener(() {
-      final page = pageviewController.page ?? 0;
+    pageViewController.addListener(() {
+      final page = pageViewController.page ?? 0;
       if (!endReached && page >= (slides.length - 1.5)) {
         setState(() {
           endReached = true;
@@ -57,10 +64,11 @@ class _UsersGuideScreenState extends State<UsersGuideScreen> {
       }
     });
   }
+  
 
   @override
   void dispose() {
-    pageviewController.dispose();
+    pageViewController.dispose();
     super.dispose();
   }
 
@@ -72,7 +80,12 @@ class _UsersGuideScreenState extends State<UsersGuideScreen> {
       body: Stack(
         children: [
           PageView(
-            controller: pageviewController,
+            onPageChanged: (value) {
+              setState(() {
+                index = value;
+              });
+            },
+            controller: pageViewController,
             physics: const BouncingScrollPhysics(),
             children: slides
                 .map((slideData) => _Slide(
@@ -86,14 +99,21 @@ class _UsersGuideScreenState extends State<UsersGuideScreen> {
             top: 50,
             child: TextButton(
               onPressed: () {
-                context.pop();
+                ref.read(authProvider.notifier).endFirstInitApp();
+                
               },
               child: const Text(
-                "Salir",
+                "Omitir",
                 style: TextStyle(fontSize: 25),
               ),
             ),
           ),
+          Positioned(
+            bottom: 30,
+            left: 50,
+            child: PageIndicator(currentPage: index, pageCount: slides.length)),
+
+          
           if (endReached)
             Positioned(
               bottom: 20,
@@ -103,7 +123,7 @@ class _UsersGuideScreenState extends State<UsersGuideScreen> {
                 delay: const Duration(seconds: 1),
                 child: FilledButton(
                   onPressed: () {
-                    context.pop();
+                    ref.read(authProvider.notifier).endFirstInitApp();
                   },
                   child: const Text(
                     "Comenzar",
@@ -148,6 +168,7 @@ class _SlideState extends State<_Slide> {
     await flutterTts.speak(
         '${widget.title}. ${widget.caption}'); // Lee el título y el subtítulo
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -168,9 +189,10 @@ class _SlideState extends State<_Slide> {
               ),
             ),
             const SizedBox(height: 20),
-            Text(widget.title, style: titleStyle),
+            Text(widget.title, style: titleStyle!.copyWith(fontSize: 40,fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
             Text(widget.caption, style: captionStyle),
+            const SizedBox(height: 30,),
             ElevatedButton(
               onPressed:
                   _speak, // O podrías agregar un botón para activar la lectura
@@ -178,8 +200,42 @@ class _SlideState extends State<_Slide> {
                 'Leer en voz alta',
                 style: TextStyle(fontSize: 30),
               ),
+            
             ),
+            const SizedBox(height: 30,)
           ],
+        ),
+      ),
+    );
+  }
+}
+class PageIndicator extends StatelessWidget {
+  final int currentPage;
+  final int pageCount;
+
+  const PageIndicator({
+    Key? key,
+    required this.currentPage,
+    required this.pageCount,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(
+        pageCount,
+        (index) => Container(
+          width: 30,
+          height:30,
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: index == currentPage
+                ? colors.primary // Color del punto activo
+                : colors.onPrimary, // Color del punto inactivo
+          ),
         ),
       ),
     );

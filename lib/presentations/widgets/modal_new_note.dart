@@ -208,13 +208,16 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
                 OutlinedButton(
                     child: const Text(
                       'Ó Personaliza una hora⌚',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 23),
                     ),
                     onPressed: () async {
                       final TimeOfDay? selectedTime = await showTimePicker(
                         context: context,
                         initialTime: TimeOfDay.now(),
+                        builder: (BuildContext context, Widget? child) {
+                          return child!;
+                        },
                       );
                       if (selectedTime != null) {
                         if (mounted) {
@@ -354,7 +357,6 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
                                 Icons.note.codePoint.toString())
                             .then((value) => {
                                   if (mounted) context.pop(),
-                              
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                           action: SnackBarAction(

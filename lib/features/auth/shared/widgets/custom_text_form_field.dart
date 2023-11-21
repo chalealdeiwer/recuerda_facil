@@ -45,7 +45,7 @@ class CustomTextFormField extends StatelessWidget {
         onFieldSubmitted: onFieldSubmitted,
         obscureText: obscureText,
         keyboardType: keyboardType,
-        style: const TextStyle( fontSize: 30, ),
+        style: const TextStyle( fontSize: 30, color: Colors.black),
         decoration: InputDecoration(
           floatingLabelStyle:  TextStyle(color: colors.primary, fontSize: 35),
           // enabledBorder: border,
@@ -57,7 +57,7 @@ class CustomTextFormField extends StatelessWidget {
           labelStyle: const TextStyle(fontSize: 30,color: Colors.black),
           hintText: hint,
           errorText: errorMessage,
-          errorStyle: const TextStyle(fontSize: 20, ),
+          errorStyle: const TextStyle(fontSize: 20,color: Colors.red ),
           focusColor: colors.primary,
           border:  OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),

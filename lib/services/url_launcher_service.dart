@@ -30,3 +30,9 @@ Future<void> launchWhatsApp(String phone,String message) async {
     throw 'No se pudo lanzar $url';
   }
 }
+Future<void> launchUrlService(String url) async {
+  final Uri urlF = Uri.parse(url);
+  if (!await launchUrl(urlF)) {
+    throw Exception('Could not launch $urlF');
+  }
+}

@@ -43,6 +43,8 @@ dependencies:
     sdk: flutter
   flutter_local_notifications: ^15.1.1
   flutter_localization: ^0.1.14
+
+  flutter_native_splash: ^2.3.5
   flutter_rating_bar: ^4.0.1
   flutter_riverpod: ^2.4.0
   flutter_signin_button: ^2.0.0
@@ -69,6 +71,39 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter packages.
+flutter_native_splash:
+  background_image: assets/splash/splash.jpg
+  background_image_dark: assets/splash/splash_dark.jpg
+  android: true
+  ios: true
+  # background_image: assets/backgrounds/background_1.jpg
+  
+  android_12:
+    # The image parameter sets the splash screen icon image.  If this parameter is not specified,
+    # the app's launcher icon will be used instead.
+    # Please note that the splash screen will be clipped to a circle on the center of the screen.
+    # App icon with an icon background: This should be 960×960 pixels, and fit within a circle
+    # 640 pixels in diameter.
+    # App icon without an icon background: This should be 1152×1152 pixels, and fit within a circle
+    # 768 pixels in diameter.
+    color: "#e8eddb"  
+    
+    # Splash screen background color.
+    #color: "#42a5f5"
+
+    # App icon background color.
+    #icon_background_color: "#111111"
+
+    # The branding property allows you to specify an image used as branding in the splash screen.
+    #branding: assets/dart.png
+
+    # The image_dark, color_dark, icon_background_color_dark, and branding_dark set values that
+    # apply when the device is in dark mode. If they are not specified, the app will use the
+    # parameters from above.
+    #image_dark: assets/android12splash-invert.png
+    #color_dark: "#042a49"
+    #icon_background_color_dark: "#eeeeee"
+
 flutter:
 
   # The following line ensures that the Material Icons font is
@@ -82,6 +117,7 @@ flutter:
     - assets/
     - assets/images/users_guide/
     - assets/backgrounds/
+    - assets/splash/
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
