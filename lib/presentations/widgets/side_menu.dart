@@ -22,12 +22,11 @@ class _SideMenuState extends ConsumerState<SideMenu> {
   @override
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context).textTheme;
-    if(FirebaseAuth.instance.currentUser==null){
+    if (FirebaseAuth.instance.currentUser == null) {
       return const CircularProgressIndicator();
     }
-    final userUid=ref.watch(authProvider).user!.uid;
-    final userAcc =
-        ref.watch(userProviderr(userUid!));
+    final userUid = ref.watch(authProvider).user!.uid;
+    final userAcc = ref.watch(userProviderr(userUid!));
     // final hasNotch = MediaQuery.of(context).viewPadding.top > 35;
     final colors = Theme.of(context).colorScheme;
     return NavigationDrawer(
@@ -144,8 +143,9 @@ class _SideMenuState extends ConsumerState<SideMenu> {
           padding: const EdgeInsets.only(left: 17.0),
           child: TextButton(
               onPressed: () async {
-          
                 ref.read(authProvider.notifier).logout();
+                ref.watch(categoryProvider.notifier).update((state) => "Todos");
+                ref.watch(indexCategoryProvider.notifier).update((state) => 0);
               },
               child: Row(
                 children: [

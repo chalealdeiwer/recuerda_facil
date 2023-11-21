@@ -4,6 +4,7 @@ class UserAccount {
   final String? uid;
   final String? photoURL;
   final bool? emailVerified;
+  final String? phoneNumber;
   final bool? private;
   final String? displayName;
   final DateTime? created; // Cambiado a DateTime
@@ -13,11 +14,13 @@ class UserAccount {
   final String? email;
   final String? coverPhotoURL;
   final bool? firstSignIn;
+  final DateTime? dateBirthday;
 
   UserAccount({
     this.uid = 'Sin nombre',
     this.photoURL = 'Sin foto',
     this.emailVerified = false,
+    this.phoneNumber = 'Sin número',
     this.private = false,
     this.displayName = 'Sin nombre de Usuario',
     this.created, // Fecha arbitraria
@@ -27,6 +30,7 @@ class UserAccount {
     this.coverPhotoURL =
         'https://i.pinimg.com/736x/e8/9b/a4/e89ba41407fb258daa464ba2e7aa27e2.jpg',
     this.firstSignIn = false,
+    this.dateBirthday,
   });
 
   // Constructor que crea un Usuario a partir de un mapa
@@ -34,6 +38,7 @@ class UserAccount {
       : uid = map['uid'] ?? 'Sin nombre',
         photoURL = map['photoURL'] ?? 'Sin foto',
         emailVerified = map['emailVerified'] ?? false,
+        phoneNumber = map['phoneNumber'] ?? 'Sin número',
         private = map['private'] ?? false,
         displayName = map['displayName'] ?? 'Sin nombre de usuario',
         created = (map['created'] as Timestamp?)?.toDate() ??
@@ -43,5 +48,7 @@ class UserAccount {
         email = map['email'] ?? 'Sin email',
         coverPhotoURL = map['coverPhotoURL'] ??
             'https://i.pinimg.com/736x/e8/9b/a4/e89ba41407fb258daa464ba2e7aa27e2.jpg',
-            firstSignIn = map['firstSignIn'] ?? false;
+        firstSignIn = map['firstSignIn'] ?? false,
+        dateBirthday =
+            (map['dateBirthday'] as Timestamp?)?.toDate() ?? DateTime(1, 1, 1);
 }

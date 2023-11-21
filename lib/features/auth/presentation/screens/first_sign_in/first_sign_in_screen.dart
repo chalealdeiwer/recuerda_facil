@@ -2,9 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:recuerda_facil/features/auth/domain/entities/user_account.dart';
 import 'package:recuerda_facil/presentations/widgets/widgets.dart';
+import 'package:recuerda_facil/services/services.dart';
 
+import '../../../../../presentations/providers/providers.dart';
 import '../../../../../presentations/screens/screens.dart';
 import '../../providers/providers_auth.dart';
 
@@ -19,6 +22,61 @@ class FirstSignInScreen extends ConsumerStatefulWidget {
 }
 
 class _FirstSignInScreenState extends ConsumerState<FirstSignInScreen> {
+  DateTime? dateInput;
+
+  int currentStep = 0;
+
+  continueStep() {
+    setState(() {
+      if (currentStep < 4 - 1) {
+        currentStep += 1;
+      } else {
+        ref.read(authProvider.notifier).createUser(UserAccount(
+              uid: FirebaseAuth.instance.currentUser!.uid,
+              email: FirebaseAuth.instance.currentUser!.email,
+              photoURL: FirebaseAuth.instance.currentUser!.photoURL,
+              emailVerified: FirebaseAuth.instance.currentUser!.emailVerified,
+              phoneNumber: phoneController.text,
+              private: false,
+              created: DateTime.now(),
+              usersCarer: [],
+              firstSignIn: false,
+              categories: selectedCategories,
+              displayName: nameController.text,
+              dateBirthday: dateInput
+            ));
+      }
+    });
+  }
+
+  cancelStep() {
+    setState(() {
+      if (currentStep > 0) {
+        currentStep -= 1;
+      } else {
+        currentStep = 0;
+      }
+    });
+  }
+
+  onStepTapped(int step) {
+    setState(() {
+      currentStep = step;
+    });
+  }
+
+  Widget controlsBuilder(context, details) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        FilledButton(
+            onPressed: details.onStepContinue, child: const Text("Continuar")),
+        OutlinedButton(
+            onPressed: details.onStepCancel, child: const Text("Atrás"))
+      ],
+    );
+  }
+
   List<String> selectedCategories = [
     'Todos',
     'Sin Categoría',
@@ -29,14 +87,14 @@ class _FirstSignInScreenState extends ConsumerState<FirstSignInScreen> {
     'Cumpleaños',
   ];
   List<String> predefinedCategories = [
-    'Lista de Compras',
     'Trabajo',
     'Deporte',
     'Salud',
     'Medicamentos',
     'Cumpleaños',
     'Aniversarios',
-    'Personal'
+    'Personal',
+    'Compras',
   ];
   TextEditingController newCategoryController = TextEditingController();
   final TextEditingController nameController = TextEditingController(
@@ -44,7 +102,6 @@ class _FirstSignInScreenState extends ConsumerState<FirstSignInScreen> {
   final TextEditingController phoneController = TextEditingController(
       text: FirebaseAuth.instance.currentUser!.phoneNumber);
 
-  int currentStep = 0;
   bool _categoryExists(String category) {
     return selectedCategories.contains(category);
   }
@@ -53,10 +110,34 @@ class _FirstSignInScreenState extends ConsumerState<FirstSignInScreen> {
     return predefinedCategories.contains(category);
   }
 
+  int calculateAge(DateTime birthDate) {
+    final DateTime currentDate = DateTime.now();
+    int age = currentDate.year - birthDate.year;
+    final int currentMonth = currentDate.month;
+    final int birthMonth = birthDate.month;
+    final int currentDay = currentDate.day;
+    final int birthDay = birthDate.day;
+
+    // Adjust if the birthday hasn't occurred yet in the current year
+    if (birthMonth > currentMonth) {
+      age--;
+    } else if (birthMonth == currentMonth) {
+      if (birthDay > currentDay) {
+        age--;
+      }
+    }
+    return age;
+  }
+
   @override
   Widget build(BuildContext context) {
+    var isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
+    // final colors = Theme.of(context).colorScheme;
+    final textStyle = Theme.of(context).textTheme;
     List<Step> steps = [
       Step(
+          state: currentStep >= 0 ? StepState.complete : StepState.indexed,
+          isActive: currentStep >= 0,
           title: const Text('Paso 1 - Completa alguna información personal'),
           content: Column(children: [
             Align(
@@ -88,7 +169,7 @@ class _FirstSignInScreenState extends ConsumerState<FirstSignInScreen> {
             const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "Teléfono",
+                  "Teléfono(opcional)",
                 )),
             TextFormField(
               keyboardType: TextInputType.phone,
@@ -107,15 +188,24 @@ class _FirstSignInScreenState extends ConsumerState<FirstSignInScreen> {
               child: OutlinedButton(
                   style: OutlinedButton.styleFrom(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    side: const BorderSide(
-                      width: 2,
+                      borderRadius: BorderRadius.circular(5),
                     ),
                   ),
-                  child: const Text(
-                    'Fecha de cumpleaños',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  child: Row(
+                    children: [
+                      Text(
+                        dateInput == null
+                            ? "¿Fecha de cumpleaños?"
+                            : DateFormat.yMEd('es').format(dateInput!),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      (dateInput != null)
+                          ? Text(" Tienes ${calculateAge(dateInput!)} años")
+                          : const SizedBox(
+                              height: 0,
+                            ),
+                    ],
                   ),
                   onPressed: () async {
                     DateTime firstDate = DateTime(1900, 1, 1);
@@ -129,7 +219,9 @@ class _FirstSignInScreenState extends ConsumerState<FirstSignInScreen> {
                       lastDate: lastDate,
                     );
                     if (selectedDate != null) {
-                      context.pop();
+                      setState(() {
+                        dateInput = selectedDate;
+                      });
                     }
                   }),
             ),
@@ -137,15 +229,35 @@ class _FirstSignInScreenState extends ConsumerState<FirstSignInScreen> {
               height: 10,
             ),
           ])),
-      const Step(
-          title: Text('Paso 2 - Elige Apariencia'),
+      Step(
+          state: currentStep >= 1 ? StepState.complete : StepState.indexed,
+          isActive: currentStep >= 1,
+          title: const Text('Paso 2 - Elige Apariencia'),
           content: Column(
             children: [
-              Text("Escoge un color de tu agrado"),
-              SizedBox(height: 70, child: ThemeChangerView()),
+              SwitchListTile(
+                title: Text(
+                  "Modo Oscuro",
+                  style: textStyle.titleLarge,
+                ),
+                value: isDarkMode,
+                onChanged: (value) {
+                  ref.read(themeNotifierProvider.notifier).toogleDarkMode();
+                  ref
+                      .read(isDarkmodeProvider.notifier)
+                      .update((darkmode) => !darkmode);
+                  PreferencesUser().setValue<bool>('isDarkmode', !isDarkMode);
+                },
+              ),
+              const Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text("Escoge un color de tu agrado")),
+              const SizedBox(height: 70, child: ThemeChangerView()),
             ],
           )),
       Step(
+          state: currentStep >= 2 ? StepState.complete : StepState.indexed,
+          isActive: currentStep >= 2,
           title: const Text('Paso 3 - Preferencias de usuario'),
           content: Column(
             children: [
@@ -170,77 +282,53 @@ class _FirstSignInScreenState extends ConsumerState<FirstSignInScreen> {
                     ),
                 ],
               ),
-              ElevatedButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Añadir nueva categoría'),
-                            content: TextField(
-                              controller: newCategoryController,
-                              decoration: const InputDecoration(
-                                hintText: 'Nombre de la nueva categoría',
-                              ),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  final newCategory =
-                                      newCategoryController.text.trim();
-                                  if (newCategory.isNotEmpty &&
-                                      !_categoryExists(newCategory) &&
-                                      !_isPredefinedCategory(newCategory)) {
-                                    setState(() {
-                                      selectedCategories.add(newCategory);
-                                      newCategoryController.clear();
-                                      Navigator.pop(context);
-                                    });
-                                  }
-                                },
-                                child: const Text('Añadir'),
-                              ),
-                            ],
-                          );
-                        },
+              ElevatedButton.icon(
+                icon: const Icon(Icons.add),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Añadir nueva categoría'),
+                        content: TextField(
+                          controller: newCategoryController,
+                          decoration: const InputDecoration(
+                            hintText: 'Nombre de la nueva categoría',
+                          ),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              final newCategory =
+                                  newCategoryController.text.trim();
+                              if (newCategory.isNotEmpty &&
+                                  !_categoryExists(newCategory) &&
+                                  !_isPredefinedCategory(newCategory)) {
+                                setState(() {
+                                  predefinedCategories.add(newCategory);
+                                  selectedCategories.add(newCategory);
+                                  newCategoryController.clear();
+                                  Navigator.pop(context);
+                                });
+                              }
+                            },
+                            child: const Text('Añadir'),
+                          ),
+                        ],
                       );
                     },
-                    child: const Text('Añadir Categoría'),
-                  ),
-              const SizedBox(height: 16.0),
-              const Text("Categorías seleccionadas:"),
-              Wrap(
-                spacing: 8.0,
-                runSpacing: 8.0,
-                children: [
-                  for (String category in selectedCategories)
-                    InputChip(
-                      label: Text(category),
-                      onDeleted: () {
-                        if (category != 'Todos' &&
-                            category != 'Sin Categoría') {
-                          setState(() {
-                            selectedCategories.remove(category);
-                          });
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content:
-                                  Text("No puedes eliminar esta categoría"),
-                              duration: Duration(seconds: 2),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  
-                ],
+                  );
+                },
+                label: const Text('Añadir Categoría'),
               ),
+              const SizedBox(height: 16.0),
             ],
           )),
-      const Step(
-          title: Text('Paso 4 - Disfruta tu aplicación'),
-          content: Text("Empezar a usar")),
+      Step(
+          state: currentStep >= 3 ? StepState.complete : StepState.indexed,
+          isActive: currentStep >= 3,
+          title: const Text('Paso 4 - Disfruta tu aplicación'),
+          content: const Text("Empezar a usar")),
     ];
     return Scaffold(
       body: SingleChildScrollView(
@@ -268,37 +356,10 @@ class _FirstSignInScreenState extends ConsumerState<FirstSignInScreen> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   currentStep: currentStep,
                   steps: steps,
-                  onStepContinue: () {
-                    setState(() {
-                      if (currentStep < steps.length - 1) {
-                        currentStep += 1;
-                      } else {
-                        ref.read(authProvider.notifier).createUser(UserAccount(
-                              uid: FirebaseAuth.instance.currentUser!.uid,
-                              email: FirebaseAuth.instance.currentUser!.email,
-                              photoURL:
-                                  FirebaseAuth.instance.currentUser!.photoURL,
-                              emailVerified: FirebaseAuth
-                                  .instance.currentUser!.emailVerified,
-                              private: false,
-                              created: DateTime.now(),
-                              usersCarer: [],
-                              firstSignIn: false,
-                              categories: selectedCategories,
-                              displayName: nameController.text,
-                            ));
-                      }
-                    });
-                  },
-                  onStepCancel: () {
-                    setState(() {
-                      if (currentStep > 0) {
-                        currentStep -= 1;
-                      } else {
-                        currentStep = 0;
-                      }
-                    });
-                  },
+                  onStepContinue: continueStep,
+                  onStepCancel: cancelStep,
+                  onStepTapped: onStepTapped,
+                  controlsBuilder: controlsBuilder,
                 ),
                 const SizedBox(
                   height: 50,

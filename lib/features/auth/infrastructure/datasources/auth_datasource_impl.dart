@@ -127,12 +127,14 @@ class AuthDataSourceImpl extends AuthDataSource {
     final user = firebaseAuth.currentUser;
     final db = FirebaseFirestore.instance;
     final userRef = db.collection('users').doc(user!.uid);
+    
 
     await userRef.set({
       'email': user.email,
       'displayName': user.displayName,
       'created': Timestamp.now(),
       "emailVerified": user.emailVerified,
+      "phoneNumber": user.phoneNumber,
       "categories": [
         'Todos',
         'Sin Categoría',
@@ -148,6 +150,7 @@ class AuthDataSourceImpl extends AuthDataSource {
       "private": false,
       "uid": user.uid,
       "firstSignIn": false,
+      "dateBirthday": Timestamp.fromDate(DateTime(1, 1, 1))
     });
     final QuerySnapshot<Map<String, dynamic>> userDoc =
         await db.collection("users").where("uid", isEqualTo: user.uid).get();
@@ -160,6 +163,7 @@ class AuthDataSourceImpl extends AuthDataSource {
   @override
   Future<UserAccount> createUser(UserAccount user) async {
     final userF = firebaseAuth.currentUser;
+    
     final db = FirebaseFirestore.instance;
     final userRef = db.collection('users').doc(userF!.uid);
     await userRef.set({
@@ -167,12 +171,14 @@ class AuthDataSourceImpl extends AuthDataSource {
       'displayName': user.displayName,
       'created': Timestamp.now(),
       "emailVerified": user.emailVerified,
+      "phoneNumber":user.phoneNumber,
       "categories": user.categories,
       "usersCarer": user.usersCarer,
       "photoURL": user.photoURL,
       "private": user.private,
       "uid": user.uid,
       "firstSignIn": false,
+      "dateBirthday":user.dateBirthday
     });
     final QuerySnapshot<Map<String, dynamic>> userDoc =
         await db.collection("users").where("uid", isEqualTo: user.uid).get();

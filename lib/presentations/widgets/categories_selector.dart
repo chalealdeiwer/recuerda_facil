@@ -151,7 +151,6 @@ class _CategorySelectorState extends ConsumerState<CategorySelector> {
               }},
               onLongPress: () {
                 selectedIndex = index;
-
                 ref
                     .watch(categoryProvider.notifier)
                     .update((state) => categories[index]);

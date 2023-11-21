@@ -112,7 +112,7 @@ class _LoginForm extends ConsumerWidget {
             ),
             buttonLogin(ref, loginForm),
             buildOrLine(),
-            buttonGoogle(ref),
+            buttonGoogle(ref,loginForm),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: Divider(),
@@ -170,12 +170,12 @@ class _LoginForm extends ConsumerWidget {
           style: TextStyle(fontSize: 18),
         ),
         TextButton(onPressed: (){
-          launchUrlService("https://www.google.com/");
+          launchUrlService("https://www.deiwerchaleal.com/");
         }, child: const Text("Términos de uso",style: TextStyle(fontSize: 18, color: Colors.blue, decoration: TextDecoration.underline, decorationColor: Colors.blue))),
         const Text("y"),
         TextButton(
             onPressed: () {
-          launchUrlService("https://www.google.com/");
+          launchUrlService("https://shop.deiwerchaleal.com/");
 
             },
             child: const Text(
@@ -225,32 +225,17 @@ class _LoginForm extends ConsumerWidget {
     );
   }
 
-  Widget buttonGoogle(WidgetRef ref) {
+  Widget buttonGoogle(WidgetRef ref,loginForm) {
     return Column(
       children: [
+        loginForm.isPosting? const CircularProgressIndicator():
         SignInButton(
+
             padding: const EdgeInsets.only(left: 40),
             // mini: true,
             text: "Entrar con Google",
             Buttons.Google, onPressed: () async {
           ref.read(loginFormProvider.notifier).signInGoogle();
-          // ref.read(userProvider.notifier).signInWithGoogle();
-
-          // if (user!= null) {
-          //   if( await searchUserUid(user.uid)){
-          //     print("el usuario ya esta ene la base de datos");
-
-          //   }else{
-          //     print("el usuario se esta agregando a la base de datos");
-          //         addUser(user.displayName.toString(), user.email.toString(),user.emailVerified, user.uid,user.photoURL.toString());
-          //       // Navigator.pushAndRemoveUntil(
-          //       // context,
-          //       // MaterialPageRoute(builder: (context) => HomeScreen()),
-          //       // (Route<dynamic> route) => false);
-
-          //   }
-
-          // }
         })
       ],
     );
