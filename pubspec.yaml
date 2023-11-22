@@ -43,7 +43,6 @@ dependencies:
     sdk: flutter
   flutter_local_notifications: ^15.1.1
   flutter_localization: ^0.1.14
-
   flutter_native_splash: ^2.3.5
   flutter_rating_bar: ^4.0.1
   flutter_riverpod: ^2.4.0
@@ -54,6 +53,7 @@ dependencies:
   google_sign_in: ^6.1.6
   image_picker: ^1.0.4
   intl: ^0.18.1
+  intl_phone_number_input: ^0.7.3+1
   permission_handler: ^11.0.1
   qr_flutter: ^4.1.0
   qrscan: ^0.3.3
@@ -77,7 +77,6 @@ flutter_native_splash:
   android: true
   ios: true
   # background_image: assets/backgrounds/background_1.jpg
-  
   android_12:
     # The image parameter sets the splash screen icon image.  If this parameter is not specified,
     # the app's launcher icon will be used instead.
@@ -86,17 +85,13 @@ flutter_native_splash:
     # 640 pixels in diameter.
     # App icon without an icon background: This should be 1152×1152 pixels, and fit within a circle
     # 768 pixels in diameter.
-    color: "#e8eddb"  
-    
+    color: "#e8eddb"
     # Splash screen background color.
     #color: "#42a5f5"
-
     # App icon background color.
     #icon_background_color: "#111111"
-
     # The branding property allows you to specify an image used as branding in the splash screen.
     #branding: assets/dart.png
-
     # The image_dark, color_dark, icon_background_color_dark, and branding_dark set values that
     # apply when the device is in dark mode. If they are not specified, the app will use the
     # parameters from above.

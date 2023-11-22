@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:go_router/go_router.dart';
-import 'package:recuerda_facil/config/notes/app_notes.dart';
 import 'package:recuerda_facil/features/auth/presentation/providers/providers_auth.dart';
 import 'package:recuerda_facil/presentations/views/notes/calendar_view.dart';
 import 'package:recuerda_facil/presentations/views/notes/home_view.dart';
@@ -85,7 +84,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final category = ref.watch(categoryProvider);
     final isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
     final scaffoldKey = GlobalKey<ScaffoldState>();
-    final AppNotes noteProvider = ref.watch(noteNotifierProvider);
+    final  noteProvider = ref.watch(noteNotifierProvider.notifier);
     final colors = Theme.of(context).colorScheme;
     final customBack = ref.watch(customBackground);
     final opacity = ref.watch(opacityProvider);

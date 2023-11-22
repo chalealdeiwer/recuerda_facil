@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:recuerda_facil/presentations/providers/notes_provider.dart';
 
-import '../../../../config/notes/app_notes.dart';
 import '../../../../models/models.dart';
 import '../../home/home_screen.dart';
 
@@ -16,7 +16,7 @@ class CarerListStream extends StatelessWidget {
       final user2 = GoRouterState.of(context).extra! as UserAccount;
     final colors = Theme.of(context).colorScheme;
     final textStyle = Theme.of(context).textTheme;
-    final AppNotes noteProvider = AppNotes();
+    final noteProvider=AppNoteNotifier();
 
     return Scaffold(
       

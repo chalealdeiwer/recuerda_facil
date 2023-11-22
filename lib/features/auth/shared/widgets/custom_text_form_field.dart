@@ -40,6 +40,7 @@ class CustomTextFormField extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(20))
       ),
       child: TextFormField(
+        
         onChanged: onChanged,
         validator: validator,
         onFieldSubmitted: onFieldSubmitted,

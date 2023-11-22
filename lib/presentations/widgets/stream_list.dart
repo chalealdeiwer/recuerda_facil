@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:recuerda_facil/config/notes/app_notes.dart';
 import 'package:recuerda_facil/features/auth/presentation/providers/providers_auth.dart';
 
 import '../providers/providers.dart';
@@ -36,7 +35,7 @@ class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
     final isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
     final colors = Theme.of(context).colorScheme;
     final textStyle = Theme.of(context).textTheme;
-    final AppNotes noteProvider = ref.read(noteNotifierProvider);
+    final  noteProvider = ref.read(noteNotifierProvider.notifier);
     final ttsTitle = ref.watch(ttsTitleProvider);
     final ttsContent = ref.watch(ttsContentProvider);
     final ttsCategory = ref.watch(ttsCategoryProvider);

@@ -36,7 +36,7 @@ class UserAccount {
   // Constructor que crea un Usuario a partir de un mapa
   UserAccount.fromMap(Map<String, dynamic> map)
       : uid = map['uid'] ?? 'Sin nombre',
-        photoURL = map['photoURL'] ?? 'Sin foto',
+        photoURL = map['photoURL'] ?? 'https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg',
         emailVerified = map['emailVerified'] ?? false,
         phoneNumber = map['phoneNumber'] ?? 'Sin número',
         private = map['private'] ?? false,

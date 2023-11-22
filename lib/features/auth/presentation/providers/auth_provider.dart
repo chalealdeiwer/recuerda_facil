@@ -77,7 +77,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         final user = await authRepository.checkAuthStatus();
         _setLoggedUser(user);
       } catch (e) {
-        logout("Error al iniciar sesión");
+        logout();
       }
     }
   }

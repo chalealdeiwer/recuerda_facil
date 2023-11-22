@@ -4,11 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
-import 'package:recuerda_facil/config/notes/app_notes.dart';
 import 'package:recuerda_facil/services/permissions.dart';
 import 'package:recuerda_facil/services/user_services.dart';
 
-import '../../providers/notes_provider2.dart';
+import '../../providers/notes_provider.dart';
 
 class SharedNotesScreen extends ConsumerStatefulWidget {
   static const name = "shared_notes_screen";
@@ -93,7 +92,7 @@ class _SharedNotesScreenState extends ConsumerState<SharedNotesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final AppNotes noteProvider = ref.watch(noteNotifierProvider);
+    final  noteProvider = ref.watch(noteNotifierProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(),

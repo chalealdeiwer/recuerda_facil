@@ -1,15 +1,29 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:recuerda_facil/services/note_service.dart';
 
-import '../../models/models.dart';
+import '../../models/note.dart';
 
-class AppNotes {
+final noteNotifierProvider =
+    StateNotifierProvider<AppNoteNotifier, AppNotesState>(
+        (ref) => AppNoteNotifier());
+
+class AppNotesState {
+  final bool isPosting;
+  AppNotesState({this.isPosting = false});
+
+  AppNotesState copyWith({bool? isPosting}) =>
+      AppNotesState(isPosting: isPosting ?? this.isPosting);
+}
+
+class AppNoteNotifier extends StateNotifier<AppNotesState> {
+  //State= estado = new appTheme
+  AppNoteNotifier() : super(AppNotesState());
 
   FirebaseFirestore db = FirebaseFirestore.instance;
-  
-
 
   Stream<int> getNotesLengthStream(String user) {
     final StreamController<int> controller = StreamController<int>();
@@ -103,6 +117,8 @@ class AppNotes {
       category = "";
     }
     try {
+      state = state.copyWith(isPosting: true);
+
       await db.collection("notes").add({
         "title": title,
         "content": content,
@@ -114,6 +130,7 @@ class AppNotes {
         "date_remember": dateRemember,
         "icon": icon,
       });
+      state = state.copyWith(isPosting: false);
       // print("Nota añadida con éxito");
     } catch (error) {
       // print("Error al añadir nota: $error");
@@ -198,3 +215,9 @@ class AppNotes {
     }
   }
 }
+
+final remindersProvider =
+    FutureProvider.family.autoDispose<List<Note>, String>((ref, userId) async {
+  final notesService = ref.read(notesServiceProvider);
+  return await notesService.getRemindersOfUser(userId);
+});

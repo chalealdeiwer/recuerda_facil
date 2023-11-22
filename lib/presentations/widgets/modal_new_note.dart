@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:recuerda_facil/config/notes/app_notes.dart';
 
 import '../providers/providers.dart';
 
@@ -208,8 +207,8 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
                 OutlinedButton(
                     child: const Text(
                       'Ó Personaliza una hora⌚',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 23),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
                     ),
                     onPressed: () async {
                       final TimeOfDay? selectedTime = await showTimePicker(
@@ -255,7 +254,8 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
 
   @override
   Widget build(BuildContext context) {
-    final AppNotes noteProvider = ref.watch(noteNotifierProvider);
+    final posting = ref.watch(noteNotifierProvider);
+    final noteProvider = ref.watch(noteNotifierProvider.notifier);
     final category = ref.watch(categoryProvider);
 
     return Form(
@@ -287,7 +287,7 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
               children: [
                 OutlinedButton.icon(
                   icon: const Icon(Icons.calendar_month),
-                  onPressed: () {
+                  onPressed:  posting.isPosting?null:() {
                     _selectDate();
                   },
                   label: Text(
@@ -302,7 +302,7 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
                 ),
                 if (dateInput != null)
                   OutlinedButton.icon(
-                    onPressed: () {
+                    onPressed: posting.isPosting?null: () {
                       _selectHour();
                     },
                     icon: const Icon(Icons.watch),
@@ -320,9 +320,11 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(
-                    onPressed: () {
-                      context.pop();
-                    },
+                    onPressed: posting.isPosting
+                        ? null
+                        : () {
+                            context.pop();
+                          },
                     child: const Text(
                       "Cancelar",
                     )),
@@ -330,67 +332,71 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
                   width: 10,
                 ),
                 FilledButton(
-                    onPressed: () async {
-                      DateTime combinedDateTime = DateTime(
-                        dateInput?.year ??
-                            1, // Si dateInput es null, se usará el año 1
-                        dateInput?.month ??
-                            1, // Si dateInput es null, se usará el mes 1
-                        dateInput?.day ??
-                            1, // Si dateInput es null, se usará el día 1
-                        hourInput?.hour ??
-                            0, // Si hourInput es null, se usará la hora 0
-                        hourInput?.minute ??
-                            0, // Si hourInput es null, se usará el minuto 0
-                      );
-                      if (_formKey.currentState!.validate()) {
-                        await noteProvider
-                            .addNote(
-                                _titleController.text,
-                                _contentController.text,
-                                widget.user,
-                                DateTime.now(),
-                                false,
-                                category,
-                                DateTime(1, 1, 1, 0, 0),
-                                combinedDateTime,
-                                Icons.note.codePoint.toString())
-                            .then((value) => {
-                                  if (mounted) context.pop(),
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          action: SnackBarAction(
-                                            textColor: Colors.black,
-                                            label: '¡Ok!',
-                                            onPressed: () {
-                                              // ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    onPressed: posting.isPosting
+                        ? null
+                        : () async {
+                            DateTime combinedDateTime = DateTime(
+                              dateInput?.year ??
+                                  1, // Si dateInput es null, se usará el año 1
+                              dateInput?.month ??
+                                  1, // Si dateInput es null, se usará el mes 1
+                              dateInput?.day ??
+                                  1, // Si dateInput es null, se usará el día 1
+                              hourInput?.hour ??
+                                  0, // Si hourInput es null, se usará la hora 0
+                              hourInput?.minute ??
+                                  0, // Si hourInput es null, se usará el minuto 0
+                            );
+                            if (_formKey.currentState!.validate()) {
+                              await noteProvider
+                                  .addNote(
+                                      _titleController.text,
+                                      _contentController.text,
+                                      widget.user,
+                                      DateTime.now(),
+                                      false,
+                                      category,
+                                      DateTime(1, 1, 1, 0, 0),
+                                      combinedDateTime,
+                                      Icons.note.codePoint.toString())
+                                  .then((value) => {
+                                        if (mounted) context.pop(),
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                action: SnackBarAction(
+                                                  textColor: Colors.black,
+                                                  label: '¡Ok!',
+                                                  onPressed: () {
+                                                    // ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-                                              // Code to execute.
-                                            },
-                                          ),
-                                          duration: const Duration(
-                                              milliseconds: 2000),
-                                          backgroundColor: Colors.green[200],
-                                          content: const Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Icon(Icons.add_alert_sharp),
-                                              Text(
-                                                "¡Recordatorio agregado!",
-                                                style: TextStyle(
-                                                    color: Colors.black),
-                                              ),
-                                            ],
-                                          )))
-                                });
-                      }
+                                                    // Code to execute.
+                                                  },
+                                                ),
+                                                duration: const Duration(
+                                                    milliseconds: 2000),
+                                                backgroundColor:
+                                                    Colors.green[200],
+                                                content: const Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Icon(Icons.add_alert_sharp),
+                                                    Text(
+                                                      "¡Recordatorio agregado!",
+                                                      style: TextStyle(
+                                                          color: Colors.black),
+                                                    ),
+                                                  ],
+                                                )))
+                                      });
+                            }
 
-                      // await NotesServices().saveNotes(
+                            // await NotesServices().saveNotes(
 
-                      //   _titleController.text, _contentController.text
-                      // );
-                    },
+                            //   _titleController.text, _contentController.text
+                            // );
+                          },
                     child: const Text("Aceptar")),
               ],
             )

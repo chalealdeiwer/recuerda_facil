@@ -29,10 +29,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
     return result;
   }
 
-  // Future<UserAccount?> getUserAccount() async {
-  //   final userAccount = await getUser(FirebaseAuth.instance.currentUser!.uid);
-  //   return userAccount;
-  // }
+  
 
   @override
   Widget build(BuildContext context) {

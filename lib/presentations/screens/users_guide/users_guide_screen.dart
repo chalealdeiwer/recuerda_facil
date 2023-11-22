@@ -64,7 +64,6 @@ class _UsersGuideScreenState extends ConsumerState<UsersGuideScreen> {
       }
     });
   }
-  
 
   @override
   void dispose() {
@@ -100,7 +99,6 @@ class _UsersGuideScreenState extends ConsumerState<UsersGuideScreen> {
             child: TextButton(
               onPressed: () {
                 ref.read(authProvider.notifier).endFirstInitApp();
-                
               },
               child: const Text(
                 "Omitir",
@@ -109,11 +107,18 @@ class _UsersGuideScreenState extends ConsumerState<UsersGuideScreen> {
             ),
           ),
           Positioned(
-            bottom: 30,
-            left: 50,
-            child: PageIndicator(currentPage: index, pageCount: slides.length)),
-
-          
+              bottom: 30,
+              left: 50,
+              child: GestureDetector(
+                  onTap: () {
+                    if (index < 3) {
+                      pageViewController.animateToPage(index + 1,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut);
+                    }
+                  },
+                  child: PageIndicator(
+                      currentPage: index, pageCount: slides.length))),
           if (endReached)
             Positioned(
               bottom: 20,
@@ -168,7 +173,6 @@ class _SlideState extends State<_Slide> {
     await flutterTts.speak(
         '${widget.title}. ${widget.caption}'); // Lee el título y el subtítulo
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -189,10 +193,14 @@ class _SlideState extends State<_Slide> {
               ),
             ),
             const SizedBox(height: 20),
-            Text(widget.title, style: titleStyle!.copyWith(fontSize: 40,fontWeight: FontWeight.bold)),
+            Text(widget.title,
+                style: titleStyle!
+                    .copyWith(fontSize: 40, fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
             Text(widget.caption, style: captionStyle),
-            const SizedBox(height: 30,),
+            const SizedBox(
+              height: 30,
+            ),
             ElevatedButton(
               onPressed:
                   _speak, // O podrías agregar un botón para activar la lectura
@@ -200,15 +208,17 @@ class _SlideState extends State<_Slide> {
                 'Leer en voz alta',
                 style: TextStyle(fontSize: 30),
               ),
-            
             ),
-            const SizedBox(height: 30,)
+            const SizedBox(
+              height: 30,
+            )
           ],
         ),
       ),
     );
   }
 }
+
 class PageIndicator extends StatelessWidget {
   final int currentPage;
   final int pageCount;
@@ -228,7 +238,7 @@ class PageIndicator extends StatelessWidget {
         pageCount,
         (index) => Container(
           width: 30,
-          height:30,
+          height: 30,
           margin: const EdgeInsets.symmetric(horizontal: 4),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
