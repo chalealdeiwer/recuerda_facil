@@ -144,6 +144,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
           child: TextButton(
               onPressed: () async {
                 ref.read(authProvider.notifier).logout();
+                ref.read(preferencesProvider.notifier).appearanceDefault();
                 ref.watch(categoryProvider.notifier).update((state) => "Todos");
                 ref.watch(indexCategoryProvider.notifier).update((state) => 0);
               },

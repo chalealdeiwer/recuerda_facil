@@ -86,12 +86,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final scaffoldKey = GlobalKey<ScaffoldState>();
     final  noteProvider = ref.watch(noteNotifierProvider.notifier);
     final colors = Theme.of(context).colorScheme;
-    final customBack = ref.watch(customBackground);
+    final customBack = ref.watch(preferencesProvider).customBackground;
     final opacity = ref.watch(opacityProvider);
-    final bottomVisibility = ref.watch(bottomVisibilityProvider);
-    final buttonMicrophone = ref.watch(buttonMicrophoneVisibilityProvider);
-    final buttonNewNote = ref.watch(buttonNewNoteVisibilityProvider);
-    final buttonAction = ref.watch(buttonActionVisibilityProvider);
+    final bottomVisibility = ref.watch(preferencesProvider).bottomVisibility;
+    final buttonMicrophone = ref.watch(preferencesProvider).buttonMicrophoneVisibility;
+    final buttonNewNote = ref.watch(preferencesProvider).buttonNewNoteVisibility;
+    final buttonAction = ref.watch(preferencesProvider).buttonActionVisibility;
     final ttsButtonsScreen = ref.watch(ttsButtonsScreenProvider);
     final openMenu = ref.watch(openMenuProvider);
     final showButton = ref.watch(buttonPageChangeProvider);

@@ -1,51 +1,10 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recuerda_facil/config/theme/app_theme.dart';
-import 'package:recuerda_facil/services/preferences_user.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:recuerda_facil/presentations/providers/appearance_provider2.dart';
 
-final isDarkmodeProviderAsync = FutureProvider<bool>((ref) async {
-  final isDarkmode = await PreferencesUser().getValue<bool>('isDarkmode');
-  return isDarkmode ?? false; // El valor predeterminado se establece en 'false'
-});
 
-final isDarkmodeProvider = StateProvider<bool>((ref) {
-  final asyncValue = ref.watch(isDarkmodeProviderAsync);
-  if (asyncValue is AsyncData<bool>) {
-    return asyncValue.value;
-  } else {
-    return false; // El valor predeterminado se establece en 'false'
-  }
-});
 
-final customBackgroundAsync = FutureProvider<bool>((ref) async {
-  final customBackground = await PreferencesUser().getValue<bool>('customBackground');
-  return customBackground ?? false; // El valor predeterminado se establece en 'false'
-});
-
-final customBackground = StateProvider<bool>((ref) {
-  final asyncValue = ref.watch(customBackgroundAsync);
-  if (asyncValue is AsyncData<bool>) {
-    return asyncValue.value;
-  } else {
-    return false; // El valor predeterminado se establece en 'false'
-  }
-});
-//Listado de colores inmutable
-final selectedColorProviderAsync = FutureProvider<int>((ref) async {
-  final prefs = await SharedPreferences.getInstance();
-  final selectedColor = prefs.getInt('selectedColor') ?? 0; // Valor predeterminado
-  return selectedColor;
-});
-
-final selectedColorProvider = StateProvider<int>((ref) {
-  final asyncValue = ref.watch(selectedColorProviderAsync);
-  if (asyncValue is AsyncData<int>) {
-    return asyncValue.value;
-  } else {
-    return 0; // Valor predeterminado
-  }
-});
 
 final colorListProvider= Provider((ref) => colorList);
 
@@ -54,7 +13,8 @@ final opacityProvider = StateNotifierProvider<OpacityNotifier, double>((ref) {
 });
 
 //un objeto de tipo AppTheme(custom)
-final themeNotifierProvider = StateNotifierProvider<ThemeNotifier,AppTheme>((ref) => ThemeNotifier(selectedColor: ref.watch(selectedColorProvider), isDarkMode: ref.watch(isDarkmodeProvider)));
+final themeNotifierProvider = StateNotifierProvider<ThemeNotifier,AppTheme>((ref) => 
+ThemeNotifier(selectedColor: ref.watch(preferencesProvider).selectedColor, isDarkMode: ref.watch(preferencesProvider).isDarkMode));
 
 class ThemeNotifier extends StateNotifier<AppTheme> {
   final int selectedColor;
@@ -65,12 +25,12 @@ class ThemeNotifier extends StateNotifier<AppTheme> {
   void updateTheme(AppTheme theme) {
     state = theme;
   }
-  void toogleDarkMode(){
-    state= state.copyWith(isDarkMode: !state.isDarkMode);
-  }
-  void changeColorIndex(int colorIndex){
-    state= state.copyWith(selectedColor: colorIndex);
-  }
+  // void toogleDarkMode(){
+  //   state= state.copyWith(isDarkMode: !state.isDarkMode);
+  // }
+  // void changeColorIndex(int colorIndex){
+  //   state= state.copyWith(selectedColor: colorIndex);
+  // }
 }
 class OpacityNotifier extends StateNotifier<double> {
   OpacityNotifier() : super(0.5);  // Inicializa con opacidad completa

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:recuerda_facil/presentations/screens/screens.dart';
-import 'package:recuerda_facil/services/services.dart';
 
 import '../../providers/providers.dart';
 
@@ -15,14 +14,16 @@ class AppearanceScreen extends ConsumerWidget {
     var isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
     final colors = Theme.of(context).colorScheme;
     final textStyle = Theme.of(context).textTheme;
-    final customBack = ref.watch(customBackground);
+    final customBack = ref.watch(preferencesProvider).customBackground;
     final opacity = ref.watch(opacityProvider);
-    final clockVisibility = ref.watch(clockVisibilityProvider);
-    final bottomVisibility = ref.watch(bottomVisibilityProvider);
-    final categoriesVisibility = ref.watch(categoriesVisibilityProvider);
-    final appBarVisibility = ref.watch(appBarVisibilityProvider);
-    final buttonMicrophone = ref.watch(buttonMicrophoneVisibilityProvider);
-    final buttonNewNote = ref.watch(buttonNewNoteVisibilityProvider);
+    final clockVisibility = ref.watch(preferencesProvider).clockVisibility;
+    final bottomVisibility = ref.watch(preferencesProvider).bottomVisibility;
+    final categoriesVisibility =
+        ref.watch(preferencesProvider).categoriesVisibility;
+    final appBarVisibility = ref.watch(preferencesProvider).appBarVisibility;
+    final buttonMicrophone = ref.watch(preferencesProvider).buttonMicrophoneVisibility;
+    final buttonNewNote =
+        ref.watch(preferencesProvider).buttonNewNoteVisibility;
 
     final size = MediaQuery.of(context).size;
     return Scaffold(
@@ -76,12 +77,9 @@ class AppearanceScreen extends ConsumerWidget {
                     ),
                     value: isDarkMode,
                     onChanged: (value) {
-                      ref.read(themeNotifierProvider.notifier).toogleDarkMode();
                       ref
-                          .read(isDarkmodeProvider.notifier)
-                          .update((darkmode) => !darkmode);
-                      PreferencesUser()
-                          .setValue<bool>('isDarkmode', !isDarkMode);
+                          .read(preferencesProvider.notifier)
+                          .changeIsDarkMode(!isDarkMode);
                     },
                   ),
                   SwitchListTile(
@@ -92,10 +90,8 @@ class AppearanceScreen extends ConsumerWidget {
                     value: customBack,
                     onChanged: (value) {
                       ref
-                          .read(customBackground.notifier)
-                          .update((customBack) => !customBack);
-                      PreferencesUser()
-                          .setValue<bool>('customBackground', !customBack);
+                          .read(preferencesProvider.notifier)
+                          .changeCustomBackground(!customBack);
                     },
                   ),
                   Padding(
@@ -132,15 +128,11 @@ class AppearanceScreen extends ConsumerWidget {
                     value: appBarVisibility,
                     onChanged: (value) {
                       ref
-                          .read(appBarVisibilityProvider.notifier)
-                          .update((appBarVisibility) => !appBarVisibility);
+                          .read(preferencesProvider.notifier)
+                          .changeAppBarVisibility(!appBarVisibility);
                       ref
-                          .read(buttonActionVisibilityProvider.notifier)
-                          .update((buttonAction) => !buttonAction);
-                      PreferencesUser().setValue<bool>(
-                          'buttonActionVisibility', !value);
-                      PreferencesUser().setValue<bool>(
-                          'appBarVisibility', !appBarVisibility);
+                          .read(preferencesProvider.notifier)
+                          .changeButtonActionVisibility(appBarVisibility);
                     },
                   ),
                   Padding(
@@ -168,16 +160,15 @@ class AppearanceScreen extends ConsumerWidget {
                     ),
                     value: categoriesVisibility,
                     onChanged: (value) {
-                      ref.read(categoriesVisibilityProvider.notifier).update(
-                          (categoriesVisibility) => !categoriesVisibility);
+                      ref
+                          .read(preferencesProvider.notifier)
+                          .changeCategoriesVisibility(!categoriesVisibility);
                       ref
                           .watch(categoryProvider.notifier)
                           .update((state) => "Todos");
                       ref
                           .watch(indexCategoryProvider.notifier)
                           .update((state) => 0);
-                      PreferencesUser().setValue<bool>(
-                          'categoriesVisibility', !categoriesVisibility);
                     },
                   ),
                   Padding(
@@ -198,10 +189,8 @@ class AppearanceScreen extends ConsumerWidget {
                     value: clockVisibility,
                     onChanged: (value) async {
                       ref
-                          .read(clockVisibilityProvider.notifier)
-                          .update((clockVisibility) => !clockVisibility);
-                      PreferencesUser()
-                          .setValue<bool>('clockVisibility', !clockVisibility);
+                          .read(preferencesProvider.notifier)
+                          .changeClockVisibility(!clockVisibility);
                     },
                   ),
                   SwitchListTile(
@@ -212,10 +201,8 @@ class AppearanceScreen extends ConsumerWidget {
                     value: buttonMicrophone,
                     onChanged: (value) {
                       ref
-                          .read(buttonMicrophoneVisibilityProvider.notifier)
-                          .update((buttonMicrophone) => !buttonMicrophone);
-                      PreferencesUser().setValue<bool>(
-                          'buttonMicrophoneVisibility', !buttonMicrophone);
+                          .read(preferencesProvider.notifier)
+                          .changeButtonMicrophoneVisibility(!buttonMicrophone);
                     },
                   ),
                   SwitchListTile(
@@ -226,10 +213,8 @@ class AppearanceScreen extends ConsumerWidget {
                     value: buttonNewNote,
                     onChanged: (value) {
                       ref
-                          .read(buttonNewNoteVisibilityProvider.notifier)
-                          .update((buttonNewNote) => !buttonNewNote);
-                      PreferencesUser().setValue<bool>(
-                          'buttonNewNoteVisibility', !buttonNewNote);
+                          .read(preferencesProvider.notifier)
+                          .changeButtonNewNoteVisibility(!buttonNewNote);
                     },
                   ),
                   SwitchListTile(
@@ -240,10 +225,8 @@ class AppearanceScreen extends ConsumerWidget {
                     value: bottomVisibility,
                     onChanged: (value) {
                       ref
-                          .read(bottomVisibilityProvider.notifier)
-                          .update((bottomVisibility) => !bottomVisibility);
-                      PreferencesUser().setValue<bool>(
-                          'bottomVisibility', !bottomVisibility);
+                          .read(preferencesProvider.notifier)
+                          .changeBottomVisibility(!bottomVisibility);
                     },
                   ),
                   Row(
@@ -345,9 +328,7 @@ class ThemeChangerView extends ConsumerWidget {
         final Color color = colors[index];
         return GestureDetector(
           onTap: () {
-            ref.read(themeNotifierProvider.notifier).changeColorIndex(index);
-            ref.read(selectedColorProvider.notifier).state = index;
-            PreferencesUser().setValue<int>('selectedColor', index);
+            ref.read(preferencesProvider.notifier).changeSelectedColor(index);
           },
           child: Container(
             margin: const EdgeInsets.all(8.0),

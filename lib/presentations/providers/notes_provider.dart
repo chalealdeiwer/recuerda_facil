@@ -13,10 +13,12 @@ final noteNotifierProvider =
 
 class AppNotesState {
   final bool isPosting;
-  AppNotesState({this.isPosting = false});
+  final bool isUpdating;
+  AppNotesState({this.isPosting = false, this.isUpdating = false});
 
-  AppNotesState copyWith({bool? isPosting}) =>
-      AppNotesState(isPosting: isPosting ?? this.isPosting);
+  AppNotesState copyWith({bool? isPosting, bool? isUpdating}) => AppNotesState(
+      isPosting: isPosting ?? this.isPosting,
+      isUpdating: isUpdating ?? this.isUpdating);
 }
 
 class AppNoteNotifier extends StateNotifier<AppNotesState> {
@@ -189,10 +191,16 @@ class AppNoteNotifier extends StateNotifier<AppNotesState> {
     String newNote,
     String newContent,
   ) async {
-    await db
-        .collection("notes")
-        .doc(uid)
-        .update({"title": newNote, "content": newContent});
+    try {
+      state = state.copyWith(isUpdating: true);
+      await db
+          .collection("notes")
+          .doc(uid)
+          .update({"title": newNote, "content": newContent});
+      state = state.copyWith(isUpdating: true);
+    } catch (error) {
+      throw Exception();
+    }
   }
 
   Future<void> toggleNoteState(String uid, bool currentState) async {

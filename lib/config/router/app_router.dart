@@ -80,6 +80,10 @@ final goRouterProvider = Provider((ref) {
           path: '/account',
           builder: (context, state) => const AccountScreen()),
       GoRoute(
+          name: UsersGuideFirstInitScreen.name,
+          path: '/user_guide_first_init',
+          builder: (context, state) => const UsersGuideFirstInitScreen()),
+      GoRoute(
           name: UsersGuideScreen.name,
           path: '/user_guide',
           builder: (context, state) => const UsersGuideScreen()),
@@ -148,20 +152,21 @@ final goRouterProvider = Provider((ref) {
       GoRoute(
           name: FirstSignInScreen.name,
           path: '/firstSignIn',
-          builder: (context, state) =>  FirstSignInScreen()),
+          builder: (context, state) => FirstSignInScreen()),
     ],
     redirect: (context, state) {
       final isGoingTo = state.matchedLocation;
       final authStatus = goRouterNotifier.authStatus;
       print("Is going to: $isGoingTo, authStatus: $authStatus");
       // if (authStatus == AuthStatus.checking) return '/splashScreen';
-      if (isGoingTo=='/login'&& authStatus == AuthStatus.firstSignIn) {
+      if (isGoingTo == '/login' && authStatus == AuthStatus.firstSignIn) {
         return '/firstSignIn';
       }
       if (isGoingTo == '/splashScreen' && authStatus == AuthStatus.firstInit) {
-        return '/user_guide';
+        return '/user_guide_first_init';
       }
-      if (isGoingTo == '/firstSignIn' && authStatus == AuthStatus.authenticated) {
+      if (isGoingTo == '/firstSignIn' &&
+          authStatus == AuthStatus.authenticated) {
         return '/home/1';
       }
       if (isGoingTo == '/splashScreen' &&

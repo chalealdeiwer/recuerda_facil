@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:recuerda_facil/features/auth/presentation/providers/providers_auth.dart';
 import 'package:recuerda_facil/presentations/screens/screens.dart';
 
-import '../../../services/services.dart';
 import '../../providers/providers.dart';
 
 class CustomAppbar extends ConsumerWidget {
@@ -16,7 +15,7 @@ class CustomAppbar extends ConsumerWidget {
     final isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
     final size = MediaQuery.of(context).size;
     final colors = Theme.of(context).colorScheme;
-    final user= ref.watch(authProvider).user;
+    final user = ref.watch(authProvider).user;
     return SliverAppBar(
       expandedHeight: size.height * 0.06,
       backgroundColor: colors.surfaceVariant.withOpacity(0.5),
@@ -59,17 +58,20 @@ class CustomAppbar extends ConsumerWidget {
         const Spacer(),
         IconButton(
             onPressed: () {
-              showNewNote(context, category,user!.uid);
+              showNewNote(context, category, user!.uid);
             },
             icon: const Icon(Icons.add)),
         IconButton(
             onPressed: () {
-              ref.read(themeNotifierProvider.notifier).toogleDarkMode();
+              // ref.read(themeNotifierProvider.notifier).toogleDarkMode();
 
+              // ref
+              //     .read(isDarkmodeProvider.notifier)
+              //     .update((darkmode) => !darkmode);
               ref
-                  .read(isDarkmodeProvider.notifier)
-                  .update((darkmode) => !darkmode);
-              PreferencesUser().setValue<bool>('isDarkmode', !isDarkMode);
+                  .read(preferencesProvider.notifier)
+                  .changeIsDarkMode(!isDarkMode);
+              // PreferencesUser().setValue<bool>('isDarkmode', !isDarkMode);
             },
             icon: isDarkMode
                 ? const Icon(Icons.light_mode_outlined)

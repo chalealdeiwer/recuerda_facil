@@ -20,9 +20,9 @@ class _HomeViewState extends ConsumerState<HomeView>
     final colors = Theme.of(context).colorScheme;
     final isListeningProv = ref.watch(isListeningProvider);
     final textProv = ref.watch(textProvider);
-    final clockVisibility = ref.watch(clockVisibilityProvider);
-    final categoriesVisibility = ref.watch(categoriesVisibilityProvider);
-    final appBarVisibility = ref.watch(appBarVisibilityProvider);
+    final clockVisibility = ref.watch(preferencesProvider).clockVisibility;
+    final categoriesVisibility = ref.watch(preferencesProvider).categoriesVisibility;
+    final appBarVisibility = ref.watch(preferencesProvider).appBarVisibility;
     final size = MediaQuery.of(context).size;
     final textStyle = Theme.of(context).textTheme;
 

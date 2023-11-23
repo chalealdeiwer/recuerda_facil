@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:recuerda_facil/features/auth/domain/entities/user_account.dart';
-import 'package:recuerda_facil/services/services.dart';
 
 import '../../../../../presentations/providers/providers.dart';
 import '../../../../../presentations/screens/screens.dart';
@@ -147,14 +146,8 @@ class _FirstSignInScreenState extends ConsumerState<FirstSignInScreen> {
     final colors = Theme.of(context).colorScheme;
     final textStyle = Theme.of(context).textTheme;
     final size = MediaQuery.of(context).size;
-    final customBack = ref.watch(customBackground);
+    final customBack = ref.watch(preferencesProvider).customBackground;
     final opacity = ref.watch(opacityProvider);
-    final clockVisibility = ref.watch(clockVisibilityProvider);
-    final bottomVisibility = ref.watch(bottomVisibilityProvider);
-    final categoriesVisibility = ref.watch(categoriesVisibilityProvider);
-    final appBarVisibility = ref.watch(appBarVisibilityProvider);
-    final buttonMicrophone = ref.watch(buttonMicrophoneVisibilityProvider);
-    final buttonNewNote = ref.watch(buttonNewNoteVisibilityProvider);
 
     List<Step> steps = [
       Step(
@@ -213,17 +206,10 @@ class _FirstSignInScreenState extends ConsumerState<FirstSignInScreen> {
                 child: Text(
                   "Teléfono(opcional)",
                 )),
-            // TextFormField(
-            //   maxLength: 15,
-            //   keyboardType: TextInputType.phone,
-            //   controller: phoneController,
-            //   decoration: InputDecoration(
-            //       hintText: phoneController.text.isEmpty
-            //           ? "Tu numero de teléfono"
-            //           : nameController.text,
-            //       border: const OutlineInputBorder()),
-            // ),
             InternationalPhoneNumberInput(
+              hintText: phoneController.text.isEmpty
+                  ? "Teléfono"
+                  : phoneController.text,
               textFieldController: phoneController,
               onInputChanged: (PhoneNumber number) {
                 phoneNumber = number.phoneNumber!;
@@ -310,24 +296,6 @@ class _FirstSignInScreenState extends ConsumerState<FirstSignInScreen> {
           title: const Text('Paso 2 - Elige Apariencia'),
           content: Column(
             children: [
-              SwitchListTile(
-                title: Text(
-                  "Modo Oscuro",
-                  style: textStyle.titleLarge,
-                ),
-                value: isDarkMode,
-                onChanged: (value) {
-                  ref.read(themeNotifierProvider.notifier).toogleDarkMode();
-                  ref
-                      .read(isDarkmodeProvider.notifier)
-                      .update((darkmode) => !darkmode);
-                  PreferencesUser().setValue<bool>('isDarkmode', !isDarkMode);
-                },
-              ),
-              const Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Text("Escoge un color de tu agrado")),
-              const SizedBox(height: 70, child: ThemeChangerView()),
               const Text(
                   "¿Como te gustaría ver la apariencia de tu aplicación?"),
               SegmentedButton<Appearance>(
@@ -356,330 +324,125 @@ class _FirstSignInScreenState extends ConsumerState<FirstSignInScreen> {
                   setState(() {
                     if (simple.containsAll(value)) {
                       selection = value;
-                      //barra de funciones
-                      ref
-                          .read(appBarVisibilityProvider.notifier)
-                          .update((appBarVisibility) => false);
-                      ref
-                          .read(buttonActionVisibilityProvider.notifier)
-                          .update((buttonAction) => true);
-                      PreferencesUser()
-                          .setValue<bool>('buttonActionVisibility', true);
-                      PreferencesUser()
-                          .setValue<bool>('appBarVisibility', false);
 
-                      //selector de categoría
-                      ref
-                          .read(categoriesVisibilityProvider.notifier)
-                          .update((categoriesVisibility) => false);
                       ref
                           .watch(categoryProvider.notifier)
                           .update((state) => "Todos");
                       ref
                           .watch(indexCategoryProvider.notifier)
                           .update((state) => 0);
-                      PreferencesUser()
-                          .setValue<bool>('categoriesVisibility', false);
-                      //mensaje de bienvenida
-                      ref
-                          .read(clockVisibilityProvider.notifier)
-                          .update((clockVisibility) => false);
-                      PreferencesUser()
-                          .setValue<bool>('clockVisibility', false);
-                      //botón comando de voz
-                      ref
-                          .read(buttonMicrophoneVisibilityProvider.notifier)
-                          .update((buttonMicrophone) => true);
-                      PreferencesUser()
-                          .setValue<bool>('buttonMicrophoneVisibility', true);
-                      //botón nueva nota
-                      ref
-                          .read(buttonNewNoteVisibilityProvider.notifier)
-                          .update((buttonNewNote) => false);
-                      PreferencesUser()
-                          .setValue<bool>('buttonNewNoteVisibility', false);
-                      //botones de pantalla
-                      ref
-                          .read(bottomVisibilityProvider.notifier)
-                          .update((bottomVisibility) => false);
-                      PreferencesUser()
-                          .setValue<bool>('bottomVisibility', false);
+                      ref.read(preferencesProvider.notifier).appearanceSimple();
                     }
                     if (reducida.containsAll(value)) {
                       selection = value;
-                      //barra de funciones
-                      ref
-                          .read(appBarVisibilityProvider.notifier)
-                          .update((appBarVisibility) => false);
-                      ref
-                          .read(buttonActionVisibilityProvider.notifier)
-                          .update((buttonAction) => true);
-                      PreferencesUser()
-                          .setValue<bool>('buttonActionVisibility', true);
-                      PreferencesUser()
-                          .setValue<bool>('appBarVisibility', false);
 
-                      //selector de categoría
-                      ref
-                          .read(categoriesVisibilityProvider.notifier)
-                          .update((categoriesVisibility) => true);
                       ref
                           .watch(categoryProvider.notifier)
                           .update((state) => "Todos");
                       ref
                           .watch(indexCategoryProvider.notifier)
                           .update((state) => 0);
-                      PreferencesUser()
-                          .setValue<bool>('categoriesVisibility', true);
-                      //mensaje de bienvenida
                       ref
-                          .read(clockVisibilityProvider.notifier)
-                          .update((clockVisibility) => true);
-                      PreferencesUser().setValue<bool>('clockVisibility', true);
-                      //botón comando de voz
-                      ref
-                          .read(buttonMicrophoneVisibilityProvider.notifier)
-                          .update((buttonMicrophone) => true);
-                      PreferencesUser()
-                          .setValue<bool>('buttonMicrophoneVisibility', true);
-                      //botón nueva nota
-                      ref
-                          .read(buttonNewNoteVisibilityProvider.notifier)
-                          .update((buttonNewNote) => true);
-                      PreferencesUser()
-                          .setValue<bool>('buttonNewNoteVisibility', true);
-                      //botones de pantalla
-                      ref
-                          .read(bottomVisibilityProvider.notifier)
-                          .update((bottomVisibility) => false);
-                      PreferencesUser()
-                          .setValue<bool>('bottomVisibility', false);
+                          .read(preferencesProvider.notifier)
+                          .appearanceReduced();
                     }
                     if (completa.containsAll(value)) {
                       selection = value;
-                      //barra de funciones
-                      ref
-                          .read(appBarVisibilityProvider.notifier)
-                          .update((appBarVisibility) => true);
-                      ref
-                          .read(buttonActionVisibilityProvider.notifier)
-                          .update((buttonAction) => false);
-                      PreferencesUser()
-                          .setValue<bool>('buttonActionVisibility', false);
-                      PreferencesUser()
-                          .setValue<bool>('appBarVisibility', true);
 
-                      //selector de categoría
-                      ref
-                          .read(categoriesVisibilityProvider.notifier)
-                          .update((categoriesVisibility) => true);
                       ref
                           .watch(categoryProvider.notifier)
                           .update((state) => "Todos");
                       ref
                           .watch(indexCategoryProvider.notifier)
                           .update((state) => 0);
-                      PreferencesUser()
-                          .setValue<bool>('categoriesVisibility', true);
-                      //mensaje de bienvenida
                       ref
-                          .read(clockVisibilityProvider.notifier)
-                          .update((clockVisibility) => true);
-                      PreferencesUser().setValue<bool>('clockVisibility', true);
-                      //botón comando de voz
-                      ref
-                          .read(buttonMicrophoneVisibilityProvider.notifier)
-                          .update((buttonMicrophone) => true);
-                      PreferencesUser()
-                          .setValue<bool>('buttonMicrophoneVisibility', true);
-                      //botón nueva nota
-                      ref
-                          .read(buttonNewNoteVisibilityProvider.notifier)
-                          .update((buttonNewNote) => true);
-                      PreferencesUser()
-                          .setValue<bool>('buttonNewNoteVisibility', true);
-                      //botones de pantalla
-                      ref
-                          .read(bottomVisibilityProvider.notifier)
-                          .update((bottomVisibility) => true);
-                      PreferencesUser()
-                          .setValue<bool>('bottomVisibility', true);
+                          .read(preferencesProvider.notifier)
+                          .appearanceComplete();
                     }
                   });
                 },
               ),
-              const SizedBox(
-                height: 5,
+              SwitchListTile(
+                title: Text(
+                  "Modo Oscuro",
+                  style: textStyle.titleLarge,
+                ),
+                value: isDarkMode,
+                onChanged: (value) {
+                  ref
+                      .read(preferencesProvider.notifier)
+                      .changeIsDarkMode(!isDarkMode);
+                },
               ),
-              ExpansionTile(
-                title: const Text("Opciones de apariencia completa"),
-                children: [
-                  SingleChildScrollView(
-                    child: SwitchListTile(
-                      title: Text(
-                        "Fondo personalizado",
+              SwitchListTile(
+                title: Text(
+                  "Fondo personalizado",
+                  style: textStyle.titleLarge,
+                ),
+                value: customBack,
+                onChanged: (value) {
+                  ref
+                      .read(preferencesProvider.notifier)
+                      .changeCustomBackground(!customBack);
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Visibility(
+                  visible: customBack,
+                  child: Row(
+                    children: [
+                      Text(
+                        "Opacidad",
                         style: textStyle.titleLarge,
                       ),
-                      value: customBack,
-                      onChanged: (value) {
-                        ref
-                            .read(customBackground.notifier)
-                            .update((customBack) => !customBack);
-                        PreferencesUser()
-                            .setValue<bool>('customBackground', !customBack);
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Visibility(
-                      visible: customBack,
-                      child: Row(
-                        children: [
-                          Text(
-                            "Opacidad",
-                            style: textStyle.titleLarge,
-                          ),
-                          Expanded(
-                            child: Slider(
-                              value: opacity,
-                              min: 0.0,
-                              max: 1.0,
-                              onChanged: (newValue) {
-                                ref
-                                    .read(opacityProvider.notifier)
-                                    .updateOpacity(newValue);
-                              },
-                            ),
-                          ),
-                        ],
+                      Expanded(
+                        child: Slider(
+                          value: opacity,
+                          min: 0.0,
+                          max: 1.0,
+                          onChanged: (newValue) {
+                            ref
+                                .read(opacityProvider.notifier)
+                                .updateOpacity(newValue);
+                          },
+                        ),
                       ),
+                    ],
+                  ),
+                ),
+              ),
+              Text(
+                "Vista previa",
+                style: textStyle.titleLarge,
+              ),
+              Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                      border:
+                          Border.all(color: colors.secondary.withOpacity(0.5))),
+                  width: size.width * 0.2,
+                  height: size.height * 0.2,
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: IgnorePointer(
+                      child: SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height,
+                          child: HomeScreen(
+                            pageIndex: 1,
+                          )),
                     ),
                   ),
-                  SwitchListTile(
-                    title: Text(
-                      "Barra de funciones",
-                      style: textStyle.titleLarge,
-                    ),
-                    value: appBarVisibility,
-                    onChanged: (value) {
-                      ref
-                          .read(appBarVisibilityProvider.notifier)
-                          .update((appBarVisibility) => !appBarVisibility);
-                      ref
-                          .read(buttonActionVisibilityProvider.notifier)
-                          .update((buttonAction) => !buttonAction);
-                      PreferencesUser()
-                          .setValue<bool>('buttonActionVisibility', !value);
-                      PreferencesUser().setValue<bool>(
-                          'appBarVisibility', !appBarVisibility);
-                    },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Visibility(
-                      visible: !appBarVisibility,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        // mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Text(
-                            "Se agregará un botón de acción",
-                            textScaleFactor: 1,
-                            style: TextStyle(color: colors.error, fontSize: 20),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SwitchListTile(
-                    title: Text(
-                      "Selector de categoría",
-                      style: textStyle.titleLarge,
-                    ),
-                    value: categoriesVisibility,
-                    onChanged: (value) {
-                      ref.read(categoriesVisibilityProvider.notifier).update(
-                          (categoriesVisibility) => !categoriesVisibility);
-                      ref
-                          .watch(categoryProvider.notifier)
-                          .update((state) => "Todos");
-                      ref
-                          .watch(indexCategoryProvider.notifier)
-                          .update((state) => 0);
-                      PreferencesUser().setValue<bool>(
-                          'categoriesVisibility', !categoriesVisibility);
-                    },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Visibility(
-                      visible: !categoriesVisibility,
-                      child: Text(
-                        "Los recordatorios nuevos se agregaran a 'Sin Categoría'",
-                        style: TextStyle(color: colors.error, fontSize: 20),
-                      ),
-                    ),
-                  ),
-                  SwitchListTile(
-                    title: Text(
-                      "Mensaje de bienvenida",
-                      style: textStyle.titleLarge,
-                    ),
-                    value: clockVisibility,
-                    onChanged: (value) async {
-                      ref
-                          .read(clockVisibilityProvider.notifier)
-                          .update((clockVisibility) => !clockVisibility);
-                      PreferencesUser()
-                          .setValue<bool>('clockVisibility', !clockVisibility);
-                    },
-                  ),
-                  SwitchListTile(
-                    title: Text(
-                      "Botón Comando de Voz",
-                      style: textStyle.titleLarge,
-                    ),
-                    value: buttonMicrophone,
-                    onChanged: (value) {
-                      ref
-                          .read(buttonMicrophoneVisibilityProvider.notifier)
-                          .update((buttonMicrophone) => !buttonMicrophone);
-                      PreferencesUser().setValue<bool>(
-                          'buttonMicrophoneVisibility', !buttonMicrophone);
-                    },
-                  ),
-                  SwitchListTile(
-                    title: Text(
-                      "Botón de nueva nota",
-                      style: textStyle.titleLarge,
-                    ),
-                    value: buttonNewNote,
-                    onChanged: (value) {
-                      ref
-                          .read(buttonNewNoteVisibilityProvider.notifier)
-                          .update((buttonNewNote) => !buttonNewNote);
-                      PreferencesUser().setValue<bool>(
-                          'buttonNewNoteVisibility', !buttonNewNote);
-                    },
-                  ),
-                  SwitchListTile(
-                    title: Text(
-                      "Botones de pantalla",
-                      style: textStyle.titleLarge,
-                    ),
-                    value: bottomVisibility,
-                    onChanged: (value) {
-                      ref
-                          .read(bottomVisibilityProvider.notifier)
-                          .update((bottomVisibility) => !bottomVisibility);
-                      PreferencesUser().setValue<bool>(
-                          'bottomVisibility', !bottomVisibility);
-                    },
-                  ),
-                ],
-              )
+                ),
+              ),
+              const Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text("Escoge un color de tu agrado")),
+              const SizedBox(height: 70, child: ThemeChangerView()),
+              const SizedBox(
+                height: 10,
+              ),
             ],
           )),
       Step(
@@ -824,9 +587,20 @@ class _FirstSignInScreenState extends ConsumerState<FirstSignInScreen> {
                                   child: const Text("Cancelar")),
                               FilledButton(
                                   onPressed: () {
+                                    //creación de usuario
                                     ref
                                         .read(authProvider.notifier)
                                         .defaultCreateUser();
+                                    ref
+                                        .read(preferencesProvider.notifier)
+                                        .appearanceDefault();
+
+                                    ref
+                                        .watch(categoryProvider.notifier)
+                                        .update((state) => "Todos");
+                                    ref
+                                        .watch(indexCategoryProvider.notifier)
+                                        .update((state) => 0);
                                   },
                                   child: const Text("Aceptar")),
                             ],

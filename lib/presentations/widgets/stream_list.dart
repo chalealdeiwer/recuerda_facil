@@ -35,11 +35,13 @@ class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
     final isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
     final colors = Theme.of(context).colorScheme;
     final textStyle = Theme.of(context).textTheme;
-    final  noteProvider = ref.read(noteNotifierProvider.notifier);
+    final noteProvider = ref.read(noteNotifierProvider.notifier);
     final ttsTitle = ref.watch(ttsTitleProvider);
     final ttsContent = ref.watch(ttsContentProvider);
     final ttsCategory = ref.watch(ttsCategoryProvider);
     final textToSpeech = ref.watch(onTestToSpeechProvider);
+    final updating = ref.watch(noteNotifierProvider);
+
     //recordatorios finalizados
     if (!widget.done) {
       return user != null
@@ -673,49 +675,53 @@ class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
                                                   ),
                                             ),
                                             FilledButton(
-                                                onPressed: () async {
-                                                  await noteProvider
-                                                      .updateNote(
-                                                          notes2[index].key,
-                                                          titleController.text,
-                                                          contentController
-                                                              .text)
-                                                      .then((value) {
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(SnackBar(
-                                                            action: SnackBarAction(
-                                                                textColor:
-                                                                    Colors
-                                                                        .black,
-                                                                label: '¡Ok!',
-                                                                onPressed:
-                                                                    () {}),
-                                                            duration:
-                                                                const Duration(
-                                                                    milliseconds:
-                                                                        1100),
-                                                            backgroundColor:
-                                                                Colors.yellow[
-                                                                    200],
-                                                            content: const Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              children: [
-                                                                Icon(Icons
-                                                                    .add_alert_sharp),
-                                                                Text(
-                                                                  "¡Recordatorio actualizado!",
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .black),
-                                                                ),
-                                                              ],
-                                                            )));
-                                                    context.pop();
-                                                  });
-                                                },
+                                                onPressed: updating.isUpdating
+                                                    ? null
+                                                    : () async {
+                                                        await noteProvider
+                                                            .updateNote(
+                                                                notes2[index]
+                                                                    .key,
+                                                                titleController
+                                                                    .text,
+                                                                contentController
+                                                                    .text)
+                                                            .then((value) {
+                                                          ScaffoldMessenger.of(context).showSnackBar(
+                                                              SnackBar(
+                                                                  action: SnackBarAction(
+                                                                      textColor:
+                                                                          Colors
+                                                                              .black,
+                                                                      label:
+                                                                          '¡Ok!',
+                                                                      onPressed:
+                                                                          () {}),
+                                                                  duration: const Duration(
+                                                                      milliseconds:
+                                                                          1100),
+                                                                  backgroundColor:
+                                                                      Colors.yellow[
+                                                                          200],
+                                                                  content:
+                                                                      const Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Icon(Icons
+                                                                          .add_alert_sharp),
+                                                                      Text(
+                                                                        "¡Recordatorio actualizado!",
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.black),
+                                                                      ),
+                                                                    ],
+                                                                  )));
+                                                          context.pop();
+                                                        });
+                                                      },
                                                 child: const Text("Actualizar"))
                                           ],
                                         ),

@@ -8,7 +8,6 @@ import 'package:recuerda_facil/services/user_services.dart';
 
 import '../../features/auth/presentation/providers/providers_auth.dart';
 
-
 class CategorySelector extends ConsumerStatefulWidget {
   const CategorySelector({super.key});
 
@@ -32,10 +31,15 @@ class _CategorySelectorState extends ConsumerState<CategorySelector> {
 
   @override
   Widget build(BuildContext context) {
+    if (ref.watch(authProvider).user == null) {
+      return const Center(
+        child: LinearProgressIndicator(),
+      );
+    }
     final userUid = ref.watch(authProvider).user!.uid;
-    
+
     final userAcc = ref.watch(userProviderr(userUid!));
-  
+
     final ttsCategorySelector = ref.watch(ttsCategorySelectorProvider);
     final List<String> categories;
     categories = userAcc.when(
@@ -56,9 +60,7 @@ class _CategorySelectorState extends ConsumerState<CategorySelector> {
     final formKey = GlobalKey<FormState>();
     String categorySpeechText = "";
 
-    return 
-    
-    ListView.builder(
+    return ListView.builder(
       scrollDirection: Axis.horizontal,
       itemCount: categories.length + 1,
       itemBuilder: (BuildContext context, int index) {
@@ -138,17 +140,18 @@ class _CategorySelectorState extends ConsumerState<CategorySelector> {
                     .watch(indexCategoryProvider.notifier)
                     .update((state) => index);
                 if (ttsCategorySelector) {
-                if (categories[index] == "Todos") {
-                  categorySpeechText = "Todos los recordatorios";
-                } else if (categories[index] == "" ||
-                    categories[index].toLowerCase() == "sin categoría") {
-                  categorySpeechText = "Sin categoría";
-                } else {
-                  categorySpeechText = "Categoría ${categories[index]}";
-                }
+                  if (categories[index] == "Todos") {
+                    categorySpeechText = "Todos los recordatorios";
+                  } else if (categories[index] == "" ||
+                      categories[index].toLowerCase() == "sin categoría") {
+                    categorySpeechText = "Sin categoría";
+                  } else {
+                    categorySpeechText = "Categoría ${categories[index]}";
+                  }
 
-                _speak(categorySpeechText);
-              }},
+                  _speak(categorySpeechText);
+                }
+              },
               onLongPress: () {
                 selectedIndex = index;
                 ref
@@ -178,19 +181,19 @@ class _CategorySelectorState extends ConsumerState<CategorySelector> {
                             // Por favor verifica este widget, no es estándar en Flutter y podría causar un error
                             child: const Text('Eliminar'),
                             onPressed: () async {
-                              if(mounted){
-                              ref
-                                  .watch(categoryProvider.notifier)
-                                  .update((state) => categories[1]);
-                              ref
-                                  .watch(indexCategoryProvider.notifier)
-                                  .update((state) => 1);
-                              await removeUserCategory(
-                                      FirebaseAuth.instance.currentUser!.uid,
-                                      categories[index])
-                                  .then((value) {
-                                context.pop();
-                              });
+                              if (mounted) {
+                                ref
+                                    .watch(categoryProvider.notifier)
+                                    .update((state) => categories[1]);
+                                ref
+                                    .watch(indexCategoryProvider.notifier)
+                                    .update((state) => 1);
+                                await removeUserCategory(
+                                        FirebaseAuth.instance.currentUser!.uid,
+                                        categories[index])
+                                    .then((value) {
+                                  context.pop();
+                                });
                               }
                             },
                           ),
