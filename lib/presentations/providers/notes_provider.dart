@@ -197,7 +197,7 @@ class AppNoteNotifier extends StateNotifier<AppNotesState> {
           .collection("notes")
           .doc(uid)
           .update({"title": newNote, "content": newContent});
-      state = state.copyWith(isUpdating: true);
+      state = state.copyWith(isUpdating: false);
     } catch (error) {
       throw Exception();
     }

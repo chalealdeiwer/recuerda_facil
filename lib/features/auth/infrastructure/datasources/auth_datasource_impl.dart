@@ -42,7 +42,11 @@ class AuthDataSourceImpl extends AuthDataSource {
         // Verificar si el documento del usuario ya existe
         final doc = await userRef.get();
         if (!doc.exists) {
-          return UserAccount(firstSignIn: true);
+          if (credential.user!.emailVerified == false) {
+            return UserAccount(firstSignIn: true, emailVerified: false);
+          } else {
+            return UserAccount(firstSignIn: true,emailVerified: true);
+          }
         } else {
           try {
             final QuerySnapshot<Map<String, dynamic>> userDoc = await db
@@ -118,8 +122,53 @@ class AuthDataSourceImpl extends AuthDataSource {
   }
 
   @override
-  Future<UserAccount> register(String email, String password) {
-    throw UnimplementedError();
+  Future<UserAccount> register(String email, String password) async {
+    try {
+      UserCredential credential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+      await credential.user!.sendEmailVerification();
+
+      if (credential.user!.emailVerified == false) {
+        return UserAccount(firstSignIn: true, emailVerified: false);
+// return throw CustomError("Por favor verifica tu correo electrónico");
+      }
+      if (credential.user != null) {
+        final user = firebaseAuth.currentUser;
+        final db = FirebaseFirestore.instance;
+        final userRef = db.collection('users').doc(user!.uid);
+        // Verificar si el documento del usuario ya existe
+        final doc = await userRef.get();
+        if (!doc.exists) {
+          return UserAccount(firstSignIn: true,emailVerified: true);
+        } else {
+          try {
+            final QuerySnapshot<Map<String, dynamic>> userDoc = await db
+                .collection("users")
+                .where("uid", isEqualTo: credential.user!.uid)
+                .get();
+            final user = UserAccount.fromMap(userDoc.docs.first.data());
+            print(
+                "el usuario ya estaba en la base de datos por el login normal ");
+
+            return user;
+          } catch (e) {
+            print("Error al obtener los datos del usuario: $e");
+            throw Exception();
+          }
+          // print("el usuario ya esta en la base de datos");
+        }
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        throw CustomError("El correo ya se encuentra en uso");
+      } else {
+        if (e.code == 'weak-password') {
+          throw CustomError("La contraseña es muy débil");
+        }
+      }
+    } catch (e) {}
+    //
+    throw CustomError("Por favor verifica tu correo electrónico");
   }
 
   @override
@@ -127,7 +176,6 @@ class AuthDataSourceImpl extends AuthDataSource {
     final user = firebaseAuth.currentUser;
     final db = FirebaseFirestore.instance;
     final userRef = db.collection('users').doc(user!.uid);
-    
 
     await userRef.set({
       'email': user.email,
@@ -163,7 +211,7 @@ class AuthDataSourceImpl extends AuthDataSource {
   @override
   Future<UserAccount> createUser(UserAccount user) async {
     final userF = firebaseAuth.currentUser;
-    
+
     final db = FirebaseFirestore.instance;
     final userRef = db.collection('users').doc(userF!.uid);
     await userRef.set({
@@ -171,14 +219,14 @@ class AuthDataSourceImpl extends AuthDataSource {
       'displayName': user.displayName,
       'created': Timestamp.now(),
       "emailVerified": user.emailVerified,
-      "phoneNumber":user.phoneNumber,
+      "phoneNumber": user.phoneNumber,
       "categories": user.categories,
       "usersCarer": user.usersCarer,
       "photoURL": user.photoURL,
       "private": user.private,
       "uid": user.uid,
       "firstSignIn": false,
-      "dateBirthday":user.dateBirthday
+      "dateBirthday": user.dateBirthday
     });
     final QuerySnapshot<Map<String, dynamic>> userDoc =
         await db.collection("users").where("uid", isEqualTo: user.uid).get();

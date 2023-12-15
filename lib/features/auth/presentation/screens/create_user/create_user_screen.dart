@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../../presentations/providers/providers.dart';
 import '../../../../../services/services.dart';
+import '../../../shared/widgets/custom_text_form_field.dart';
+import '../../providers/providers_auth.dart';
 
 class CreateUserScreen extends ConsumerStatefulWidget {
   static const name = "create_user_screen";
@@ -16,11 +18,11 @@ class CreateUserScreen extends ConsumerStatefulWidget {
 }
 
 class CreateUserScreenState extends ConsumerState<CreateUserScreen> {
-  late String email, password;
-  final _formkey = GlobalKey<FormState>();
   String error = '';
   @override
   Widget build(BuildContext context) {
+    final loginForm = ref.watch(loginFormProvider);
+
     final colors = Theme.of(context).colorScheme;
     final isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
     return Scaffold(
@@ -99,11 +101,11 @@ class CreateUserScreenState extends ConsumerState<CreateUserScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8),
-                  child: formulario(),
+                  child: formulario(ref, loginForm),
                 ),
               ],
             ),
-            buttonCreate(),
+            buttonCreate(ref,loginForm),
             const SizedBox(
               height: 10,
             ),
@@ -117,107 +119,99 @@ class CreateUserScreenState extends ConsumerState<CreateUserScreen> {
     );
   }
 
-  Widget formulario() {
-    return Form(
-        key: _formkey,
-        child: Column(
-          children: [
-            buildEmail(),
-            const Padding(padding: EdgeInsets.only(top: 12)),
-            buildPassword()
-          ],
-        ));
-  }
-
-  Widget buildEmail() {
-    return TextFormField(
-      style: const TextStyle(fontSize: 30),
-      decoration: InputDecoration(
-          labelText: "Correo",
-          labelStyle: const TextStyle(fontSize: 25),
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Colors.black))),
-      keyboardType: TextInputType.emailAddress,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return "Este campo es obligatorio";
-        }
-        return null;
-      },
-      onSaved: (String? value) {
-        email = value!;
-      },
-    );
-  }
-
-  Widget buildPassword() {
-    return TextFormField(
-      style: const TextStyle(fontSize: 30),
-      decoration: InputDecoration(
-          labelText: "Contraseña",
-          labelStyle: const TextStyle(fontSize: 25),
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Colors.black))),
-      obscureText: true,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return "Este campo es obligatorio";
-        }
-        return null;
-      },
-      onSaved: (String? value) {
-        password = value!;
-      },
-    );
-  }
-
-  Widget buttonCreate() {
+ Widget buttonCreate(WidgetRef ref, loginForm) {
     return FractionallySizedBox(
       widthFactor: 0.6,
       child: FilledButton(
-          onPressed: () async {
-            if (_formkey.currentState!.validate()) {
-              _formkey.currentState!.save();
-              UserCredential? credenciales = await crear(email, password);
-              if (credenciales != null) {
-                await credenciales.user!.sendEmailVerification();
-                await FirebaseAuth.instance.signOut().then((value) => {
-                context.pop()
-                });
-              }
-            } else {
-              error = "No se ha creado la cuenta, formato no válido";
-            }
-          },
+          onPressed: loginForm.isPosting
+              ? null
+              : () {
+                  ref.read(loginFormProvider.notifier).onFormCreateUser();
+                },
           child: const Text(
-            "Crear",
+            "Crear Cuenta",
             style: TextStyle(fontSize: 25),
           )),
     );
   }
+  // Widget buttonCreate() {
+  //   return FractionallySizedBox(
+  //     widthFactor: 0.6,
+  //     child: FilledButton(
+  //         onPressed: () async {
+  //           if (_formkey.currentState!.validate()) {
+  //             _formkey.currentState!.save();
+  //             UserCredential? credenciales = await crear(email, password);
+  //             if (credenciales != null) {
+  //               await credenciales.user!.sendEmailVerification();
+  //               await FirebaseAuth.instance.signOut().then((value) => {
+  //               context.pop()
+  //               });
+  //             }
+  //           } else {
+  //             error = "No se ha creado la cuenta, formato no válido";
+  //           }
+  //         },
+  //         child: const Text(
+  //           "Crear",
+  //           style: TextStyle(fontSize: 25),
+  //         )),
+  //   );
+  // }
 
-  Future<UserCredential?> crear(String email, String passwd) async {
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
-      return userCredential;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'email-already-in-use') {
-        setState(() {
-          error = "El correo ya se encuentra en uso";
-        });
-      } else {
-        if (e.code == 'weak-password') {
-          setState(() {
-            error = "Contraseña débil";
-          });
-        }
-      }
-    }
-    return null;
+  // Future<UserCredential?> crear(String email, String passwd) async {
+  //   try {
+  //     UserCredential userCredential = await FirebaseAuth.instance
+  //         .createUserWithEmailAndPassword(email: email, password: password);
+  //     return userCredential;
+  //   } on FirebaseAuthException catch (e) {
+  //     if (e.code == 'email-already-in-use') {
+  //       setState(() {
+  //         error = "El correo ya se encuentra en uso";
+  //       });
+  //     } else {
+  //       if (e.code == 'weak-password') {
+  //         setState(() {
+  //           error = "Contraseña débil";
+  //         });
+  //       }
+  //     }
+  //   }
+  //   return null;
+  // }
+  Widget formulario(WidgetRef ref, loginForm) {
+    return Form(
+        child: Column(
+      children: [
+        buildEmail(ref, loginForm),
+        const Padding(padding: EdgeInsets.only(top: 12)),
+        buildPassword(ref, loginForm)
+      ],
+    ));
   }
+
+  Widget buildEmail(WidgetRef ref, loginForm) {
+    return CustomTextFormField(
+      label: 'Usa tu correo',
+      keyboardType: TextInputType.emailAddress,
+      onChanged: ref.read(loginFormProvider.notifier).onEmailChange,
+      errorMessage:
+          loginForm.isFormPosted ? loginForm.email.errorMessage : null,
+    );
+  }
+
+  Widget buildPassword(WidgetRef ref, loginForm) {
+    return CustomTextFormField(
+        label: 'Crea una contraseña',
+        obscureText: false,
+        onChanged: ref.read(loginFormProvider.notifier).onPasswordChange,
+        onFieldSubmitted: (_) {
+          ref.read(loginFormProvider.notifier).onFormSubmit();
+        },
+        errorMessage:
+            loginForm.isFormPosted ? loginForm.password.errorMessage : null);
+  }
+}
 
   Widget privacy() {
     return Wrap(
@@ -229,12 +223,12 @@ class CreateUserScreenState extends ConsumerState<CreateUserScreen> {
           style: TextStyle(fontSize: 18),
         ),
         TextButton(onPressed: (){
-          launchUrlService("https://www.google.com/");
+          launchUrlService("https://recuerdafaciltu.deiwerchaleal.com/");
         }, child: const Text("Términos de uso",style: TextStyle(fontSize: 18, color: Colors.blue, decoration: TextDecoration.underline, decorationColor: Colors.blue))),
         const Text("y"),
         TextButton(
             onPressed: () {
-          launchUrlService("https://www.google.com/");
+          launchUrlService("https://recuerdafacilpp.deiwerchaleal.com/");
               
             },
             child: const Text(
@@ -244,4 +238,3 @@ class CreateUserScreenState extends ConsumerState<CreateUserScreen> {
       ],
     );
   }
-}

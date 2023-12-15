@@ -5,12 +5,24 @@ import 'package:recuerda_facil/presentations/screens/screens.dart';
 
 import '../../providers/providers.dart';
 
-class AppearanceScreen extends ConsumerWidget {
+enum Appearance { simple, reducida, completa }
+
+class AppearanceScreen extends ConsumerStatefulWidget {
   const AppearanceScreen({super.key});
   static const name = 'appearance_screen';
 
   @override
-  Widget build(BuildContext context, ref) {
+  ConsumerState<AppearanceScreen> createState() => _AppearanceScreenState();
+}
+
+class _AppearanceScreenState extends ConsumerState<AppearanceScreen> {
+  Set<Appearance> selection = <Appearance>{
+    Appearance.reducida,
+  };
+  @override
+  Widget build(
+    BuildContext context,
+  ) {
     var isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
     final colors = Theme.of(context).colorScheme;
     final textStyle = Theme.of(context).textTheme;
@@ -21,7 +33,8 @@ class AppearanceScreen extends ConsumerWidget {
     final categoriesVisibility =
         ref.watch(preferencesProvider).categoriesVisibility;
     final appBarVisibility = ref.watch(preferencesProvider).appBarVisibility;
-    final buttonMicrophone = ref.watch(preferencesProvider).buttonMicrophoneVisibility;
+    final buttonMicrophone =
+        ref.watch(preferencesProvider).buttonMicrophoneVisibility;
     final buttonNewNote =
         ref.watch(preferencesProvider).buttonNewNoteVisibility;
 
@@ -119,6 +132,86 @@ class AppearanceScreen extends ConsumerWidget {
                         ],
                       ),
                     ),
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        " Apariencia",
+                        textScaleFactor: 1,
+                        maxLines: 2,
+                        style: textStyle.displaySmall,
+                      ),
+                      const Expanded(child: Divider())
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  SegmentedButton<Appearance>(
+                    multiSelectionEnabled: false,
+                    segments: const [
+                      ButtonSegment<Appearance>(
+                        value: Appearance.simple,
+                        icon: Icon(Icons.library_add_check_outlined),
+                        label: Text("Simple "),
+                      ),
+                      ButtonSegment<Appearance>(
+                        value: Appearance.reducida,
+                        icon: Icon(Icons.library_add_check_outlined),
+                        label: Text("Reducida "),
+                      ),
+                      ButtonSegment<Appearance>(
+                          value: Appearance.completa,
+                          label: Text("Completa "),
+                          icon: Icon(Icons.library_add_check_outlined))
+                    ],
+                    selected: selection,
+                    onSelectionChanged: (value) {
+                      Set simple = {Appearance.simple};
+                      Set reducida = {Appearance.reducida};
+                      Set completa = {Appearance.completa};
+                      setState(() {
+                        if (simple.containsAll(value)) {
+                          selection = value;
+
+                          ref
+                              .watch(categoryProvider.notifier)
+                              .update((state) => "Todos");
+                          ref
+                              .watch(indexCategoryProvider.notifier)
+                              .update((state) => 0);
+                          ref
+                              .read(preferencesProvider.notifier)
+                              .appearanceSimple();
+                        }
+                        if (reducida.containsAll(value)) {
+                          selection = value;
+
+                          ref
+                              .watch(categoryProvider.notifier)
+                              .update((state) => "Todos");
+                          ref
+                              .watch(indexCategoryProvider.notifier)
+                              .update((state) => 0);
+                          ref
+                              .read(preferencesProvider.notifier)
+                              .appearanceReduced();
+                        }
+                        if (completa.containsAll(value)) {
+                          selection = value;
+
+                          ref
+                              .watch(categoryProvider.notifier)
+                              .update((state) => "Todos");
+                          ref
+                              .watch(indexCategoryProvider.notifier)
+                              .update((state) => 0);
+                          ref
+                              .read(preferencesProvider.notifier)
+                              .appearanceComplete();
+                        }
+                      });
+                    },
                   ),
                   SwitchListTile(
                     title: Text(
@@ -235,7 +328,7 @@ class AppearanceScreen extends ConsumerWidget {
                     // mainAxisSize: MainAxisSize.max,
                     children: [
                       Text(
-                        "Vista previa",
+                        " Vista previa",
                         style: textStyle.displaySmall,
                       ),
                     ],

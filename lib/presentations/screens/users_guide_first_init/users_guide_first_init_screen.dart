@@ -205,7 +205,7 @@ class _SlideState extends State<_Slide> {
               onPressed:
                   _speak, // O podrías agregar un botón para activar la lectura
               child: const Text(
-                'Leer en voz alta',
+                'Leer en voz alta🔊',
                 style: TextStyle(fontSize: 30),
               ),
             ),

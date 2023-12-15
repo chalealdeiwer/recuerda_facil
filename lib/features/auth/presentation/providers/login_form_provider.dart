@@ -9,7 +9,8 @@ final loginFormProvider =
     StateNotifierProvider.autoDispose<LoginFormNotifier, LoginFormState>((ref) {
   final loginUserCallback = ref.watch(authProvider.notifier).loginUser;
   final loginUserWithGoogleCallback=ref.watch(authProvider.notifier).loginUserWithGoogle;
-  return LoginFormNotifier(loginUserCallback: loginUserCallback,loginUserWithGoogleCallback: loginUserWithGoogleCallback);
+  final registerUserCallback = ref.watch(authProvider.notifier).registerUser;
+  return LoginFormNotifier(loginUserCallback: loginUserCallback,loginUserWithGoogleCallback: loginUserWithGoogleCallback,registerUserCallback: registerUserCallback);
 });
 
 //! 1-state de este provider
@@ -61,7 +62,8 @@ class LoginFormNotifier extends StateNotifier<LoginFormState> {
   final Function() loginUserWithGoogleCallback;
   
   final Function(String, String) loginUserCallback;
-  LoginFormNotifier({required this.loginUserCallback,required this.loginUserWithGoogleCallback})
+  final Function(String, String) registerUserCallback;
+  LoginFormNotifier({required this.loginUserCallback,required this.loginUserWithGoogleCallback,required this.registerUserCallback})
       : super(LoginFormState());
 
   onEmailChange(String value) {
@@ -79,6 +81,13 @@ class LoginFormNotifier extends StateNotifier<LoginFormState> {
       isValid: Formz.validate([newPassword, state.email]),
     );
   }
+  onFormCreateUser() async {
+    _touchEveryField();
+    if (!state.isValid) return;
+    state=state.copyWith(isPosting: true);
+    await registerUserCallback(state.email.value, state.password.value);
+    state=state.copyWith(isPosting: false);
+  }
 
   onFormSubmit() async {
     _touchEveryField();
@@ -86,7 +95,6 @@ class LoginFormNotifier extends StateNotifier<LoginFormState> {
     state=state.copyWith(isPosting: true);
     await loginUserCallback(state.email.value, state.password.value);
     state=state.copyWith(isPosting: false);
-
   }
   signInGoogle()async{
     state=state.copyWith(isPosting: true);

@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:recuerda_facil/features/auth/presentation/screens/first_sign_in/first_sign_in_screen.dart';
 import 'package:recuerda_facil/features/auth/presentation/screens/login/login_2.dart';
+import 'package:recuerda_facil/features/auth/presentation/screens/screens.dart';
 import 'package:recuerda_facil/presentations/screens/more/more_games/games/tictac/tictactoe_game.dart';
 import 'package:recuerda_facil/presentations/screens/more_functions/carer/carer_list.dart';
 import 'package:recuerda_facil/presentations/screens/screens.dart';
@@ -153,6 +154,10 @@ final goRouterProvider = Provider((ref) {
           name: FirstSignInScreen.name,
           path: '/firstSignIn',
           builder: (context, state) => FirstSignInScreen()),
+      GoRoute(
+          name: EmailVerifiedScreen.name,
+          path: '/emailVerified',
+          builder: (context, state) =>const  EmailVerifiedScreen())
     ],
     redirect: (context, state) {
       final isGoingTo = state.matchedLocation;
@@ -160,6 +165,12 @@ final goRouterProvider = Provider((ref) {
       print("Is going to: $isGoingTo, authStatus: $authStatus");
       // if (authStatus == AuthStatus.checking) return '/splashScreen';
       if (isGoingTo == '/login' && authStatus == AuthStatus.firstSignIn) {
+        return '/firstSignIn';
+      }
+      if (isGoingTo == '/login' && authStatus == AuthStatus.emailVerified) {
+        return '/emailVerified';
+      }
+      if (isGoingTo == '/emailVerified' && authStatus == AuthStatus.firstSignIn) {
         return '/firstSignIn';
       }
       if (isGoingTo == '/splashScreen' && authStatus == AuthStatus.firstInit) {

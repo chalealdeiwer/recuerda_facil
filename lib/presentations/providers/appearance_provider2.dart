@@ -43,7 +43,7 @@ class AppearanceNotifier extends StateNotifier<AppearanceState> {
     //appBarVisibility
     final appBarVisibility =
         await PreferencesUser().getValue<bool>('appBarVisibility');
-    appBarVisibility ?? false;
+    appBarVisibility ?? true;
     state = state.copyWith(appBarVisibility: appBarVisibility);
     //buttonNewNoteVisibility
     final buttonNewNoteVisibility =
@@ -60,6 +60,15 @@ class AppearanceNotifier extends StateNotifier<AppearanceState> {
         await PreferencesUser().getValue<bool>('buttonMicrophoneVisibility');
     buttonMicrophoneVisibility ?? true;
     state = state.copyWith(buttonMicrophoneVisibility: buttonMicrophoneVisibility);
+    //buttonPageChange
+    final buttonPageChange =
+        await PreferencesUser().getValue<bool>('buttonPageChange');
+    buttonPageChange ?? true;
+    state = state.copyWith(buttonPageChange: buttonPageChange);
+    //openMenu
+    final openMenu = await PreferencesUser().getValue<bool>('openMenu');
+    openMenu ?? false;
+    state = state.copyWith(openMenu: openMenu);
   }
 
   //dark mode
@@ -124,6 +133,16 @@ class AppearanceNotifier extends StateNotifier<AppearanceState> {
         .setValue<bool>('buttonMicrophoneVisibility', buttonMicrophoneVisibility);
     state = state.copyWith(buttonMicrophoneVisibility: buttonMicrophoneVisibility);
   }
+  //buttonPageChange
+  void changeButtonPageChange(bool buttonPageChange) {
+    PreferencesUser().setValue<bool>('buttonPageChange', buttonPageChange);
+    state = state.copyWith(buttonPageChange: buttonPageChange);
+  }
+  //openMenu
+  void changeOpenMenu(bool openMenu) {
+    PreferencesUser().setValue<bool>('openMenu', openMenu);
+    state = state.copyWith(openMenu: openMenu);
+  }
 
   void appearanceDefault() {
     changeIsDarkMode(false);
@@ -132,10 +151,11 @@ class AppearanceNotifier extends StateNotifier<AppearanceState> {
     changeBottomVisibility(false);
     changeClockVisibility(true);
     changeCategoriesVisibility(true);
-    changeAppBarVisibility(false);
+    changeAppBarVisibility(true);
     changeButtonNewNoteVisibility(true);
-    changeButtonActionVisibility(true);
+    changeButtonActionVisibility(false);
     changeButtonMicrophoneVisibility(true);
+    changeButtonPageChange(true);
   }
 
   void appearanceSimple() {
@@ -146,6 +166,8 @@ class AppearanceNotifier extends StateNotifier<AppearanceState> {
     changeButtonNewNoteVisibility(true);
     changeButtonActionVisibility(true);
     changeButtonMicrophoneVisibility(true);
+    changeButtonPageChange(true);
+
 
   }
 
@@ -153,10 +175,12 @@ class AppearanceNotifier extends StateNotifier<AppearanceState> {
     changeBottomVisibility(false);
     changeClockVisibility(true);
     changeCategoriesVisibility(true);
-    changeAppBarVisibility(false);
+    changeAppBarVisibility(true);
     changeButtonNewNoteVisibility(true);
-    changeButtonActionVisibility(true);
+    changeButtonActionVisibility(false);
     changeButtonMicrophoneVisibility(true);
+    changeButtonPageChange(true);
+
 
   }
 
@@ -169,6 +193,8 @@ class AppearanceNotifier extends StateNotifier<AppearanceState> {
     changeButtonNewNoteVisibility(true);
     changeButtonActionVisibility(false);
     changeButtonMicrophoneVisibility(true);
+    changeButtonPageChange(true);
+
 
   }
 }
@@ -186,6 +212,9 @@ class AppearanceState {
   final bool buttonNewNoteVisibility;
   final bool buttonActionVisibility;
   final bool buttonMicrophoneVisibility;
+  //button de pagina
+  final bool  openMenu;
+  final bool buttonPageChange;
 
   AppearanceState({
     this.isDarkMode = false,
@@ -194,10 +223,12 @@ class AppearanceState {
     this.bottomVisibility = false,
     this.clockVisibility = true,
     this.categoriesVisibility = true,
-    this.appBarVisibility = false,
+    this.appBarVisibility = true,
     this.buttonNewNoteVisibility = true,
     this.buttonActionVisibility = false,
     this.buttonMicrophoneVisibility = true,
+    this.buttonPageChange = true,
+    this.openMenu = false,
   });
 
   AppearanceState copyWith({
@@ -211,6 +242,8 @@ class AppearanceState {
     bool? buttonNewNoteVisibility,
     bool? buttonActionVisibility,
     bool? buttonMicrophoneVisibility,
+    bool? buttonPageChange,
+    bool? openMenu,
   }) =>
       AppearanceState(
         isDarkMode: isDarkMode ?? this.isDarkMode,
@@ -225,5 +258,7 @@ class AppearanceState {
         buttonActionVisibility:
             buttonActionVisibility ?? this.buttonActionVisibility,
         buttonMicrophoneVisibility: buttonMicrophoneVisibility?? this.buttonMicrophoneVisibility,
+        buttonPageChange: buttonPageChange ?? this.buttonPageChange,
+        openMenu: openMenu ?? this.openMenu,
       );
 }

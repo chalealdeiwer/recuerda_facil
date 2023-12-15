@@ -43,8 +43,19 @@ class _CustomBottomNavigationState
     return DefaultTextStyle(
       style: const TextStyle(fontSize: 50), // Cambia el tamaño del texto aquí
       child: BottomNavigationBar(
+        
+        type: BottomNavigationBarType.fixed,
+        iconSize: 35,
+        selectedFontSize: 25,
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+        selectedIconTheme: const IconThemeData(size: 45),
+        showUnselectedLabels: true,
+        unselectedFontSize: 15,
+        showSelectedLabels: true,
         backgroundColor: colors.surfaceVariant.withOpacity(0.5),
         currentIndex: widget.currentIndex,
+        
+        // mouseCursor: MouseCursor.defer,
         onTap: (index) {
           onItemTapped(context, index);
           if (index == 2) {
@@ -75,15 +86,16 @@ class _CustomBottomNavigationState
         elevation: 0,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle, size: 60),
+            icon: Icon(Icons.account_circle),
             label: "Más",
+            
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle_outline, size: 60),
+            icon: Icon(Icons.add_circle_outline),
             label: "Mi día",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today, size: 50),
+            icon: Icon(Icons.calendar_today,),
             label: "Calendario",
           ),
         ],

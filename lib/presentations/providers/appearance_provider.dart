@@ -19,7 +19,7 @@ final openMenuProvider = StateProvider<bool>((ref) {
 
 final buttonPageChangeProviderAsync = FutureProvider<bool>((ref) async {
   final buttonPageChange = await PreferencesUser().getValue<bool>('buttonPageChange');
-  return buttonPageChange ?? false; // El valor predeterminado se establece en 'true'
+  return buttonPageChange ?? true; // El valor predeterminado se establece en 'true'
 });
 
 final buttonPageChangeProvider = StateProvider<bool>((ref) {
@@ -27,7 +27,7 @@ final buttonPageChangeProvider = StateProvider<bool>((ref) {
   if (asyncValue is AsyncData<bool>) {
     return asyncValue.value;
   } else {
-    return false; // El valor predeterminado se establece en 'true'
+    return true; // El valor predeterminado se establece en 'true'
   }
 });
 

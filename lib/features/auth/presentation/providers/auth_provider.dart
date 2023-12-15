@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:recuerda_facil/models/models.dart';
 import 'package:recuerda_facil/services/preferences_user.dart';
@@ -31,11 +33,15 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> loginUser(String email, String password) async {
     try {
       final user = await authRepository.login(email, password);
-      if(user.firstSignIn == true){
-        firstSignIn();}
-        else{
+      if (user.emailVerified == false) {
+        await emailVerified();
+      } else {
+        if (user.firstSignIn == true) {
+          firstSignIn();
+        } else {
           _setLoggedUser(user);
         }
+      }
     } on CustomError catch (e) {
       logout(e.message);
     } catch (e) {
@@ -46,27 +52,44 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> loginUserWithGoogle() async {
     try {
       final user = await authRepository.loginWithGoogle();
-      if(user.firstSignIn == true){
-        firstSignIn();}
-        else{
-          _setLoggedUser(user);
-        }
-    
+      if (user.firstSignIn == true) {
+        firstSignIn();
+      } else {
+        _setLoggedUser(user);
+      }
     } catch (e) {
       logout("Fallido, intentar de nuevo");
     }
-
   }
-  void defaultCreateUser()async{
+
+  void defaultCreateUser() async {
     final user = await authRepository.createUserDefault();
     _setLoggedUser(user);
   }
-  void createUser(UserAccount user)async{
+
+  void createUser(UserAccount user) async {
     final userS = await authRepository.createUser(user);
     _setLoggedUser(userS);
   }
 
-  void registerUser(String email, String password) async {}
+  void registerUser(String email, String password) async {
+    try {
+      final user = await authRepository.register(email, password);
+      if (user.emailVerified == false) {
+        await emailVerified();
+      } else {
+        if (user.firstSignIn == true) {
+          await firstSignIn();
+        } else {
+          _setLoggedUser(user);
+        }
+      }
+    } on CustomError catch (e) {
+      logout(e.message);
+    } catch (e) {
+      logout("Fallido, intentar de nuevo");
+    }
+  }
 
   void checkAuthStatus() async {
     final firstInitValue = await firstInit.getValue<bool>('firstInit');
@@ -97,11 +120,33 @@ class AuthNotifier extends StateNotifier<AuthState> {
         user: null,
         errorMessage: errorMessage);
   }
-  Future<void> firstSignIn() async {
 
+  Future<bool> verifiedEmail() async {
+    await FirebaseAuth.instance.currentUser!.reload().then((value) {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user!.emailVerified == false) {
+        state = state.copyWith(authStatus: AuthStatus.emailVerified);
+        return false;
+      } else {
+        
+        state = state.copyWith(authStatus: AuthStatus.firstSignIn);
+        return true;
+      }
+
+    }
+    
+    );
+    return false;
+
+  }
+
+  Future<void> firstSignIn() async {
     state = state.copyWith(authStatus: AuthStatus.firstSignIn);
   }
-  
+
+  Future<void> emailVerified() async {
+    state = state.copyWith(authStatus: AuthStatus.emailVerified);
+  }
 
   Future<void> firstInitApp() async {
     await firstInit.setValue<bool>('firstInit', true);
@@ -116,7 +161,14 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 }
 
-enum AuthStatus { checking, authenticated, notAuthenticated, firstInit,firstSignIn }
+enum AuthStatus {
+  checking,
+  authenticated,
+  notAuthenticated,
+  firstInit,
+  firstSignIn,
+  emailVerified
+}
 
 class AuthState {
   final AuthStatus authStatus;

@@ -132,22 +132,6 @@ class _LoginForm extends ConsumerWidget {
     return FractionallySizedBox(
       widthFactor: 0.6,
       child: FilledButton(
-
-          // UserCredential? credenciales = await login(email, password);
-          // if (credenciales != null) {
-          //   if (credenciales.user != null) {
-          //     if (credenciales.user!.emailVerified) {
-          //       Navigator.pushAndRemoveUntil(
-          //           context,
-          //           MaterialPageRoute(builder: (context) => HomeScreen()),
-          //           (route) => false);
-          //     } else {
-          //       setState(() {
-          //         error = "Debes verificar tu correo antes de acceder";
-          //       });
-          //     }
-          // }
-          // }
           onPressed: loginForm.isPosting
               ? null
               : () {
@@ -170,12 +154,12 @@ class _LoginForm extends ConsumerWidget {
           style: TextStyle(fontSize: 18),
         ),
         TextButton(onPressed: (){
-          launchUrlService("https://www.deiwerchaleal.com/");
+          launchUrlService("https://recuerdafaciltu.deiwerchaleal.com/");
         }, child: const Text("Términos de uso",style: TextStyle(fontSize: 18, color: Colors.blue, decoration: TextDecoration.underline, decorationColor: Colors.blue))),
         const Text("y"),
         TextButton(
             onPressed: () {
-          launchUrlService("https://shop.deiwerchaleal.com/");
+          launchUrlService("https://recuerdafacilpp.deiwerchaleal.com/");
 
             },
             child: const Text(

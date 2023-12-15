@@ -33,9 +33,43 @@ class MoreView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    // GestureDetector(
+                    //   onTap: () {
+                    //     context.push('/more/news');
+                    //   },
+                    //   child: Container(
+                    //     decoration: BoxDecoration(
+                    //       borderRadius: BorderRadius.circular(10),
+                    //       color: colors.primary.withOpacity(0.2),
+                    //     ),
+                    //     width: 150,
+                    //     height: 150,
+                    //     child: Column(
+                    //       children: [
+                    //         const SizedBox(
+                    //           height: 10,
+                    //         ),
+                    //         FadeInLeft(
+                    //           child: const Icon(
+                    //             Icons.newspaper,
+                    //             size: 100,
+                    //           ),
+                    //         ),
+                    //         const SizedBox(
+                    //           height: 10,
+                    //         ),
+                    //         Text(
+                    //           "Noticias",
+                    //           style: textStyle.titleLarge,
+                    //           textScaleFactor: 1,
+                    //         )
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
                     GestureDetector(
                       onTap: () {
-                        context.push('/more/news');
+                        context.push('/more_functions');
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -49,9 +83,9 @@ class MoreView extends StatelessWidget {
                             const SizedBox(
                               height: 10,
                             ),
-                            FadeInLeft(
+                            FadeInRight(
                               child: const Icon(
-                                Icons.newspaper,
+                                Icons.data_saver_on_outlined,
                                 size: 100,
                               ),
                             ),
@@ -59,9 +93,10 @@ class MoreView extends StatelessWidget {
                               height: 10,
                             ),
                             Text(
-                              "Noticias",
+                              "Cuidador",
                               style: textStyle.titleLarge,
                               textScaleFactor: 1,
+
                             )
                           ],
                         ),
@@ -107,73 +142,73 @@ class MoreView extends StatelessWidget {
                 const SizedBox(
                   height: 40,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap:() {
-                        context.push('/more/boards');
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: colors.primary.withOpacity(0.2),
-                        ),
-                        width: 150,
-                        height: 150,
-                        child: Column(
-                          children: [
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            FadeInLeft(child: const Icon(Icons.table_view, size: 100)),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "Tableros",
-                              style: textStyle.titleLarge,
-                              textScaleFactor: 1,
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //   crossAxisAlignment: CrossAxisAlignment.center,
+                //   children: [
+                //     GestureDetector(
+                //       onTap:() {
+                //         context.push('/more/boards');
+                //       },
+                //       child: Container(
+                //         decoration: BoxDecoration(
+                //           borderRadius: BorderRadius.circular(10),
+                //           color: colors.primary.withOpacity(0.2),
+                //         ),
+                //         width: 150,
+                //         height: 150,
+                //         child: Column(
+                //           children: [
+                //             const SizedBox(
+                //               height: 10,
+                //             ),
+                //             FadeInLeft(child: const Icon(Icons.table_view, size: 100)),
+                //             const SizedBox(
+                //               height: 10,
+                //             ),
+                //             Text(
+                //               "Tableros",
+                //               style: textStyle.titleLarge,
+                //               textScaleFactor: 1,
                               
 
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap:(){
-                        context.push('/more/productivity');
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: colors.primary.withOpacity(0.2),
-                        ),
-                        width: 150,
-                        height: 150,
-                        child: Column(
-                          children: [
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            FadeInRight(child: const Icon(Icons.timer, size: 100)),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "Productividad",
-                              style: textStyle.titleLarge,
-                              textScaleFactor: 1,
+                //             )
+                //           ],
+                //         ),
+                //       ),
+                //     ),
+                //     GestureDetector(
+                //       onTap:(){
+                //         context.push('/more/productivity');
+                //       },
+                //       child: Container(
+                //         decoration: BoxDecoration(
+                //           borderRadius: BorderRadius.circular(10),
+                //           color: colors.primary.withOpacity(0.2),
+                //         ),
+                //         width: 150,
+                //         height: 150,
+                //         child: Column(
+                //           children: [
+                //             const SizedBox(
+                //               height: 10,
+                //             ),
+                //             FadeInRight(child: const Icon(Icons.timer, size: 100)),
+                //             const SizedBox(
+                //               height: 10,
+                //             ),
+                //             Text(
+                //               "Productividad",
+                //               style: textStyle.titleLarge,
+                //               textScaleFactor: 1,
 
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                //             )
+                //           ],
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
               ],
             ),
           )

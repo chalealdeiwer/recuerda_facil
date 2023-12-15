@@ -8,7 +8,6 @@ class PrivacyScreen extends ConsumerWidget {
   const PrivacyScreen({super.key});
   static const name = 'privacy_screen';
 
-
   @override
   Widget build(BuildContext context, ref) {
     final colors = Theme.of(context).colorScheme;
@@ -36,29 +35,31 @@ class PrivacyScreen extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Image.asset(
-                    isDarkMode ? "assets/circleLogoWhite.png" : "assets/circleLogo.png",
+                    isDarkMode
+                        ? "assets/circleLogoWhite.png"
+                        : "assets/circleLogo.png",
                     height: 90,
                   ),
                   Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Recuerda",
-                            style: TextStyle(
-                                fontFamily: 'SpicyRice-Regular',
-                                fontSize: 30,
-                                color: colors.primary),
-                          ),
-                          Text(
-                            "Fácil",
-                            style: TextStyle(
-                                fontFamily: 'SpicyRice-Regular',
-                                fontSize: 25,
-                                color: colors.secondary),
-                          ),
-                        ],
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Recuerda",
+                        style: TextStyle(
+                            fontFamily: 'SpicyRice-Regular',
+                            fontSize: 30,
+                            color: colors.primary),
                       ),
+                      Text(
+                        "Fácil",
+                        style: TextStyle(
+                            fontFamily: 'SpicyRice-Regular',
+                            fontSize: 25,
+                            color: colors.secondary),
+                      ),
+                    ],
+                  ),
                   Image.asset(
                     isDarkMode ? "assets/udenarwhite.png" : "assets/udenar.png",
                     height: 110,
@@ -140,13 +141,17 @@ Estamos comprometidos a proteger tu privacidad conforme a la Ley 1581 de 2012 y 
                           style: textStyle2,
                         ),
                         GestureDetector(
-                          onTap: () {
-                            launchEmailPrivacy('recuerdafacil2024@gmail.com');
-                            // _launchUrl();
-                          },
-
-                          
-                          child:const Text("recuerdafacil2024@gmail.com",style: TextStyle(fontSize: 22,color: Colors.blue,),)),
+                            onTap: () {
+                              launchEmailPrivacy('recuerdafacil2024@gmail.com');
+                              // _launchUrl();
+                            },
+                            child: const Text(
+                              "recuerdafacil2024@gmail.com",
+                              style: TextStyle(
+                                fontSize: 22,
+                                color: Colors.blue,
+                              ),
+                            )),
                         Text(
                           "9.Ley Aplicable y Jurisdicción ",
                           style: titleStyle,
@@ -167,20 +172,50 @@ Estamos comprometidos a proteger tu privacidad conforme a la Ley 1581 de 2012 y 
                           "Aceptación del Usuario",
                           style: titleStyle,
                         ),
-                        Row(
+                        const Row(
                           children: [
-                            Checkbox(
-                              value: true,
-                              onChanged: (value) {
-                                value = !value!;
-                              },
-                            ),
+                            // Checkbox(
+                            //   value: true,
+                            //   onChanged: (value) {
+
+                            //     value = !value!;
+                            //   },
+                            // ),
+                          ],
+                        ),
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
                             const Text(
-                              """ Acepto la Declaración de 
- Tratamiento de Datos 
- 3D Privacidad.""",
+                              """ Al usar a aplicación aceptas """,
                               style: textStyle2,
                             ),
+                            TextButton(
+                                onPressed: () {
+                                  launchUrlService(
+                                      "https://recuerdafaciltu.deiwerchaleal.com/");
+                                },
+                                child: const Text("Términos de uso",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.blue,
+                                        decoration: TextDecoration.underline,
+                                        decorationColor: Colors.blue))),
+                            const Text("y"),
+                            TextButton(
+                                onPressed: () {
+                                  launchUrlService(
+                                      "https://recuerdafacilpp.deiwerchaleal.com/");
+                                },
+                                child: const Text(
+                                  "Política de Privacidad",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.blue,
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: Colors.blue),
+                                ))
                           ],
                         )
                       ],
@@ -193,4 +228,3 @@ Estamos comprometidos a proteger tu privacidad conforme a la Ley 1581 de 2012 y 
     );
   }
 }
-
