@@ -2,23 +2,26 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final connectionStatusProvider = Provider.autoDispose<ConnectionStatusNotifier>((ref) {
-  return ConnectionStatusNotifier()..checkCurrentStatus();
+final connectionStatusProvider = StateNotifierProvider<ConnectionStatusNotifier,ConnectionStatus>((ref) {
+  return ConnectionStatusNotifier();
 });
 
-class ConnectionStatusNotifier extends StateNotifier<bool> {
-  ConnectionStatusNotifier() : super(false) {
-    _init();
+class ConnectionStatusNotifier extends StateNotifier<ConnectionStatus> {
+
+  ConnectionStatusNotifier() : super(ConnectionStatus()) {
+    check();
+    checkCurrentStatus();
+    
   }
 
   final Dio _dio = Dio();
 
-  Future<void> _init() async {
+  Future<void> check() async {
     Connectivity().onConnectivityChanged.listen((result) async {
       if (result != ConnectivityResult.none) {
         await checkCurrentStatus();
       } else {
-        state = false;
+        state=state.copyWith(isConnected: false);
       }
     });
   }
@@ -27,12 +30,23 @@ class ConnectionStatusNotifier extends StateNotifier<bool> {
     try {
       final result = await _dio.get('https://jsonplaceholder.typicode.com/posts/1');
       if (result.statusCode == 200) {
-        state = true;
+        state=state.copyWith(isConnected: true);
       } else {
-        state = false;
+        state=state.copyWith(isConnected: false);
       }
     } catch (e) {
-      state = false;
+      state=state.copyWith(isConnected: false);
     }
   }
 }
+class ConnectionStatus {
+  final bool? isConnected;
+  ConnectionStatus({this.isConnected=false});
+
+  ConnectionStatus copyWith({
+    bool? isConnected,
+  })=> ConnectionStatus( 
+    isConnected: isConnected ?? this.isConnected,
+  );
+  }
+

@@ -194,6 +194,7 @@ class AuthDataSourceImpl extends AuthDataSource {
         'Personal'
       ],
       "usersCarer": [],
+      "chats": [],
       "photoURL": user.photoURL,
       "private": false,
       "uid": user.uid,
@@ -226,7 +227,8 @@ class AuthDataSourceImpl extends AuthDataSource {
       "private": user.private,
       "uid": user.uid,
       "firstSignIn": false,
-      "dateBirthday": user.dateBirthday
+      "dateBirthday": user.dateBirthday,
+      "chats": user.chats
     });
     final QuerySnapshot<Map<String, dynamic>> userDoc =
         await db.collection("users").where("uid", isEqualTo: user.uid).get();

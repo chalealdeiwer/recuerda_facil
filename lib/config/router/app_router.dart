@@ -1,11 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:recuerda_facil/features/auth/presentation/screens/first_sign_in/first_sign_in_screen.dart';
-import 'package:recuerda_facil/features/auth/presentation/screens/login/login_2.dart';
 import 'package:recuerda_facil/features/auth/presentation/screens/screens.dart';
 import 'package:recuerda_facil/presentations/screens/more/more_games/games/tictac/tictactoe_game.dart';
 import 'package:recuerda_facil/presentations/screens/more_functions/carer/carer_list.dart';
 import 'package:recuerda_facil/presentations/screens/screens.dart';
+import 'package:recuerda_facil/presentations/screens/test/alarm.dart';
 import 'package:recuerda_facil/presentations/views/notes/more_view.dart';
 
 import '../../features/auth/presentation/providers/providers_auth.dart';
@@ -47,7 +46,7 @@ final goRouterProvider = Provider((ref) {
       GoRoute(
           name: TestScreen.name,
           path: '/test',
-          builder: (context, state) => const SplashTest()),
+          builder: (context, state) => const AlarmTest()),
       GoRoute(
         path: '/more',
         builder: (context, state) => const MoreView(),
@@ -74,6 +73,21 @@ final goRouterProvider = Provider((ref) {
               name: ProductivityScreen.name,
               path: 'productivity',
               builder: (context, state) => const ProductivityScreen()),
+          GoRoute(
+              name: ChatsScreen.name,
+              path: 'chats',
+              builder: (context, state) => const ChatsScreen(),
+              routes: [
+                GoRoute(
+                    name: ChatScreen.name,
+                    path: 'chat/:chatId',
+                    builder: (context, state){
+                      final chatId = state.pathParameters['chatId'] ?? '0';
+                      return ChatScreen(chatId: chatId,);
+                    }),
+                  
+
+              ]),
         ],
       ),
       GoRoute(
@@ -157,7 +171,7 @@ final goRouterProvider = Provider((ref) {
       GoRoute(
           name: EmailVerifiedScreen.name,
           path: '/emailVerified',
-          builder: (context, state) =>const  EmailVerifiedScreen())
+          builder: (context, state) => const EmailVerifiedScreen())
     ],
     redirect: (context, state) {
       final isGoingTo = state.matchedLocation;
@@ -170,7 +184,8 @@ final goRouterProvider = Provider((ref) {
       if (isGoingTo == '/login' && authStatus == AuthStatus.emailVerified) {
         return '/emailVerified';
       }
-      if (isGoingTo == '/emailVerified' && authStatus == AuthStatus.firstSignIn) {
+      if (isGoingTo == '/emailVerified' &&
+          authStatus == AuthStatus.firstSignIn) {
         return '/firstSignIn';
       }
       if (isGoingTo == '/splashScreen' && authStatus == AuthStatus.firstInit) {

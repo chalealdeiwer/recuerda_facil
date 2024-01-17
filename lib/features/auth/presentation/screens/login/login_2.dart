@@ -150,7 +150,7 @@ class _LoginForm extends ConsumerWidget {
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         const Text(
-          "Al registrarte aceptas nuestros ",
+          "Al iniciar sesión aceptas nuestros ",
           style: TextStyle(fontSize: 18),
         ),
         TextButton(onPressed: (){

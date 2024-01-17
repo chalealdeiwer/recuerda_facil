@@ -153,27 +153,8 @@ class _FirstSignInScreenState extends ConsumerState<FirstSignInScreen> {
       Step(
           state: currentStep >= 0 ? StepState.complete : StepState.indexed,
           isActive: currentStep >= 0,
-          title: const Text(''),
-          // title: const Text('Info Personal'),
+          title: const Text('Paso 1 - Completa alguna información personal'),
           content: Column(children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Es tu primera vez en recuerda fácil, llena algo de información, y luego continua con la configuración inicial",
-                    style: TextStyle(fontSize: 16),
-                  )),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Paso 1 - Completa alguna información personal',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  )),
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -312,26 +293,11 @@ class _FirstSignInScreenState extends ConsumerState<FirstSignInScreen> {
       Step(
           state: currentStep >= 1 ? StepState.complete : StepState.indexed,
           isActive: currentStep >= 1,
-          title: const Text(''),
+          title: const Text('Paso 2 - Elige Apariencia'),
           content: Column(
             children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Paso 2 - Elige Apariencia',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    )),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
               const Text(
-                "¿Como te gustaría ver la apariencia de tu aplicación?",
-                style: TextStyle(fontSize: 16),
-              ),
+                  "¿Como te gustaría ver la apariencia de tu aplicación?"),
               SegmentedButton<Appearance>(
                 multiSelectionEnabled: false,
                 segments: const [
@@ -482,21 +448,10 @@ class _FirstSignInScreenState extends ConsumerState<FirstSignInScreen> {
       Step(
           state: currentStep >= 2 ? StepState.complete : StepState.indexed,
           isActive: currentStep >= 2,
-          title: const Text(''),
+          title: const Text('Paso 3 - Preferencias de usuario'),
           content: Column(
             children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Paso 3 - Preferencias de usuario',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    )),
-              ),
-              const SizedBox(height: 10,),
-              const Text("Elige o crea categorías para tus recordatorios",style: TextStyle(fontSize: 16),),
+              const Text("Elige o crea categorías para tus recordatorios"),
               Wrap(
                 spacing: 8.0,
                 runSpacing: 8.0,
@@ -569,27 +524,13 @@ class _FirstSignInScreenState extends ConsumerState<FirstSignInScreen> {
       Step(
           state: currentStep >= 3 ? StepState.complete : StepState.indexed,
           isActive: currentStep >= 3,
-          title: const Text(''),
-          content: const Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Paso 4 - Disfruta tu aplicación',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    )),
-              ),
-              Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Empezar a usar",
-                    style: TextStyle(fontSize: 16),
-                  )),
-            ],
-          )),
+          title: const Text('Paso 4 - Disfruta tu aplicación'),
+          content: const Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Empezar a usar",
+                style: TextStyle(fontSize: 20),
+              ))),
     ];
     return Scaffold(
       body: SafeArea(
@@ -635,7 +576,7 @@ class _FirstSignInScreenState extends ConsumerState<FirstSignInScreen> {
                           return AlertDialog(
                             title: const Text("Información"),
                             content: const Text(
-                              "¿Estas seguro que deseas saltar configuración inicial? La configuración inicial te permite elegir preferencias y configurar tu app de recordatorios, si omites se creará la cuenta por defecto y podrás configurar más tarde.",
+                              "¿Estas seguro que deseas saltar configuración inicial? La configuración inicial te permite elegir preferencias y configurar tu app de recordatorios, si omites se creara la cuenta por defecto y podrás configurar más tarde.",
                               style: TextStyle(fontSize: 20),
                             ),
                             actions: [
@@ -678,26 +619,24 @@ class _FirstSignInScreenState extends ConsumerState<FirstSignInScreen> {
               child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Completa todos los pasos y disfruta tu aplicación",
+                    "Primera vez en recuerda fácil, primeros pasos, y configuración inicial",
                     style: TextStyle(fontSize: 20),
                   )),
             ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.8,
-              child: Stepper(
-                physics: const AlwaysScrollableScrollPhysics(),
-                currentStep: currentStep,
-                type: StepperType.horizontal,
-                steps: steps,
-                onStepContinue: continueStep,
-                onStepCancel: cancelStep,
-                onStepTapped: onStepTapped,
-                controlsBuilder: controlsBuilder,
-              ),
+            Stepper(
+              physics: const AlwaysScrollableScrollPhysics(),
+              currentStep: currentStep,
+              steps: steps,
+              onStepContinue: continueStep,
+              onStepCancel: cancelStep,
+              onStepTapped: onStepTapped,
+              controlsBuilder: controlsBuilder,
             ),
             SizedBox(
               height: size.height * 0.05,
+            ),
+            SizedBox(
+              height: size.height * 0.2,
             ),
           ],
         ),

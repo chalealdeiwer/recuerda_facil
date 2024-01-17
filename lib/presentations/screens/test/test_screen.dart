@@ -10,13 +10,14 @@ class TestScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context,  ref) {
-    final connectionStatus = ref.watch(connectionStatusProvider).state;
+    final connectionStatus = ref.watch(connectionStatusProvider.notifier).state.isConnected;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Test Screen'),
       ),
       body: Center(
-        child: connectionStatus
+        child: connectionStatus!
             ? const Text(
                 'Estás conectado a Internet',
                 style: TextStyle(fontSize: 20, color: Colors.green),

@@ -66,7 +66,7 @@ Future<void> showNotificationWithImage() async {
     platformChannelSpecifics,
   );
 }
-Future<void> showNotification2(String content) async {
+Future<void> showNotification2(String title,String content) async {
   const AndroidNotificationDetails androidPlatformChannelSpecifics =
       AndroidNotificationDetails(
     // actions: <AndroidNotificationAction>[
@@ -86,7 +86,8 @@ Future<void> showNotification2(String content) async {
 
   await flutterLocalNotificationsPlugin.show(
     0,
-    'Ha llegado la hora de recordar.⌚⌚',
+    // 'Ha llegado la hora de recordar.⌚⌚',
+    title,
     content,
     notificationDetails,
   );

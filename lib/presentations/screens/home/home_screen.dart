@@ -112,19 +112,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               return AlertDialog(
                 title: const Text('¿Salir?'),
                 content: const Text(
-                    '¿Estás seguro de que quieres salir de la aplicación?'),
+                    '¿Está seguro de que quiere salir de la aplicación?',style: TextStyle(fontSize: 22),),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(false),
                     child: const Text(
-                      'Cancelar',
+                      'Cancelar',style: TextStyle(fontSize: 18),
                     ),
                   ),
                   FilledButton(
                     onPressed: () => SystemNavigator.pop(),
                     // Navigator.of(context).pop(true),
                     child: const Text(
-                      'Salir',
+                      'Salir',style: TextStyle(fontSize: 18),
                     ),
                   ),
                 ],

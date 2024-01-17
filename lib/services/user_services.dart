@@ -210,6 +210,18 @@ Future<bool> getPrivate(String uid) async {
     return false;
   }
 }
+Future<void> updatePrivate(String uid, bool private) async {
+  await db.collection("users").doc(uid).update({"private": private});
+}
+Future<void> updateNameUser(String uid, String name) async {
+  await db.collection("users").doc(uid).update({"displayName": name});
+}
+Future<void>updatePhoneUser(String uid, String phone) async {
+  await db.collection("users").doc(uid).update({"phoneNumber": phone});
+}
+Future<void>updateBirthdayUser(String uid, DateTime birthday) async {
+  await db.collection("users").doc(uid).update({"dateBirthday": birthday});
+}
 
 Future<bool> searchUserUid(String uid) async {
   try {

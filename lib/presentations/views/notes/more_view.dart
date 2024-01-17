@@ -142,7 +142,45 @@ class MoreView extends StatelessWidget {
                 const SizedBox(
                   height: 40,
                 ),
-                // Row(
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        context.push('/more/chats');
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: colors.primary.withOpacity(0.2),
+                        ),
+                        width: 150,
+                        height: 150,
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            FadeInRight(
+                              child: const Icon(
+                                Icons.message,
+                                size: 100,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "Mensajes",
+                              style: textStyle.titleLarge,
+                              textScaleFactor: 1,
+
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+
                 //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 //   crossAxisAlignment: CrossAxisAlignment.center,
                 //   children: [
@@ -208,7 +246,7 @@ class MoreView extends StatelessWidget {
                 //       ),
                 //     ),
                 //   ],
-                // ),
+                ),
               ],
             ),
           )

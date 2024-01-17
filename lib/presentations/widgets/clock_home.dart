@@ -45,13 +45,13 @@ class ClockWidgetState extends ConsumerState<ClockWidget> {
     // Obtener la hora actual y determinar el saludo correspondiente
     int hour = _dateTime.hour;
     if (hour < 12) {
-      _greeting = ' ¡BUENOS DÍAS!';
+      _greeting = ' ¡BUENOS DÍAS!🌅';
       _mm = "am";
     } else if (hour < 18) {
-      _greeting = ' ¡BUENAS TARDES!';
+      _greeting = ' ¡BUENAS TARDES!🌄';
       _mm = "pm";
     } else {
-      _greeting = ' ¡BUENAS NOCHES!';
+      _greeting = ' ¡BUENAS NOCHES!🌃';
       _mm = "pm";
     }
   }

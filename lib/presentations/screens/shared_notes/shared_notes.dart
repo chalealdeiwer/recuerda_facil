@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
+import 'package:recuerda_facil/features/auth/presentation/providers/auth_provider.dart';
 import 'package:recuerda_facil/services/permissions.dart';
 import 'package:recuerda_facil/services/user_services.dart';
 
@@ -93,7 +94,7 @@ class _SharedNotesScreenState extends ConsumerState<SharedNotesScreen> {
   @override
   Widget build(BuildContext context) {
     final  noteProvider = ref.watch(noteNotifierProvider.notifier);
-
+    final user=ref.watch(authProvider).user;
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(
@@ -105,7 +106,7 @@ class _SharedNotesScreenState extends ConsumerState<SharedNotesScreen> {
               height: 40,
             ),
             Text(
-              FirebaseAuth.instance.currentUser!.displayName.toString(),
+              user!.displayName.toString(),
               style: const TextStyle(fontSize: 40),
             ),
             const Text(

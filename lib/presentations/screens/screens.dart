@@ -1,3 +1,7 @@
+export 'package:recuerda_facil/presentations/screens/chat/chat_screen.dart';
+
+export 'package:recuerda_facil/presentations/screens/chat/chats_list_screen.dart';
+
 export 'package:recuerda_facil/presentations/screens/users_guide/users_guide_screen.dart';
 
 export 'package:recuerda_facil/features/auth/presentation/screens/create_user/create_user_screen.dart';

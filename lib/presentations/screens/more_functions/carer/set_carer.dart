@@ -1,21 +1,26 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
+import '../../../../features/auth/presentation/providers/providers_auth.dart';
 
-class SetCarer extends StatefulWidget {
+
+class SetCarer extends ConsumerStatefulWidget {
   static const  name="set_carer";
   const SetCarer({super.key});
 
   @override
-  State<SetCarer> createState() => _SharedNotesScreenState();
+  ConsumerState<SetCarer> createState() => _SharedNotesScreenState();
 }
 
-class _SharedNotesScreenState extends State<SetCarer> {
+class _SharedNotesScreenState extends ConsumerState<SetCarer> {
   String data = FirebaseAuth.instance.currentUser!.uid.toString();
 
   @override
   Widget build(BuildContext context) {
+    final user=ref.watch(authProvider).user;
+
 
     return Scaffold(
       appBar: AppBar(),
@@ -26,7 +31,7 @@ class _SharedNotesScreenState extends State<SetCarer> {
           children: [
             const SizedBox(height: 40,),
             Text(
-              FirebaseAuth.instance.currentUser!.displayName.toString(),
+              user!.displayName.toString(),
               style: const TextStyle(fontSize: 40),
             ),
             const Text(

@@ -1,4 +1,3 @@
-
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 
@@ -9,14 +8,22 @@ void printHello() {
   // final DateTime now = DateTime.now();
   // final int isolateId = Isolate.current.hashCode;
   // print("[$now] Hola mundo! isolate=$isolateId function='$printHello'");
-  showNotification2("Tomar agua todos los días");
+  showNotification2("Recordar", "Tomar agua todos los días");
 }
-void primeraAlarma() {
+
+String alarmTitle = "ay";
+String alarmContent = "que rabia parce";
+
+void alarm(int id, Map<String, dynamic> content) {
   // final DateTime now = DateTime.now();
   // final int isolateId = Isolate.current.hashCode;
   // print("[$now] Hola mundo! isolate=$isolateId function='$printHello'");
-  showNotification2("Mi segunda alarma xd");
-  showNotificationWithImage();
+  showNotification2("hola ${content["0"]}", content["1"]);
+  // showNotificationWithImage();
+}
+
+void alarm2() {
+  showNotification2("hola", "hola");
 }
 // void programNotification(DateTime targetTime) async {
 //   final currentTime = DateTime.now();
@@ -48,27 +55,35 @@ class AlarmTest extends StatelessWidget {
           children: [
             TextButton(
                 onPressed: () async {
+                  alarmTitle = "Hola";
+                  alarmContent = "sera que si ??";
                   // await AndroidAlarmManager.periodic(
                   //     const Duration(seconds: 5), helloAlarmID, printHello);
                   await AndroidAlarmManager.oneShot(
-                    const Duration(seconds: 5), 
-                    1, 
-                    primeraAlarma,
+                    const Duration(seconds: 10),
+
+                    1,
+                    // alarm(15, {"0": "Deiwer", "1": "Chaleal"}),
+                    // alarm2,
+                    alarmCallback,
                     alarmClock: true,
                     wakeup: true,
                     allowWhileIdle: true,
                     exact: true,
                     rescheduleOnReboot: true,
-                    );
+                  );
                 },
-
                 child: const Text("alarma")),
-                const DateTimePickerWidget()
+            const DateTimePickerWidget()
           ],
         ),
       ),
     );
   }
+}
+
+void alarmCallback() {
+  alarm(15, {"0": alarmTitle, "1": alarmContent});
 }
 
 class DateTimePickerWidget extends StatefulWidget {
@@ -127,30 +142,33 @@ class DateTimePickerWidgetState extends State<DateTimePickerWidget> {
                 selectedDate.day,
                 selectedTime.hour,
                 selectedTime.minute);
-            programNotification(scheduledNotificationDateTime); // Pasando la fecha y hora seleccionadas a la función de programación
+            programNotification(scheduledNotificationDateTime, "Hola",
+                "sera que si ??"); // Pasando la fecha y hora seleccionadas a la función de programación
           },
         ),
       ],
     );
   }
-
-  
 }
-void programNotification(DateTime targetTime) async {
-    final initialDuration = targetTime.isBefore(DateTime.now())
-        ? targetTime.add(const Duration(days: 1)).difference(DateTime.now())
-        : targetTime.difference(DateTime.now());
-  
-    await AndroidAlarmManager.oneShot(
-      initialDuration,
-      1,
-      primeraAlarma,
-      alarmClock: true,
 
-      wakeup: true,
-      allowWhileIdle: true,
-      exact: true,
-      rescheduleOnReboot: true,
-    );
-    // await AndroidAlarmManager.periodic(duration, id, callback)
-  }
+void programNotification(
+    DateTime targetTime, String title, String content) async {
+  alarmTitle = title;
+  alarmContent = content;
+  final initialDuration = targetTime.isBefore(DateTime.now())
+      ? targetTime.add(const Duration(days: 1)).difference(DateTime.now())
+      : targetTime.difference(DateTime.now());
+
+  await AndroidAlarmManager.oneShot(
+    initialDuration,
+    1,
+    // alarm(3, {"0": "Johna", "1": "Jene"}),
+    alarm2,
+    alarmClock: true,
+    wakeup: true,
+    allowWhileIdle: true,
+    exact: true,
+    rescheduleOnReboot: true,
+  );
+  // await AndroidAlarmManager.periodic(duration, id, callback)
+}
