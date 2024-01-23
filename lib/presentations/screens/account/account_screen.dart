@@ -322,7 +322,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("Fecha cumpleaños: ",
-                                style: textStyle.titleLarge),
+                                style: textStyle.titleMedium),
                             Text(
                               userAcc.when(
                                 data: (data) {

@@ -27,7 +27,7 @@ class _AppearanceScreenState extends ConsumerState<AppearanceScreen> {
     final colors = Theme.of(context).colorScheme;
     final textStyle = Theme.of(context).textTheme;
     final customBack = ref.watch(preferencesProvider).customBackground;
-    final opacity = ref.watch(opacityProvider);
+    final opacity = ref.watch(preferencesProvider).opacity;
     final clockVisibility = ref.watch(preferencesProvider).clockVisibility;
     final bottomVisibility = ref.watch(preferencesProvider).bottomVisibility;
     final categoriesVisibility =
@@ -111,25 +111,42 @@ class _AppearanceScreenState extends ConsumerState<AppearanceScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Visibility(
                       visible: customBack,
-                      child: Row(
+                      child: Column(
                         children: [
-                          Text(
-                            "Opacidad",
-                            style: textStyle.titleLarge,
+                          Row(
+                            children: [
+                              Text(
+                                "Opacidad",
+                                style: textStyle.titleLarge,
+                              ),
+                              Expanded(
+                                child: Slider(
+                                  value: opacity,
+                                  min: 0.0,
+                                  max: 1.0,
+                                  onChanged: (newValue) {
+                                    ref
+                                        .read(preferencesProvider.notifier)
+                                        .changeOpacity(newValue);
+                                  },
+                                ),
+                              ),
+                            ],
+
                           ),
-                          Expanded(
-                            child: Slider(
-                              value: opacity,
-                              min: 0.0,
-                              max: 1.0,
-                              onChanged: (newValue) {
-                                ref
-                                    .read(opacityProvider.notifier)
-                                    .updateOpacity(newValue);
-                              },
-                            ),
-                          ),
+                          Row(
+                            children: [
+                              FilledButton(onPressed: (){
+                                context.push('/background');
+
+
+
+                              }, child: const Text("Personalizar fondo"))
+                            ],
+                          )
+                          
                         ],
+                        
                       ),
                     ),
                   ),

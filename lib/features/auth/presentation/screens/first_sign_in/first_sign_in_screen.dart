@@ -147,7 +147,7 @@ class _FirstSignInScreenState extends ConsumerState<FirstSignInScreen> {
     final textStyle = Theme.of(context).textTheme;
     final size = MediaQuery.of(context).size;
     final customBack = ref.watch(preferencesProvider).customBackground;
-    final opacity = ref.watch(opacityProvider);
+    final opacity = ref.watch(preferencesProvider).opacity;
 
     List<Step> steps = [
       Step(
@@ -437,8 +437,8 @@ class _FirstSignInScreenState extends ConsumerState<FirstSignInScreen> {
                           max: 1.0,
                           onChanged: (newValue) {
                             ref
-                                .read(opacityProvider.notifier)
-                                .updateOpacity(newValue);
+                                .read(preferencesProvider.notifier)
+                                .changeOpacity(newValue);
                           },
                         ),
                       ),

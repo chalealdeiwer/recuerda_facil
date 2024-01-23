@@ -100,6 +100,9 @@ class SettingsScreen extends ConsumerWidget {
                             return value;
                           });
                           await showNotification();
+                          // await showNotification2("Un recordatorio se ha vencido", "Ir a pasear al parque");
+                          // await showNotification2("Un recordatorio esta proximo", "Tomar medicina");
+
                         },
                         child: const Text(
                           "Permitir",

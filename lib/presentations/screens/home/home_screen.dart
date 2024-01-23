@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:go_router/go_router.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:recuerda_facil/features/auth/presentation/providers/providers_auth.dart';
 import 'package:recuerda_facil/presentations/views/notes/calendar_view.dart';
 import 'package:recuerda_facil/presentations/views/notes/home_view.dart';
@@ -44,9 +47,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   void initState() {
+
     super.initState();
     flutterTts = FlutterTts();
   }
+
+  
 
   Future<void> _speak(String text) async {
     await flutterTts.setLanguage("es-ES");
@@ -84,17 +90,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final category = ref.watch(categoryProvider);
     final isDarkMode = ref.watch(themeNotifierProvider).isDarkMode;
     final scaffoldKey = GlobalKey<ScaffoldState>();
-    final  noteProvider = ref.watch(noteNotifierProvider.notifier);
+    final noteProvider = ref.watch(noteNotifierProvider.notifier);
     final colors = Theme.of(context).colorScheme;
     final customBack = ref.watch(preferencesProvider).customBackground;
-    final opacity = ref.watch(opacityProvider);
+    final opacity = ref.watch(preferencesProvider).opacity;
     final bottomVisibility = ref.watch(preferencesProvider).bottomVisibility;
-    final buttonMicrophone = ref.watch(preferencesProvider).buttonMicrophoneVisibility;
-    final buttonNewNote = ref.watch(preferencesProvider).buttonNewNoteVisibility;
+    final buttonMicrophone =
+        ref.watch(preferencesProvider).buttonMicrophoneVisibility;
+    final buttonNewNote =
+        ref.watch(preferencesProvider).buttonNewNoteVisibility;
     final buttonAction = ref.watch(preferencesProvider).buttonActionVisibility;
     final ttsButtonsScreen = ref.watch(ttsButtonsScreenProvider);
     final openMenu = ref.watch(openMenuProvider);
     final showButton = ref.watch(buttonPageChangeProvider);
+    final backgroundImage=ref.watch(preferencesProvider).background; 
     String viewRouteSpeechText = "";
     PageController pageController = PageController(
       initialPage: widget.pageIndex,
@@ -112,19 +121,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               return AlertDialog(
                 title: const Text('¿Salir?'),
                 content: const Text(
-                    '¿Está seguro de que quiere salir de la aplicación?',style: TextStyle(fontSize: 22),),
+                  '¿Está seguro de que quiere salir de la aplicación?',
+                  style: TextStyle(fontSize: 22),
+                ),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(false),
                     child: const Text(
-                      'Cancelar',style: TextStyle(fontSize: 18),
+                      'Cancelar',
+                      style: TextStyle(fontSize: 18),
                     ),
                   ),
                   FilledButton(
                     onPressed: () => SystemNavigator.pop(),
                     // Navigator.of(context).pop(true),
                     child: const Text(
-                      'Salir',style: TextStyle(fontSize: 18),
+                      'Salir',
+                      style: TextStyle(fontSize: 18),
                     ),
                   ),
                 ],
@@ -151,16 +164,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     bottom: 0,
                     child: Opacity(
                       opacity: opacity,
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.black,
-                          image: DecorationImage(
-                            image: AssetImage(
-                                "assets/backgrounds/background_5.jpg"),
-                            fit: BoxFit
-                                .cover, // Esto hará que la imagen cubra toda la pantalla
-                          ),
-                        ),
+                      child: Image(
+                        image: backgroundImage.image,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
@@ -278,7 +284,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   .update((isListening) => !isListening);
                               widget.speech.listen(
                                 onResult: (result) {
-                                  
                                   ref.read(textProvider.notifier).update(
                                       (state) => result.recognizedWords);
                                 },
@@ -295,15 +300,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         }
                       },
                       onTapUp: (details) async {
-                        if(isListeningProv==false) return;
+                        if (isListeningProv == false) return;
                         ref
                             .read(isListeningProvider.notifier)
                             .update((isListening) => !isListening);
 
                         widget.speech.stop();
-                        if(textProv=="") return;
-                        if(textProv=="cancelar") return;
-                        if(textProv=="Mantén presionado el botón para iniciar el reconocimiento de voz") return;
+                        if (textProv == "") return;
+                        if (textProv == "cancelar") return;
+                        if (textProv ==
+                            "Mantén presionado el botón para iniciar el reconocimiento de voz")
+                          return;
                         await noteProvider
                             .addNote(
                                 textProv,
@@ -312,14 +319,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 DateTime.now(),
                                 false,
                                 category,
-                                DateTime(1,1,1,0,0),
-                                DateTime(1,1,1,0,0),
-                                
+                                DateTime(1, 1, 1, 0, 0),
+                                DateTime(1, 1, 1, 0, 0),
                                 Icons.alarm.codePoint.toString())
                             .then((value) {
-                          ref
-                              .read(textProvider.notifier)
-                              .update((state) => "Mantén presionado el botón para iniciar el reconocimiento de voz");
+                          ref.read(textProvider.notifier).update((state) =>
+                              "Mantén presionado el botón para iniciar el reconocimiento de voz");
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               duration: const Duration(milliseconds: 2000),
                               action: SnackBarAction(

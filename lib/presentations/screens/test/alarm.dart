@@ -8,7 +8,7 @@ void printHello() {
   // final DateTime now = DateTime.now();
   // final int isolateId = Isolate.current.hashCode;
   // print("[$now] Hola mundo! isolate=$isolateId function='$printHello'");
-  showNotification2("Recordar", "Tomar agua todos los días");
+  showNotification2(3,"Recordar", "Tomar agua todos los días");
 }
 
 String alarmTitle = "ay";
@@ -18,12 +18,12 @@ void alarm(int id, Map<String, dynamic> content) {
   // final DateTime now = DateTime.now();
   // final int isolateId = Isolate.current.hashCode;
   // print("[$now] Hola mundo! isolate=$isolateId function='$printHello'");
-  showNotification2("hola ${content["0"]}", content["1"]);
+  showNotification2(5,"hola ${content["0"]}", content["1"]);
   // showNotificationWithImage();
 }
 
 void alarm2() {
-  showNotification2("hola", "hola");
+  showNotification2(5,"Recordatorio", "Un recordatorio esta esperando por ti, entra a la app para verlo");
 }
 // void programNotification(DateTime targetTime) async {
 //   final currentTime = DateTime.now();
@@ -55,6 +55,7 @@ class AlarmTest extends StatelessWidget {
           children: [
             TextButton(
                 onPressed: () async {
+
                   alarmTitle = "Hola";
                   alarmContent = "sera que si ??";
                   // await AndroidAlarmManager.periodic(
@@ -142,8 +143,7 @@ class DateTimePickerWidgetState extends State<DateTimePickerWidget> {
                 selectedDate.day,
                 selectedTime.hour,
                 selectedTime.minute);
-            programNotification(scheduledNotificationDateTime, "Hola",
-                "sera que si ??"); // Pasando la fecha y hora seleccionadas a la función de programación
+            programNotification(scheduledNotificationDateTime,); // Pasando la fecha y hora seleccionadas a la función de programación
           },
         ),
       ],
@@ -152,9 +152,8 @@ class DateTimePickerWidgetState extends State<DateTimePickerWidget> {
 }
 
 void programNotification(
-    DateTime targetTime, String title, String content) async {
-  alarmTitle = title;
-  alarmContent = content;
+    DateTime targetTime) async {
+  
   final initialDuration = targetTime.isBefore(DateTime.now())
       ? targetTime.add(const Duration(days: 1)).difference(DateTime.now())
       : targetTime.difference(DateTime.now());

@@ -8,9 +8,9 @@ import 'package:recuerda_facil/presentations/providers/appearance_provider2.dart
 
 final colorListProvider= Provider((ref) => colorList);
 
-final opacityProvider = StateNotifierProvider<OpacityNotifier, double>((ref) {
-  return OpacityNotifier();
-});
+// final opacityProvider = StateNotifierProvider<OpacityNotifier, double>((ref) {
+//   return OpacityNotifier();
+// });
 
 //un objeto de tipo AppTheme(custom)
 final themeNotifierProvider = StateNotifierProvider<ThemeNotifier,AppTheme>((ref) => 
@@ -32,10 +32,10 @@ class ThemeNotifier extends StateNotifier<AppTheme> {
   //   state= state.copyWith(selectedColor: colorIndex);
   // }
 }
-class OpacityNotifier extends StateNotifier<double> {
-  OpacityNotifier() : super(0.5);  // Inicializa con opacidad completa
+// class OpacityNotifier extends StateNotifier<double> {
+//   OpacityNotifier() : super(0.5); 
 
-  void updateOpacity(double value) {
-    state = value;
-  }
-}
+//   void updateOpacity(double value) {
+//     state = value;
+//   }
+// }

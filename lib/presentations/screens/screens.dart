@@ -1,3 +1,5 @@
+export 'package:recuerda_facil/presentations/screens/appearance/appearance_background.dart';
+
 export 'package:recuerda_facil/presentations/screens/chat/chat_screen.dart';
 
 export 'package:recuerda_facil/presentations/screens/chat/chats_list_screen.dart';
@@ -30,3 +32,4 @@ export 'package:recuerda_facil/presentations/screens/support/support_screen.dart
 export 'package:recuerda_facil/presentations/screens/test/splash_test.dart';
 export 'package:recuerda_facil/presentations/screens/test/test_screen.dart';
 export 'package:recuerda_facil/presentations/screens/users_guide_first_init/users_guide_first_init_screen.dart';
+

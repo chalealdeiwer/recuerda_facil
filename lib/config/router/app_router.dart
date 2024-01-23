@@ -138,6 +138,10 @@ final goRouterProvider = Provider((ref) {
           path: '/appearance',
           builder: (context, state) => const AppearanceScreen()),
       GoRoute(
+          name: ScreenBackground.name,
+          path: '/background',
+          builder: (context, state) => const ScreenBackground()),
+      GoRoute(
           name: MoreFunctionsScreen.name,
           path: '/more_functions',
           builder: (context, state) => const MoreFunctionsScreen()),

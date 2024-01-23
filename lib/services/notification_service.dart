@@ -23,8 +23,8 @@ Future<void> showNotification() async {
     ],
     'your channel id',
     'your channel name',
-    importance: Importance.max,
-    priority: Priority.high,
+    importance: Importance.min,
+    priority: Priority.min,
     showWhen: true,
     ongoing: true, // Esto hace que la notificación sea persistente
 
@@ -66,7 +66,7 @@ Future<void> showNotificationWithImage() async {
     platformChannelSpecifics,
   );
 }
-Future<void> showNotification2(String title,String content) async {
+Future<void> showNotification2(int id,String title,String content) async {
   const AndroidNotificationDetails androidPlatformChannelSpecifics =
       AndroidNotificationDetails(
     // actions: <AndroidNotificationAction>[
@@ -78,6 +78,12 @@ Future<void> showNotification2(String title,String content) async {
     importance: Importance.max,
     priority: Priority.high,
     showWhen: true,
+    actions: [
+      // AndroidNotificationAction("1", "Actualizar🔄"),
+      AndroidNotificationAction("1", "Cerrar✖️")
+
+      
+    ]
     // ongoing: true, // Esto hace que la notificación sea persistente
 
   );
@@ -85,11 +91,12 @@ Future<void> showNotification2(String title,String content) async {
       NotificationDetails(android: androidPlatformChannelSpecifics);
 
   await flutterLocalNotificationsPlugin.show(
-    0,
+    id,
     // 'Ha llegado la hora de recordar.⌚⌚',
     title,
     content,
     notificationDetails,
+
   );
 }
 

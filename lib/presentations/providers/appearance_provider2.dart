@@ -1,4 +1,11 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:recuerda_facil/services/preferences_user.dart';
 
 final preferencesProvider =
@@ -20,6 +27,27 @@ class AppearanceNotifier extends StateNotifier<AppearanceState> {
         await PreferencesUser().getValue<bool>('customBackground');
     customBackground ?? false;
     state = state.copyWith(customBackground: customBackground);
+    //opacity
+    final opacity = await PreferencesUser().getValue<double>('opacity');
+    opacity ?? 0.5;
+    state = state.copyWith(opacity: opacity);
+    //backgroundImage
+
+    final appDocumentsDirectory = await getApplicationDocumentsDirectory();
+    const fileName = "custom_background.png";
+    final filePath = "${appDocumentsDirectory.path}/$fileName";
+
+    if (await File(filePath).exists()) {
+      final Image background = Image.file(File(filePath));
+      state = state.copyWith(background: background);
+    } else {
+      final ByteData data =
+          await rootBundle.load("assets/backgrounds/background_5.jpg");
+      final Uint8List bytes = data.buffer.asUint8List();
+      final Image background = Image.memory(bytes);
+      state = state.copyWith(background: background);
+    }
+
     //selectedColor
     final selectedColor =
         await PreferencesUser().getValue<int>('selectedColor');
@@ -59,7 +87,8 @@ class AppearanceNotifier extends StateNotifier<AppearanceState> {
     final buttonMicrophoneVisibility =
         await PreferencesUser().getValue<bool>('buttonMicrophoneVisibility');
     buttonMicrophoneVisibility ?? true;
-    state = state.copyWith(buttonMicrophoneVisibility: buttonMicrophoneVisibility);
+    state =
+        state.copyWith(buttonMicrophoneVisibility: buttonMicrophoneVisibility);
     //buttonPageChange
     final buttonPageChange =
         await PreferencesUser().getValue<bool>('buttonPageChange');
@@ -81,6 +110,58 @@ class AppearanceNotifier extends StateNotifier<AppearanceState> {
   void changeCustomBackground(bool customBackground) {
     PreferencesUser().setValue<bool>('customBackground', customBackground);
     state = state.copyWith(customBackground: customBackground);
+  }
+
+  //opacity
+  void changeOpacity(double opacity) {
+    PreferencesUser().setValue<double>('opacity', opacity);
+    state = state.copyWith(opacity: opacity);
+  }
+
+  void changeBackground(XFile pickedImage) async {
+    // final ImagePicker imagePicker = ImagePicker();
+    // final XFile? pickedImage =
+    //     await imagePicker.pickImage(source: ImageSource.gallery);
+
+    // if (pickedImage != null) {
+    final appDocumentsDirectory = await getApplicationDocumentsDirectory();
+    const fileName = "custom_background.png";
+    final filePath = "${appDocumentsDirectory.path}/$fileName";
+
+    await pickedImage.saveTo(filePath);
+    // final Image image = Image.file(File(filePath),
+    //     key: UniqueKey());
+    // changeBackground2(image);
+
+    // } else {
+    //   final ByteData data =
+    //       await rootBundle.load("assets/backgrounds/background_5.jpg");
+    //   final Uint8List bytes = data.buffer.asUint8List();
+    //   final background = Image.memory(bytes,
+    //       key: UniqueKey()); // Añade una clave única al widget Image
+    //   changeBackground2(background);
+    // }
+  }
+
+  void changeBackground2(Image image) {
+    state = state.copyWith(background: image);
+  }
+
+  void changeBackgroundDefault() async {
+    final appDocumentsDirectory = await getApplicationDocumentsDirectory();
+    const fileName = "custom_background.png";
+    final filePath = "${appDocumentsDirectory.path}/$fileName";
+
+    if (await File(filePath).exists()) {
+      await File(filePath).delete();
+    } else {
+    }
+    final ByteData data =
+        await rootBundle.load("assets/backgrounds/background_5.jpg");
+    final Uint8List bytes = data.buffer.asUint8List();
+    final background = Image.memory(bytes,
+        key: UniqueKey()); 
+    state = state.copyWith(background: background);
   }
 
   //selectedColor
@@ -127,17 +208,21 @@ class AppearanceNotifier extends StateNotifier<AppearanceState> {
         .setValue<bool>('buttonActionVisibility', buttonActionVisibility);
     state = state.copyWith(buttonActionVisibility: buttonActionVisibility);
   }
+
   //buttonMicrophoneVisibility
   void changeButtonMicrophoneVisibility(bool buttonMicrophoneVisibility) {
-    PreferencesUser()
-        .setValue<bool>('buttonMicrophoneVisibility', buttonMicrophoneVisibility);
-    state = state.copyWith(buttonMicrophoneVisibility: buttonMicrophoneVisibility);
+    PreferencesUser().setValue<bool>(
+        'buttonMicrophoneVisibility', buttonMicrophoneVisibility);
+    state =
+        state.copyWith(buttonMicrophoneVisibility: buttonMicrophoneVisibility);
   }
+
   //buttonPageChange
   void changeButtonPageChange(bool buttonPageChange) {
     PreferencesUser().setValue<bool>('buttonPageChange', buttonPageChange);
     state = state.copyWith(buttonPageChange: buttonPageChange);
   }
+
   //openMenu
   void changeOpenMenu(bool openMenu) {
     PreferencesUser().setValue<bool>('openMenu', openMenu);
@@ -156,6 +241,7 @@ class AppearanceNotifier extends StateNotifier<AppearanceState> {
     changeButtonActionVisibility(false);
     changeButtonMicrophoneVisibility(true);
     changeButtonPageChange(true);
+    changeOpacity(0.5);
   }
 
   void appearanceSimple() {
@@ -167,8 +253,7 @@ class AppearanceNotifier extends StateNotifier<AppearanceState> {
     changeButtonActionVisibility(true);
     changeButtonMicrophoneVisibility(true);
     changeButtonPageChange(true);
-
-
+    changeOpacity(0.5);
   }
 
   void appearanceReduced() {
@@ -180,12 +265,10 @@ class AppearanceNotifier extends StateNotifier<AppearanceState> {
     changeButtonActionVisibility(false);
     changeButtonMicrophoneVisibility(true);
     changeButtonPageChange(true);
-
-
+    changeOpacity(0.5);
   }
 
   void appearanceComplete() {
-    
     changeBottomVisibility(true);
     changeClockVisibility(true);
     changeCategoriesVisibility(true);
@@ -194,8 +277,7 @@ class AppearanceNotifier extends StateNotifier<AppearanceState> {
     changeButtonActionVisibility(false);
     changeButtonMicrophoneVisibility(true);
     changeButtonPageChange(true);
-
-
+    changeOpacity(0.5);
   }
 }
 
@@ -203,6 +285,8 @@ class AppearanceState {
   //appearance colors
   final bool isDarkMode;
   final bool customBackground;
+  final double opacity;
+  final Image background;
   final int selectedColor;
   //appearance buttons
   final bool bottomVisibility;
@@ -213,12 +297,15 @@ class AppearanceState {
   final bool buttonActionVisibility;
   final bool buttonMicrophoneVisibility;
   //button de pagina
-  final bool  openMenu;
+  final bool openMenu;
   final bool buttonPageChange;
 
   AppearanceState({
     this.isDarkMode = false,
     this.customBackground = false,
+    this.opacity = 0.5,
+    this.background =
+        const Image(image: AssetImage("assets/backgrounds/background_5.jpg")),
     this.selectedColor = 0,
     this.bottomVisibility = false,
     this.clockVisibility = true,
@@ -234,6 +321,8 @@ class AppearanceState {
   AppearanceState copyWith({
     bool? isDarkMode,
     bool? customBackground,
+    double? opacity,
+    Image? background,
     int? selectedColor,
     bool? bottomVisibility,
     bool? clockVisibility,
@@ -248,6 +337,8 @@ class AppearanceState {
       AppearanceState(
         isDarkMode: isDarkMode ?? this.isDarkMode,
         customBackground: customBackground ?? this.customBackground,
+        opacity: opacity ?? this.opacity,
+        background: background ?? this.background,
         selectedColor: selectedColor ?? this.selectedColor,
         bottomVisibility: bottomVisibility ?? this.bottomVisibility,
         clockVisibility: clockVisibility ?? this.clockVisibility,
@@ -257,7 +348,8 @@ class AppearanceState {
             buttonNewNoteVisibility ?? this.buttonNewNoteVisibility,
         buttonActionVisibility:
             buttonActionVisibility ?? this.buttonActionVisibility,
-        buttonMicrophoneVisibility: buttonMicrophoneVisibility?? this.buttonMicrophoneVisibility,
+        buttonMicrophoneVisibility:
+            buttonMicrophoneVisibility ?? this.buttonMicrophoneVisibility,
         buttonPageChange: buttonPageChange ?? this.buttonPageChange,
         openMenu: openMenu ?? this.openMenu,
       );

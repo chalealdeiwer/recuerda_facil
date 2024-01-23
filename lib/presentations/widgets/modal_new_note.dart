@@ -1,8 +1,12 @@
+import 'dart:math';
+
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:recuerda_facil/services/services.dart';
 
 import '../providers/providers.dart';
 
@@ -287,9 +291,11 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
               children: [
                 OutlinedButton.icon(
                   icon: const Icon(Icons.calendar_month),
-                  onPressed:  posting.isPosting?null:() {
-                    _selectDate();
-                  },
+                  onPressed: posting.isPosting
+                      ? null
+                      : () {
+                          _selectDate();
+                        },
                   label: Text(
                     dateInput == null
                         ? "¿Cuando recordar?"
@@ -302,9 +308,11 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
                 ),
                 if (dateInput != null)
                   OutlinedButton.icon(
-                    onPressed: posting.isPosting?null: () {
-                      _selectHour();
-                    },
+                    onPressed: posting.isPosting
+                        ? null
+                        : () {
+                            _selectHour();
+                          },
                     icon: const Icon(Icons.watch),
                     label: Text(
                       hourInput == null
@@ -347,6 +355,12 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
                               hourInput?.minute ??
                                   0, // Si hourInput es null, se usará el minuto 0
                             );
+                            //notificación
+                            if (combinedDateTime.isAfter(DateTime.now())) {
+                              programNotification(combinedDateTime);
+                              programNotification2(combinedDateTime,_titleController.text,
+                                      _contentController.text,);
+                            }
                             if (_formKey.currentState!.validate()) {
                               await noteProvider
                                   .addNote(
@@ -406,6 +420,44 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
     );
   }
 
+  void programNotification2(DateTime targetTime,title,content) async {
+    final id = Random().nextInt(1000);
+    final initialDuration = targetTime.isBefore(DateTime.now())
+        ? targetTime.add(const Duration(days: 1)).difference(DateTime.now())
+        : targetTime.difference(DateTime.now());
+
+    await AndroidAlarmManager.oneShot(
+      initialDuration,
+      id,
+      // (int id) => alarm2(id),
+      (int id) => alarm2(id, {"0": title, "1": content}),
+      alarmClock: true,
+      wakeup: true,
+      allowWhileIdle: true,
+      exact: true,
+      rescheduleOnReboot: true,
+    );
+    // await AndroidAlarmManager.periodic(duration, id, callback)
+  }
+  void programNotification(DateTime targetTime) async {
+    final id = Random().nextInt(100);
+    final initialDuration = targetTime.isBefore(DateTime.now())
+        ? targetTime.add(const Duration(days: 1)).difference(DateTime.now())
+        : targetTime.difference(DateTime.now());
+
+    await AndroidAlarmManager.oneShot(
+      initialDuration,
+      id,
+      alarm,
+      alarmClock: true,
+      wakeup: true,
+      allowWhileIdle: true,
+      exact: true,
+      rescheduleOnReboot: true,
+    );
+    // await AndroidAlarmManager.periodic(duration, id, callback)
+  }
+
   @override
   void dispose() {
     _contentController.dispose();
@@ -414,3 +466,15 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
     super.dispose();
   }
 }
+
+void alarm2(int id, Map<String, dynamic> content) {
+  
+  showNotification2(id, "Recordatorio ${content["0"]}⌚ ",
+      "${content["1"]}");
+}
+void alarm() {
+  final id = Random().nextInt(1000);
+  showNotification2(id, "Recordatorio⌚ ",
+      "Un recordatorio esta esperando por ti, entra a la app para verlo");
+}
+
