@@ -39,6 +39,29 @@ class _SideMenuState extends ConsumerState<SideMenu> {
 
         final menuItem = appMenuItems[value];
         context.push(menuItem.link);
+        print(menuItem.link);
+        if (menuItem.link == "/home/1") {
+          ref
+              .read(buttonPageChangeProvider.notifier)
+              .update((showButton) => true);
+        } else {
+          if (menuItem.link == "/home/2") {
+            ref
+                .read(buttonPageChangeProvider.notifier)
+                .update((showButton) => false);
+          } else {
+            if (menuItem.link == "/home/0") {
+              ref
+                  .read(buttonPageChangeProvider.notifier)
+                  .update((showButton) => false);
+            } else {
+              ref
+                  .read(buttonPageChangeProvider.notifier)
+                  .update((showButton) => true);
+            }
+          }
+        }
+
         widget.scaffoldKey.currentState?.closeDrawer();
       },
       children: [

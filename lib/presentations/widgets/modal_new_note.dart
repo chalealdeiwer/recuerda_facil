@@ -24,6 +24,12 @@ class ModalNewNote extends ConsumerStatefulWidget {
 class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
   String selectedCategory = 'Sin Categoría';
   String currentUserUID = FirebaseAuth.instance.currentUser?.uid ?? '';
+  bool notification = true;
+  bool prenotification = false;
+  bool alarm = false;
+
+  DateTime combinedDateTime = DateTime(1, 1, 1, 0, 0);
+
   // Categoría seleccionada inicialmente
 
   List<String> userCategories = [];
@@ -191,6 +197,19 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
                               context.pop();
                             },
                             child: const Text("Sin hora")),
+                      minutesButton(context, 'En 1 minutos',
+                          addMinutesToTimeOfDay(TimeOfDay.now(), 1)),
+                      minutesButton(context, 'En 2 minutos',
+                          addMinutesToTimeOfDay(TimeOfDay.now(), 2)),
+                      minutesButton(context, 'En 3 minutos',
+                          addMinutesToTimeOfDay(TimeOfDay.now(), 3)),
+                      minutesButton(context, 'En 4 minutos',
+                          addMinutesToTimeOfDay(TimeOfDay.now(), 4)),
+                      minutesButton(context, 'En 5 minutos',
+                          addMinutesToTimeOfDay(TimeOfDay.now(), 5)),
+                          minutesButton(context, 'En 10 minutos',
+                          addMinutesToTimeOfDay(TimeOfDay.now(), 10)),
+
                       hourButton(context, '6:00 AM', 6, 0),
                       hourButton(context, '7:00 AM', 7, 0),
                       hourButton(context, '9:00 AM', 9, 0),
@@ -256,6 +275,21 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
     );
   }
 
+  Widget minutesButton(BuildContext context, String label, TimeOfDay date) {
+    return OutlinedButton(
+      child: Text(label),
+      onPressed: () {
+        Navigator.of(context)
+            .pop(TimeOfDay(hour: date.hour, minute: date.minute));
+      },
+    );
+  }
+
+  TimeOfDay addMinutesToTimeOfDay(TimeOfDay time, int minutesToAdd) {
+    final minutes = time.hour * 60 + time.minute + minutesToAdd;
+    return TimeOfDay(hour: minutes ~/ 60, minute: minutes % 60);
+  }
+
   @override
   Widget build(BuildContext context) {
     final posting = ref.watch(noteNotifierProvider);
@@ -293,8 +327,21 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
                   icon: const Icon(Icons.calendar_month),
                   onPressed: posting.isPosting
                       ? null
-                      : () {
-                          _selectDate();
+                      : () async {
+                          await _selectDate();
+                          combinedDateTime = DateTime(
+                            dateInput?.year ??
+                                1, // Si dateInput es null, se usará el año 1
+                            dateInput?.month ??
+                                1, // Si dateInput es null, se usará el mes 1
+                            dateInput?.day ??
+                                1, // Si dateInput es null, se usará el día 1
+                            hourInput?.hour ??
+                                0, // Si hourInput es null, se usará la hora 0
+                            hourInput?.minute ??
+                                0, // Si hourInput es null, se usará el minuto 0
+                          );
+                          setState(() {});
                         },
                   label: Text(
                     dateInput == null
@@ -310,8 +357,22 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
                   OutlinedButton.icon(
                     onPressed: posting.isPosting
                         ? null
-                        : () {
-                            _selectHour();
+                        : () async {
+                            await _selectHour();
+                            combinedDateTime = DateTime(
+                              dateInput?.year ??
+                                  1, // Si dateInput es null, se usará el año 1
+                              dateInput?.month ??
+                                  1, // Si dateInput es null, se usará el mes 1
+                              dateInput?.day ??
+                                  1, // Si dateInput es null, se usará el día 1
+                              hourInput?.hour ??
+                                  0, // Si hourInput es null, se usará la hora 0
+                              hourInput?.minute ??
+                                  0, // Si hourInput es null, se usará el minuto 0
+                            );
+
+                            setState(() {});
                           },
                     icon: const Icon(Icons.watch),
                     label: Text(
@@ -323,6 +384,43 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
                   ),
               ],
             ),
+
+            if (hourInput != null && combinedDateTime.isAfter(DateTime.now()))
+              SwitchListTile(
+                value: notification,
+                onChanged: (value) {
+                  setState(() {
+                    notification = value;
+                    prenotification = false;
+                  });
+                },
+                title: const Text("¿Notificación?"),
+              ),
+
+            if (hourInput != null &&
+                combinedDateTime.isAfter(DateTime.now()) &&
+                notification)
+              SwitchListTile(
+                value: prenotification,
+                onChanged: (value) {
+                  setState(() {
+                    prenotification = value;
+                  });
+                },
+                title: const Text("5 minutos antes"),
+              ),
+              if (hourInput != null &&
+                combinedDateTime.isAfter(DateTime.now()))
+              SwitchListTile(
+                value: alarm,
+                onChanged: (value) {
+                  setState(() {
+                    alarm = value;
+                  });
+                },
+                title: const Text("¿Alarma?"),
+              ),
+
             // categories(),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -343,25 +441,39 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
                     onPressed: posting.isPosting
                         ? null
                         : () async {
-                            DateTime combinedDateTime = DateTime(
-                              dateInput?.year ??
-                                  1, // Si dateInput es null, se usará el año 1
-                              dateInput?.month ??
-                                  1, // Si dateInput es null, se usará el mes 1
-                              dateInput?.day ??
-                                  1, // Si dateInput es null, se usará el día 1
-                              hourInput?.hour ??
-                                  0, // Si hourInput es null, se usará la hora 0
-                              hourInput?.minute ??
-                                  0, // Si hourInput es null, se usará el minuto 0
-                            );
+                            // combinedDateTime = DateTime(
+                            //   dateInput?.year ??
+                            //       1, // Si dateInput es null, se usará el año 1
+                            //   dateInput?.month ??
+                            //       1, // Si dateInput es null, se usará el mes 1
+                            //   dateInput?.day ??
+                            //       1, // Si dateInput es null, se usará el día 1
+                            //   hourInput?.hour ??
+                            //       0, // Si hourInput es null, se usará la hora 0
+                            //   hourInput?.minute ??
+                            //       0, // Si hourInput es null, se usará el minuto 0
+                            // );
                             //notificación
-                            if (combinedDateTime.isAfter(DateTime.now())) {
-                              programNotification(combinedDateTime);
-                              programNotification2(combinedDateTime,_titleController.text,
-                                      _contentController.text,);
-                            }
+
                             if (_formKey.currentState!.validate()) {
+                              if (combinedDateTime.isAfter(DateTime.now()) &&
+                                  notification) {
+                                // programNotification(combinedDateTime);
+                                programNotification2(
+                                  combinedDateTime,
+                                  _titleController.text,
+                                  _contentController.text,
+                                );
+                                DateTime fiveMinutesBeforeNow = DateTime.now()
+                                    .subtract(const Duration(minutes: 5));
+
+                                if (combinedDateTime
+                                    .isAfter(fiveMinutesBeforeNow)&&prenotification) {
+                                  programNotification3(combinedDateTime,
+                                      _titleController.text, _contentController.text);
+                                } 
+                              }
+
                               await noteProvider
                                   .addNote(
                                       _titleController.text,
@@ -420,42 +532,78 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
     );
   }
 
-  void programNotification2(DateTime targetTime,title,content) async {
+  void programNotification2(DateTime targetTime, title, content) async {
     final id = Random().nextInt(1000);
     final initialDuration = targetTime.isBefore(DateTime.now())
         ? targetTime.add(const Duration(days: 1)).difference(DateTime.now())
         : targetTime.difference(DateTime.now());
 
-    await AndroidAlarmManager.oneShot(
-      initialDuration,
-      id,
-      // (int id) => alarm2(id),
-      (int id) => alarm2(id, {"0": title, "1": content}),
-      alarmClock: true,
-      wakeup: true,
-      allowWhileIdle: true,
-      exact: true,
-      rescheduleOnReboot: true,
-    );
-    // await AndroidAlarmManager.periodic(duration, id, callback)
+    await AndroidAlarmManager.oneShot(initialDuration, id, alarm2,
+        alarmClock: true,
+        wakeup: true,
+        allowWhileIdle: true,
+        exact: true,
+        rescheduleOnReboot: true,
+        params: {'title': title, 'content': content});
   }
-  void programNotification(DateTime targetTime) async {
-    final id = Random().nextInt(100);
-    final initialDuration = targetTime.isBefore(DateTime.now())
-        ? targetTime.add(const Duration(days: 1)).difference(DateTime.now())
-        : targetTime.difference(DateTime.now());
 
-    await AndroidAlarmManager.oneShot(
-      initialDuration,
-      id,
-      alarm,
-      alarmClock: true,
-      wakeup: true,
-      allowWhileIdle: true,
-      exact: true,
-      rescheduleOnReboot: true,
-    );
-    // await AndroidAlarmManager.periodic(duration, id, callback)
+  void programNotification3(DateTime targetTime, title, content) async {
+    // Ajustar el tiempo objetivo restando 5 minutos
+    final targetTimeAdjusted = targetTime.subtract(const Duration(minutes: 5));
+
+    final id = Random().nextInt(1000);
+    final initialDuration = targetTimeAdjusted.isBefore(DateTime.now())
+        ? targetTimeAdjusted
+            .add(const Duration(days: 1))
+            .difference(DateTime.now())
+        : targetTimeAdjusted.difference(DateTime.now());
+
+    await AndroidAlarmManager.oneShot(initialDuration, id, alarm3,
+        alarmClock: true,
+        wakeup: true,
+        allowWhileIdle: true,
+        exact: true,
+        rescheduleOnReboot: true,
+        params: {'title': title, 'content': content});
+  }
+
+  // void programNotification(DateTime targetTime) async {
+  //   final id = Random().nextInt(1000);
+  //   final initialDuration = targetTime.isBefore(DateTime.now())
+  //       ? targetTime.add(const Duration(days: 1)).difference(DateTime.now())
+  //       : targetTime.difference(DateTime.now());
+
+  //   await AndroidAlarmManager.oneShot(
+  //     initialDuration,
+  //     id,
+  //     myCallback,
+  //     alarmClock: true,
+  //     wakeup: true,
+  //     allowWhileIdle: true,
+  //     exact: true,
+  //     rescheduleOnReboot: true,
+  //     params: {'customParameter': 'Hello!'},
+  //   );
+  //   // await AndroidAlarmManager.periodic(duration, id, callback)
+  // }
+
+  // static myCallback(int id, Map<String, dynamic> para) async {
+  //   final customParameter = para['customParameter'];
+  //   await Future.delayed(const Duration(seconds: 1));
+  //   return print(
+  //       'Callback executed with custom parameter: $customParameter y el id$id');
+  // }
+
+  static alarm2(int id, Map<String, dynamic> params) {
+    return showNotification2(
+        id, "⌚Recordatorio: ${params["title"]} ", "${params["content"]}");
+  }
+
+  static alarm3(int id, Map<String, dynamic> params) {
+    return showNotification2(
+        id,
+        "Un recordatorio esta proximo a vencer: ${params["title"]} ",
+        "${params["content"]}");
   }
 
   @override
@@ -467,14 +615,8 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
   }
 }
 
-void alarm2(int id, Map<String, dynamic> content) {
-  
-  showNotification2(id, "Recordatorio ${content["0"]}⌚ ",
-      "${content["1"]}");
-}
 void alarm() {
   final id = Random().nextInt(1000);
   showNotification2(id, "Recordatorio⌚ ",
       "Un recordatorio esta esperando por ti, entra a la app para verlo");
 }
-

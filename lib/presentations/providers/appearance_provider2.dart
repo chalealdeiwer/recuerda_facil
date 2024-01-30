@@ -242,6 +242,7 @@ class AppearanceNotifier extends StateNotifier<AppearanceState> {
     changeButtonMicrophoneVisibility(true);
     changeButtonPageChange(true);
     changeOpacity(0.5);
+    changeBackgroundDefault();
   }
 
   void appearanceSimple() {

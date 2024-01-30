@@ -146,16 +146,20 @@ class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
                             return false;
                           }
                         },
-                        direction: DismissDirection.endToStart,
+                        direction: DismissDirection.horizontal,
                         background: Container(
                           color: Colors.red[400],
                           child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Icon(Icons.delete, size: 35),
-                              SizedBox(
-                                width: 10,
-                              )
+                              Padding(
+                                padding: EdgeInsets.all(5.0),
+                                child: Icon(Icons.delete, size: 35),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(5.0),
+                                child: Icon(Icons.delete, size: 35),
+                              ),
                             ],
                           ),
                         ),
@@ -498,16 +502,20 @@ class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
                             return false;
                           }
                         },
-                        direction: DismissDirection.endToStart,
+                        direction: DismissDirection.horizontal,
                         background: Container(
                           color: Colors.red[400],
                           child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Icon(Icons.delete, size: 35),
-                              SizedBox(
-                                width: 10,
-                              )
+                              Padding(
+                                padding: EdgeInsets.all(5.0),
+                                child: Icon(Icons.delete, size: 35),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(5.0),
+                                child: Icon(Icons.delete, size: 35),
+                              ),
                             ],
                           ),
                         ),

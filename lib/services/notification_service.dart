@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -21,13 +24,12 @@ Future<void> showNotification() async {
       // AndroidNotificationAction('id_2', 'Action 2'),
       // AndroidNotificationAction('id_3', 'Action 3'),
     ],
-    'your channel id',
-    'your channel name',
+    '3',
+    'Notificación principal',
     importance: Importance.min,
     priority: Priority.min,
     showWhen: true,
     ongoing: true, // Esto hace que la notificación sea persistente
-
   );
   const NotificationDetails notificationDetails =
       NotificationDetails(android: androidPlatformChannelSpecifics);
@@ -42,7 +44,8 @@ Future<void> showNotification() async {
 
 Future<void> showNotificationWithImage() async {
   var bigPictureStyleInformation = const BigPictureStyleInformation(
-    DrawableResourceAndroidBitmap('/assets/images/users_guide/planDay.png'),   // Reemplaza 'app_icon' con el nombre de tu asset
+    DrawableResourceAndroidBitmap(
+        '/assets/images/users_guide/planDay.png'), // Reemplaza 'app_icon' con el nombre de tu asset
     largeIcon: DrawableResourceAndroidBitmap('app_icon'),
     contentTitle: 'Notificación con imagen',
     htmlFormatContentTitle: true,
@@ -66,38 +69,36 @@ Future<void> showNotificationWithImage() async {
     platformChannelSpecifics,
   );
 }
-Future<void> showNotification2(int id,String title,String content) async {
-  const AndroidNotificationDetails androidPlatformChannelSpecifics =
-      AndroidNotificationDetails(
-    // actions: <AndroidNotificationAction>[
-    //   // AndroidNotificationAction('id_1', 'Cerrar✖️'),
-    
-    // ],
-    'your channel id',
-    'your channel name',
-    importance: Importance.max,
-    priority: Priority.high,
-    showWhen: true,
-    actions: [
-      // AndroidNotificationAction("1", "Actualizar🔄"),
-      AndroidNotificationAction("1", "Cerrar✖️")
 
-      
-    ]
-    // ongoing: true, // Esto hace que la notificación sea persistente
+Future<void> showNotification2(int id, String title, String content) async {
+  AndroidNotificationDetails androidPlatformChannelSpecifics =
+      AndroidNotificationDetails('4', 'Recordatorios de eventos',
+          importance: Importance.max,
+          priority: Priority.max,
+          vibrationPattern: Int64List.fromList([500, 200, 500, 200]),
+          enableVibration: true,
+          playSound: true,
+          visibility: NotificationVisibility.public,
+          showWhen: true,
+          sound: const RawResourceAndroidNotificationSound('notification'),
+          
+          
+          fullScreenIntent: true,
+          actions: [
+        // AndroidNotificationAction("1", "Actualizar🔄"),
+        const AndroidNotificationAction("1", "Cerrar✖️")
+      ]
+          // ongoing: true, // Esto hace que la notificación sea persistente
 
-  );
-  const NotificationDetails notificationDetails =
+          );
+  NotificationDetails notificationDetails =
       NotificationDetails(android: androidPlatformChannelSpecifics);
 
   await flutterLocalNotificationsPlugin.show(
+
     id,
-    // 'Ha llegado la hora de recordar.⌚⌚',
     title,
     content,
     notificationDetails,
-
   );
 }
-
-
