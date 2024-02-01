@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:avatar_glow/avatar_glow.dart';
@@ -7,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:go_router/go_router.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:recuerda_facil/features/auth/presentation/providers/providers_auth.dart';
 import 'package:recuerda_facil/presentations/views/notes/calendar_view.dart';
 import 'package:recuerda_facil/presentations/views/notes/home_view.dart';
@@ -309,8 +307,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         if (textProv == "") return;
                         if (textProv == "cancelar") return;
                         if (textProv ==
-                            "Mantén presionado el botón para iniciar el reconocimiento de voz")
+                            "Mantén presionado el botón para iniciar el reconocimiento de voz") {
                           return;
+                        }
                         await noteProvider
                             .addNote(
                                 textProv,

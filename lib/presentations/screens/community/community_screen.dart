@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:recuerda_facil/features/auth/domain/entities/user_account.dart';
 import 'package:recuerda_facil/features/auth/presentation/providers/providers_auth.dart';
-import 'package:recuerda_facil/services/user_services.dart';
 
 import '../../../services/services.dart';
 
@@ -22,9 +21,8 @@ class _TestScreenState extends ConsumerState<CommunityScreen> {
     setState(() {
       posting = true;
     });
-    String chatId = await ChatService()
-        .createChat(userActive.uid.toString(), user.uid.toString());
-    context.push('/more/chats/chat/$chatId');
+    
+    await ChatService().createChat(userActive.uid.toString(), user.uid.toString()).then((value) => context.push('/more/chats/chat/$value'));
     setState(() {
       posting = false;
     });

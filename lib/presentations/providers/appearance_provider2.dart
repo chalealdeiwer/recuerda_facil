@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -56,7 +55,7 @@ class AppearanceNotifier extends StateNotifier<AppearanceState> {
     //bottomVisibility
     final bottomVisibility =
         await PreferencesUser().getValue<bool>('bottomVisibility');
-    bottomVisibility ?? false;
+    bottomVisibility ?? true;
     state = state.copyWith(bottomVisibility: bottomVisibility);
     //clockVisibility
     final clockVisibility =
@@ -98,6 +97,10 @@ class AppearanceNotifier extends StateNotifier<AppearanceState> {
     final openMenu = await PreferencesUser().getValue<bool>('openMenu');
     openMenu ?? false;
     state = state.copyWith(openMenu: openMenu);
+    //notification
+    final notification = await PreferencesUser().getValue<bool>('notification');
+    notification ?? false;
+    state = state.copyWith(notification: notification);
   }
 
   //dark mode
@@ -228,12 +231,17 @@ class AppearanceNotifier extends StateNotifier<AppearanceState> {
     PreferencesUser().setValue<bool>('openMenu', openMenu);
     state = state.copyWith(openMenu: openMenu);
   }
+  //notification
+  void changeNotification(bool notification) {
+    PreferencesUser().setValue<bool>('notification', notification);
+    state = state.copyWith(notification: notification);
+  }
 
   void appearanceDefault() {
     changeIsDarkMode(false);
     changeCustomBackground(false);
     changeSelectedColor(0);
-    changeBottomVisibility(false);
+    changeBottomVisibility(true);
     changeClockVisibility(true);
     changeCategoriesVisibility(true);
     changeAppBarVisibility(true);
@@ -300,6 +308,9 @@ class AppearanceState {
   //button de pagina
   final bool openMenu;
   final bool buttonPageChange;
+  final bool notification;
+
+  
 
   AppearanceState({
     this.isDarkMode = false,
@@ -317,6 +328,7 @@ class AppearanceState {
     this.buttonMicrophoneVisibility = true,
     this.buttonPageChange = true,
     this.openMenu = false,
+    this.notification = false,
   });
 
   AppearanceState copyWith({
@@ -334,6 +346,7 @@ class AppearanceState {
     bool? buttonMicrophoneVisibility,
     bool? buttonPageChange,
     bool? openMenu,
+    bool? notification,
   }) =>
       AppearanceState(
         isDarkMode: isDarkMode ?? this.isDarkMode,
@@ -353,5 +366,6 @@ class AppearanceState {
             buttonMicrophoneVisibility ?? this.buttonMicrophoneVisibility,
         buttonPageChange: buttonPageChange ?? this.buttonPageChange,
         openMenu: openMenu ?? this.openMenu,
+        notification: notification ?? this.notification,
       );
 }

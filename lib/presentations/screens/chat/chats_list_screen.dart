@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:recuerda_facil/services/chat_service.dart';
 
 import '../../../features/auth/presentation/providers/providers_auth.dart';
 import '../../../services/services.dart';

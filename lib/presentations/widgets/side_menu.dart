@@ -39,7 +39,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
 
         final menuItem = appMenuItems[value];
         context.push(menuItem.link);
-        print(menuItem.link);
+        // print(menuItem.link);
         if (menuItem.link == "/home/1") {
           ref
               .read(buttonPageChangeProvider.notifier)

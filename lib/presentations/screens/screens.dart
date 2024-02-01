@@ -1,3 +1,7 @@
+export 'package:recuerda_facil/presentations/screens/more/more_board/board_chat_screen.dart';
+
+export 'package:recuerda_facil/presentations/screens/more/more_board/boards_List_screen.dart';
+
 export 'package:recuerda_facil/presentations/screens/appearance/appearance_background.dart';
 
 export 'package:recuerda_facil/presentations/screens/chat/chat_screen.dart';

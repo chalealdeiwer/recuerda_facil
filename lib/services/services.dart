@@ -6,3 +6,4 @@ export 'package:recuerda_facil/services/upload_image.dart';
 export 'package:recuerda_facil/services/url_launcher_service.dart';
 export 'package:recuerda_facil/services/preferences_user.dart';
 export 'chat_service.dart';
+export 'board_service.dart';

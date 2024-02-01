@@ -21,6 +21,7 @@ class SettingsScreen extends ConsumerWidget {
     final ttsButtonsScreen = ref.watch(ttsButtonsScreenProvider);
     final ttsWelcomeMessage = ref.watch(ttsWelcomeMessageProvider);
     final colors = Theme.of(context).colorScheme;
+    final notification=ref.watch(preferencesProvider).notification;
     // if(brightness==Brightness.light){
     //  isautodark=false;
     // }
@@ -100,9 +101,6 @@ class SettingsScreen extends ConsumerWidget {
                             return value;
                           });
                           await showNotification();
-                          // await showNotification2("Un recordatorio se ha vencido", "Ir a pasear al parque");
-                          // await showNotification2("Un recordatorio esta proximo", "Tomar medicina");
-
                         },
                         child: const Text(
                           "Permitir",
@@ -110,6 +108,10 @@ class SettingsScreen extends ConsumerWidget {
                         ))
                   ],
                 ),
+                SwitchListTile(value: notification, onChanged:(value) {
+                  ref.read(preferencesProvider.notifier).changeNotification(!notification);
+                }, title:  Text("Notificación Principal",style: textStyle.titleMedium,)),
+                
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,

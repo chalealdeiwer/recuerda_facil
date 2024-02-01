@@ -4,23 +4,38 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class BarChartSample7 extends StatefulWidget {
-  BarChartSample7({super.key});
+  const BarChartSample7(this.l, this.m, this.mi, this.j, this.v, this.s, this.d,
+      {super.key});
+  final int l;
+  final int m;
+  final int mi;
+  final int j;
+  final int v;
+  final int s;
+  final int d;
 
   final shadowColor = const Color(0xFFCCCCCC);
-  final dataList = [
-    const _BarData(Colors.yellow, 18, 18),
-    const _BarData(Colors.green, 17, 8),
-    const _BarData(Colors.orange, 10, 15),
-    const _BarData(Colors.pink, 2.5, 5),
-    const _BarData(Colors.blue, 2, 2.5),
-    const _BarData(Colors.red, 2, 2),
-  ];
 
   @override
   State<BarChartSample7> createState() => _BarChartSample7State();
 }
 
 class _BarChartSample7State extends State<BarChartSample7> {
+  late List<_BarData> dataList;
+  @override
+  void initState() {
+    super.initState();
+    dataList = [
+      _BarData(Colors.yellow, widget.l.toDouble(), widget.l.toDouble(), "L"),
+      _BarData(Colors.green, widget.m.toDouble(), widget.m.toDouble(), "M"),
+      _BarData(Colors.orange, widget.mi.toDouble(), widget.mi.toDouble(), "Mi"),
+      _BarData(Colors.pink, widget.j.toDouble(), widget.j.toDouble(), "J"),
+      _BarData(Colors.blue, widget.v.toDouble(), widget.v.toDouble(), "V"),
+      _BarData(Colors.red, widget.s.toDouble(), widget.s.toDouble(), "S"),
+      _BarData(Colors.black, widget.d.toDouble(), widget.d.toDouble(), "D"),
+    ];
+  }
+
   BarChartGroupData generateBarGroup(
     int x,
     Color color,
@@ -88,8 +103,9 @@ class _BarChartSample7State extends State<BarChartSample7> {
                     return SideTitleWidget(
                       axisSide: meta.axisSide,
                       child: _IconWidget(
-                        color: widget.dataList[index].color,
+                        color: dataList[index].color,
                         isSelected: touchedGroupIndex == index,
+                        label: dataList[index].label,
                       ),
                     );
                   },
@@ -102,12 +118,11 @@ class _BarChartSample7State extends State<BarChartSample7> {
               show: true,
               drawVerticalLine: false,
               getDrawingHorizontalLine: (value) => FlLine(
-                                  color: Colors.black.withOpacity(0.2),
-
+                color: Colors.black.withOpacity(0.2),
                 strokeWidth: 1,
               ),
             ),
-            barGroups: widget.dataList.asMap().entries.map((e) {
+            barGroups: dataList.asMap().entries.map((e) {
               final index = e.key;
               final data = e.value;
               return generateBarGroup(
@@ -117,7 +132,7 @@ class _BarChartSample7State extends State<BarChartSample7> {
                 data.shadowValue,
               );
             }).toList(),
-            maxY: 20,
+            maxY: 30,
             barTouchData: BarTouchData(
               enabled: true,
               handleBuiltInTouches: false,
@@ -168,19 +183,22 @@ class _BarChartSample7State extends State<BarChartSample7> {
 }
 
 class _BarData {
-  const _BarData(this.color, this.value, this.shadowValue);
+  const _BarData(this.color, this.value, this.shadowValue, this.label);
   final Color color;
   final double value;
   final double shadowValue;
+  final String label;
 }
 
 class _IconWidget extends ImplicitlyAnimatedWidget {
   const _IconWidget({
     required this.color,
     required this.isSelected,
+    required this.label,
   }) : super(duration: const Duration(milliseconds: 300));
   final Color color;
   final bool isSelected;
+  final String label;
 
   @override
   ImplicitlyAnimatedWidgetState<ImplicitlyAnimatedWidget> createState() =>
@@ -194,14 +212,20 @@ class _IconWidgetState extends AnimatedWidgetBaseState<_IconWidget> {
   Widget build(BuildContext context) {
     final rotation = math.pi * 4 * _rotationTween!.evaluate(animation);
     final scale = 1 + _rotationTween!.evaluate(animation) * 0.5;
-    return Transform(
-      transform: Matrix4.rotationZ(rotation).scaled(scale, scale),
-      origin: const Offset(14, 14),
-      child: Icon(
-        widget.isSelected ? Icons.face_retouching_natural : Icons.face,
-        color: widget.color,
-        size: 28,
-      ),
+    return Column(
+      children: [
+        Transform(
+          transform: Matrix4.rotationZ(rotation).scaled(scale, scale),
+          origin: const Offset(14, 14),
+          child: Icon(
+            widget.isSelected ? Icons.face_retouching_natural : Icons.face,
+            color: widget.color,
+            size: 30,
+          ),
+        ),
+        const SizedBox(height: 5),
+        Text(widget.label)
+      ],
     );
   }
 

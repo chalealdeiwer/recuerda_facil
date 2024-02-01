@@ -4,10 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:recuerda_facil/presentations/providers/appearance_provider2.dart';
 import 'package:recuerda_facil/presentations/screens/home/home_screen.dart';
-import 'package:timezone/timezone.dart';
 
 import '../../../services/services.dart';
 

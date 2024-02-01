@@ -16,7 +16,8 @@ class MoreView extends StatelessWidget {
           const SizedBox(
             height: 50,
           ),
-          customTitle(context, title1: "Más ", size1: 35,title2: "Recursos", size2: 30),
+          customTitle(context,
+              title1: "Más ", size1: 35, title2: "Recursos", size2: 30),
           const SizedBox(
             height: 30,
           ),
@@ -96,7 +97,6 @@ class MoreView extends StatelessWidget {
                               "Cuidador",
                               style: textStyle.titleLarge,
                               textScaleFactor: 1,
-
                             )
                           ],
                         ),
@@ -131,7 +131,6 @@ class MoreView extends StatelessWidget {
                               "Mini juegos",
                               style: textStyle.titleLarge,
                               textScaleFactor: 1,
-
                             )
                           ],
                         ),
@@ -140,9 +139,11 @@ class MoreView extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(
-                  height: 40,
+                  height: 30,
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     GestureDetector(
                       onTap: () {
@@ -173,79 +174,81 @@ class MoreView extends StatelessWidget {
                               "Mensajes",
                               style: textStyle.titleLarge,
                               textScaleFactor: 1,
-
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        context.push('/more/productivity');
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: colors.primary.withOpacity(0.2),
+                        ),
+                        width: 150,
+                        height: 150,
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            FadeInRight(
+                                child: const Icon(Icons.timer, size: 100)),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "Productividad",
+                              style: textStyle.titleLarge,
+                              textScaleFactor: 1,
                             )
                           ],
                         ),
                       ),
                     ),
                   ],
-
-                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //   crossAxisAlignment: CrossAxisAlignment.center,
-                //   children: [
-                //     GestureDetector(
-                //       onTap:() {
-                //         context.push('/more/boards');
-                //       },
-                //       child: Container(
-                //         decoration: BoxDecoration(
-                //           borderRadius: BorderRadius.circular(10),
-                //           color: colors.primary.withOpacity(0.2),
-                //         ),
-                //         width: 150,
-                //         height: 150,
-                //         child: Column(
-                //           children: [
-                //             const SizedBox(
-                //               height: 10,
-                //             ),
-                //             FadeInLeft(child: const Icon(Icons.table_view, size: 100)),
-                //             const SizedBox(
-                //               height: 10,
-                //             ),
-                //             Text(
-                //               "Tableros",
-                //               style: textStyle.titleLarge,
-                //               textScaleFactor: 1,
-                              
-
-                //             )
-                //           ],
-                //         ),
-                //       ),
-                //     ),
-                //     GestureDetector(
-                //       onTap:(){
-                //         context.push('/more/productivity');
-                //       },
-                //       child: Container(
-                //         decoration: BoxDecoration(
-                //           borderRadius: BorderRadius.circular(10),
-                //           color: colors.primary.withOpacity(0.2),
-                //         ),
-                //         width: 150,
-                //         height: 150,
-                //         child: Column(
-                //           children: [
-                //             const SizedBox(
-                //               height: 10,
-                //             ),
-                //             FadeInRight(child: const Icon(Icons.timer, size: 100)),
-                //             const SizedBox(
-                //               height: 10,
-                //             ),
-                //             Text(
-                //               "Productividad",
-                //               style: textStyle.titleLarge,
-                //               textScaleFactor: 1,
-
-                //             )
-                //           ],
-                //         ),
-                //       ),
-                //     ),
-                //   ],
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        context.push('/more/boards');
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: colors.primary.withOpacity(0.2),
+                        ),
+                        width: 150,
+                        height: 150,
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            FadeInLeft(
+                                child: const Icon(Icons.people, size: 100)),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "Tableros",
+                              style: textStyle.titleLarge,
+                              textScaleFactor: 1,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

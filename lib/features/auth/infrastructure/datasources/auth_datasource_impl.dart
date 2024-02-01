@@ -20,8 +20,8 @@ class AuthDataSourceImpl extends AuthDataSource {
           .where("uid", isEqualTo: userActually.uid)
           .get();
       final user = UserAccount.fromMap(userDoc.docs.first.data());
-      print(
-          "el usuario ya esta en la base de datos y se recupero por checking");
+      // print(
+      //     "el usuario ya esta en la base de datos y se recupero por checking");
       return user;
     } catch (e) {
       throw Exception();
@@ -54,12 +54,12 @@ class AuthDataSourceImpl extends AuthDataSource {
                 .where("uid", isEqualTo: credential.user!.uid)
                 .get();
             final user = UserAccount.fromMap(userDoc.docs.first.data());
-            print(
-                "el usuario ya estaba en la base de datos por el login normal ");
+            // print(
+            //     "el usuario ya estaba en la base de datos por el login normal ");
 
             return user;
           } catch (e) {
-            print("Error al obtener los datos del usuario: $e");
+            // print("Error al obtener los datos del usuario: $e");
             throw Exception();
           }
           // print("el usuario ya esta en la base de datos");
@@ -109,8 +109,8 @@ class AuthDataSourceImpl extends AuthDataSource {
               .where("uid", isEqualTo: credential.user!.uid)
               .get();
           final user = UserAccount.fromMap(userDoc.docs.first.data());
-          print(
-              "el usuario ya esta en la base de datos por el login de google");
+          // print(
+          //     "el usuario ya esta en la base de datos por el login de google");
 
           return user;
         }
@@ -147,13 +147,13 @@ class AuthDataSourceImpl extends AuthDataSource {
                 .where("uid", isEqualTo: credential.user!.uid)
                 .get();
             final user = UserAccount.fromMap(userDoc.docs.first.data());
-            print(
-                "el usuario ya estaba en la base de datos por el login normal ");
+            // print(
+            //     "el usuario ya estaba en la base de datos por el login normal ");
 
             return user;
           } catch (e) {
-            print("Error al obtener los datos del usuario: $e");
-            throw Exception();
+            // print("Error al obtener los datos del usuario: $e");
+            // throw Exception();
           }
           // print("el usuario ya esta en la base de datos");
         }
@@ -166,7 +166,7 @@ class AuthDataSourceImpl extends AuthDataSource {
           throw CustomError("La contraseña es muy débil");
         }
       }
-    } catch (e) {}
+    }
     //
     throw CustomError("Por favor verifica tu correo electrónico");
   }
@@ -204,7 +204,7 @@ class AuthDataSourceImpl extends AuthDataSource {
     final QuerySnapshot<Map<String, dynamic>> userDoc =
         await db.collection("users").where("uid", isEqualTo: user.uid).get();
     final userR = UserAccount.fromMap(userDoc.docs.first.data());
-    print("el usuario se creo por default y se retorno ");
+    // print("el usuario se creo por default y se retorno ");
 
     return userR;
   }
@@ -233,7 +233,7 @@ class AuthDataSourceImpl extends AuthDataSource {
     final QuerySnapshot<Map<String, dynamic>> userDoc =
         await db.collection("users").where("uid", isEqualTo: user.uid).get();
     final userR = UserAccount.fromMap(userDoc.docs.first.data());
-    print("el usuario se creo con características y se retorno");
+    // print("el usuario se creo con características y se retorno");
 
     return userR;
   }

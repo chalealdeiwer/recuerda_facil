@@ -68,7 +68,23 @@ final goRouterProvider = Provider((ref) {
           GoRoute(
               name: BoardScreen.name,
               path: 'boards',
-              builder: (context, state) => const BoardScreen()),
+              builder: (context, state) => const BoardScreen(),
+              routes: [
+                GoRoute(
+                    name: BoardsSCreen.name,
+                    path: 'boards_list',
+                    builder: (context, state) => const BoardsSCreen(),
+                    routes: [
+                      GoRoute(
+                          name:BoardChatScreen.name,
+                          path: 'board/:boardId',
+                          builder: (context, state) {
+                            final boardId =
+                                state.pathParameters['boardId'] ?? '0';
+                            return BoardChatScreen(boardId: boardId);
+                          }),
+                    ]),
+              ]),
           GoRoute(
               name: ProductivityScreen.name,
               path: 'productivity',
@@ -81,12 +97,12 @@ final goRouterProvider = Provider((ref) {
                 GoRoute(
                     name: ChatScreen.name,
                     path: 'chat/:chatId',
-                    builder: (context, state){
+                    builder: (context, state) {
                       final chatId = state.pathParameters['chatId'] ?? '0';
-                      return ChatScreen(chatId: chatId,);
+                      return ChatScreen(
+                        chatId: chatId,
+                      );
                     }),
-                  
-
               ]),
         ],
       ),
@@ -180,7 +196,6 @@ final goRouterProvider = Provider((ref) {
     redirect: (context, state) {
       final isGoingTo = state.matchedLocation;
       final authStatus = goRouterNotifier.authStatus;
-      print("Is going to: $isGoingTo, authStatus: $authStatus");
       // if (authStatus == AuthStatus.checking) return '/splashScreen';
       if (isGoingTo == '/login' && authStatus == AuthStatus.firstSignIn) {
         return '/firstSignIn';

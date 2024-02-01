@@ -197,14 +197,14 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
                               context.pop();
                             },
                             child: const Text("Sin hora")),
-                      minutesButton(context, 'En 1 minutos',
-                          addMinutesToTimeOfDay(TimeOfDay.now(), 1)),
-                      minutesButton(context, 'En 2 minutos',
-                          addMinutesToTimeOfDay(TimeOfDay.now(), 2)),
-                      minutesButton(context, 'En 3 minutos',
-                          addMinutesToTimeOfDay(TimeOfDay.now(), 3)),
-                      minutesButton(context, 'En 4 minutos',
-                          addMinutesToTimeOfDay(TimeOfDay.now(), 4)),
+                      // minutesButton(context, 'En 1 minutos',
+                      //     addMinutesToTimeOfDay(TimeOfDay.now(), 1)),
+                      // minutesButton(context, 'En 2 minutos',
+                      //     addMinutesToTimeOfDay(TimeOfDay.now(), 2)),
+                      // minutesButton(context, 'En 3 minutos',
+                      //     addMinutesToTimeOfDay(TimeOfDay.now(), 3)),
+                      // minutesButton(context, 'En 4 minutos',
+                          // addMinutesToTimeOfDay(TimeOfDay.now(), 4)),
                       minutesButton(context, 'En 5 minutos',
                           addMinutesToTimeOfDay(TimeOfDay.now(), 5)),
                           minutesButton(context, 'En 10 minutos',
@@ -409,17 +409,17 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
                 },
                 title: const Text("5 minutos antes"),
               ),
-              if (hourInput != null &&
-                combinedDateTime.isAfter(DateTime.now()))
-              SwitchListTile(
-                value: alarm,
-                onChanged: (value) {
-                  setState(() {
-                    alarm = value;
-                  });
-                },
-                title: const Text("¿Alarma?"),
-              ),
+              // if (hourInput != null &&
+              //   combinedDateTime.isAfter(DateTime.now()))
+              // SwitchListTile(
+              //   value: alarm,
+              //   onChanged: (value) {
+              //     setState(() {
+              //       alarm = value;
+              //     });
+              //   },
+              //   title: const Text("¿Alarma?"),
+              // ),
 
             // categories(),
             Row(
@@ -538,7 +538,7 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
         ? targetTime.add(const Duration(days: 1)).difference(DateTime.now())
         : targetTime.difference(DateTime.now());
 
-    await AndroidAlarmManager.oneShot(initialDuration, id, alarm2,
+    await AndroidAlarmManager.oneShot(initialDuration, id, notification2,
         alarmClock: true,
         wakeup: true,
         allowWhileIdle: true,
@@ -558,7 +558,7 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
             .difference(DateTime.now())
         : targetTimeAdjusted.difference(DateTime.now());
 
-    await AndroidAlarmManager.oneShot(initialDuration, id, alarm3,
+    await AndroidAlarmManager.oneShot(initialDuration, id, notification3,
         alarmClock: true,
         wakeup: true,
         allowWhileIdle: true,
@@ -594,15 +594,15 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
   //       'Callback executed with custom parameter: $customParameter y el id$id');
   // }
 
-  static alarm2(int id, Map<String, dynamic> params) {
+  static notification2(int id, Map<String, dynamic> params) {
     return showNotification2(
         id, "⌚Recordatorio: ${params["title"]} ", "${params["content"]}");
   }
 
-  static alarm3(int id, Map<String, dynamic> params) {
+  static notification3(int id, Map<String, dynamic> params) {
     return showNotification2(
         id,
-        "Un recordatorio esta proximo a vencer: ${params["title"]} ",
+        "Un recordatorio esta próximo a vencer: ${params["title"]} ",
         "${params["content"]}");
   }
 

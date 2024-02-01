@@ -8,6 +8,7 @@ import 'package:recuerda_facil/config/theme/app_theme.dart';
 import 'package:recuerda_facil/firebase_options.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:recuerda_facil/presentations/providers/appearance_provider2.dart';
 import 'package:recuerda_facil/presentations/providers/theme_provider.dart';
 import 'package:recuerda_facil/services/notification_service.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -21,7 +22,6 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await initNotifications();
-  await showNotification();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -39,6 +39,10 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final AppTheme appTheme = ref.watch(themeNotifierProvider);
+    bool notification=ref.watch(preferencesProvider).notification;
+    if(notification){
+      showNotification();
+    }
     return MaterialApp.router(
       
       routerConfig: ref.watch(goRouterProvider),

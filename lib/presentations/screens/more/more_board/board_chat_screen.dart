@@ -4,20 +4,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:recuerda_facil/presentations/screens/chat/message_field.dart';
 import 'package:recuerda_facil/services/services.dart';
 
-import '../../../features/auth/presentation/providers/providers_auth.dart';
+import '../../../../features/auth/presentation/providers/providers_auth.dart';
 
-class ChatScreen extends ConsumerStatefulWidget {
-  final String chatId;
+class BoardChatScreen extends ConsumerStatefulWidget {
+  final String boardId;
   // final UserAccount currentUser; // UID del usuario principal
   // final UserAccount otherUser; // UID del otro usuario
-  static const name = 'chat_screen';
-  const ChatScreen({super.key, required this.chatId});
+  static const name = 'board_chat_screen';
+  const BoardChatScreen({super.key, required this.boardId});
 
   @override
-  ConsumerState<ChatScreen> createState() => _ChatScreenState();
+  ConsumerState<BoardChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends ConsumerState<ChatScreen> {
+class _ChatScreenState extends ConsumerState<BoardChatScreen> {
   final ScrollController chatScrollController = ScrollController();
 
   void moveScrollController() async {
@@ -71,61 +71,64 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   Widget build(BuildContext context) {
     final userActive = ref.watch(authProvider).user;
     final colors = Theme.of(context).colorScheme;
+  final userACC= ref.watch(authProvider).user;
+
 
     return Scaffold(
       appBar: AppBar(
-        //titulo de chat
-        title: FutureBuilder(
-          future: ChatService()
-              .getOtherUserIdInChat(widget.chatId, userActive!.uid!),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return const Text('Chat no existe.');
-            } else {
-              return FutureBuilder(
-                future: getUser(snapshot.data.toString()),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else if (!snapshot.hasData) {
-                    return const Text('Usuario no encontrado.');
-                  } else {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        CircleAvatar(
-                          backgroundImage:
-                              NetworkImage(snapshot.data!.photoURL!),
-                          backgroundColor: Colors.transparent,
+        toolbarHeight: 150,
+        flexibleSpace: FlexibleSpaceBar(
+          background: FutureBuilder(
+            future: BoardService().getBoardInfo(widget.boardId),
+            builder: (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                final boardInfo = snapshot.data!;
+
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        boardInfo['name'],
+                        style: const TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
                         ),
-                        const SizedBox(
-                          width: 10,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Invita personas, Código: ${boardInfo['id']}',
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
                         ),
-                        Text("${snapshot.data!.displayName}"),
-                      ],
-                    );
-                  }
-                },
-              );
-            }
-          },
-        ), // Puedes mostrar el nombre del otro usuario aquí
+                      ),
+                    ),
+                  ],
+                );
+              }
+            },
+          ),
+        ),
       ),
       //chat
       body: Column(
         children: [
           Expanded(
             child: StreamBuilder(
-              stream: ChatService().loadMessages(widget.chatId),
+              stream: BoardService().loadMessages(widget.boardId),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasError) {
-                  return const Center(child: Text('Error al cargar mensajes'));
+                  return const Center(
+                      child: Text('Error al cargar mensajes del tablero'));
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -151,6 +154,32 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                         formatMessageTime(message['timestamp']);
                     return ListTile(
                         onLongPress: () {},
+                        leading: (message['senderId'] != userActive!.uid)
+                            ? CircleAvatar(
+                                radius: 30.0,
+                                backgroundColor: Colors.transparent,
+
+                                backgroundImage: NetworkImage(message[
+                                        'userPhoto'] ??
+                                    'https://img.wattpad.com/8f19b412f2223afe4288ed0904120a48b7a38ce1/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f7279496d6167652f5650722d38464e2d744a515349673d3d2d3234323931353831302e313434336539633161633764383437652e6a7067?s=fit&w=720&h=720'),
+                              )
+                            : null,
+                        trailing: (message['senderId'] == userActive.uid)
+                            ? CircleAvatar(
+                                radius: 30.0,
+                                backgroundColor: Colors.transparent,
+                                backgroundImage: NetworkImage(message[
+                                        'userPhoto'] ??
+                                    'https://img.wattpad.com/8f19b412f2223afe4288ed0904120a48b7a38ce1/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f7279496d6167652f5650722d38464e2d744a515349673d3d2d3234323931353831302e313434336539633161633764383437652e6a7067?s=fit&w=720&h=720'),
+                              )
+                            : null,
+                        subtitle: (message['senderId'] != userActive.uid)
+                            ? Text(
+                                message['displayName'] ?? 'Usuario',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              )
+                            : null,
                         title: (message['senderId'] == userActive.uid)
                             ? Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -162,8 +191,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                                         borderRadius:
                                             BorderRadius.circular(20)),
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
@@ -178,11 +209,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                                         Padding(
                                           padding: const EdgeInsets.all(10),
                                           child: Text(
-                                            
                                             formattedTime,
                                             style: const TextStyle(
-                                                fontSize: 15,
-                                                color: Colors.black54,  ),
+                                              fontSize: 15,
+                                              color: Colors.black54,
+                                            ),
                                           ),
                                         )
                                       ],
@@ -200,12 +231,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                                 children: [
                                   Container(
                                     decoration: BoxDecoration(
-                                        color: colors.secondary.withOpacity(0.5),
+                                        color:
+                                            colors.secondary.withOpacity(0.5),
                                         borderRadius:
                                             BorderRadius.circular(20)),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
@@ -213,7 +245,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                                           child: Text(
                                             messageText,
                                             style: const TextStyle(
-                                                fontSize: 20, color: Colors.black),
+                                                fontSize: 20,
+                                                color: Colors.black),
                                           ),
                                         ),
                                         Padding(
@@ -244,8 +277,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               onValue: (value) {
             if (value.isEmpty) return;
 
-            ChatService()
-                .sendMessage(widget.chatId, userActive.uid!, value)
+            BoardService()
+                .sendMessage(widget.boardId, userACC!.uid!,
+                    userACC.displayName!, userACC.photoURL!, value)
                 .then((value) =>
                     moveScrollController()); // Llamar al método para enviar el mensaje
           })
@@ -259,48 +293,5 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     );
   }
 
-  // void _showMessageDialog(BuildContext context, chatId, senderId) {
-  //   final TextEditingController _messageController = TextEditingController();
-
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: const Text('Enviar mensaje'),
-  //         content: TextField(
-  //           controller: _messageController,
-  //           decoration: const InputDecoration(hintText: 'Escribe tu mensaje'),
-  //         ),
-  //         actions: [
-  //           ElevatedButton(
-  //             onPressed: () {
-  //               Navigator.pop(context);
-  //               ChatService().sendMessage(
-  //                   chatId,
-  //                   senderId,
-  //                   _messageController
-  //                       .text); // Llamar al método para enviar el mensaje
-  //               _messageController.clear(); // Limpiar el campo de texto
-  //             },
-  //             child: const Text('Enviar'),
-  //           ),
-  //           ElevatedButton(
-  //             onPressed: () {
-  //               Navigator.pop(context);
-  //             },
-  //             child: const Text('Cancelar'),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
-
-  // void createChat(String currentUserUid, String otherUserUid) {
-  //   // Aquí deberías implementar la lógica para iniciar un chat o enviar un mensaje
-  //   // Podrías utilizar tu servicio ChatService o Firestore para realizar acciones de chat
-
-  //   // Ejemplo básico de cómo podrías imprimir los UIDs para verificar la lógica
-  //   print('Chat iniciado entre $currentUserUid y $otherUserUid');
-  // }
+  
 }

@@ -4,17 +4,22 @@ import 'package:flutter/material.dart';
 import 'indicator.dart';
 
 class PieChartSample2 extends StatefulWidget {
-  const PieChartSample2({super.key});
+  Map<String, int> reminderCountMap;
 
+  PieChartSample2({required this.reminderCountMap, super.key});
   @override
-  State<StatefulWidget> createState() => PieChart2State();
+  State<StatefulWidget> createState() => PieChart2State(reminderCountMap);
 }
 
 class PieChart2State extends State {
   int touchedIndex = -1;
+  Map<String, int> reminderCountMap;
+  PieChart2State(this.reminderCountMap);
 
   @override
   Widget build(BuildContext context) {
+    List<String> categories = reminderCountMap.keys.toList();
+    List<int> numbers = reminderCountMap.values.toList();
     return AspectRatio(
       aspectRatio: 1.3,
       child: Row(
@@ -45,50 +50,16 @@ class PieChart2State extends State {
                     show: false,
                   ),
                   sectionsSpace: 0,
-                  centerSpaceRadius: 40,
-                  sections: showingSections(),
+                  centerSpaceRadius: 50,
+                  sections: showingSections(categories, numbers),
                 ),
               ),
             ),
           ),
-           const Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Indicator(
-                color: Colors.blue,
-                text: 'Primero',
-                isSquare: true,
-              ),
-              SizedBox(
-                height: 4,
-              ),
-              Indicator(
-                color: Colors.yellow,
-                text: 'Segundo',
-                isSquare: true,
-              ),
-              SizedBox(
-                height: 4,
-              ),
-              Indicator(
-                color: Colors.purple,
-                text: 'Tercero',
-                isSquare: true,
-              ),
-              SizedBox(
-                height: 4,
-              ),
-              Indicator(
-                color: Colors.green,
-                text: 'Cuarto',
-                isSquare: true,
-              ),
-              SizedBox(
-                height: 18,
-              ),
-            ],
-          ),
+          Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: getIndicators(categories, numbers)),
           const SizedBox(
             width: 28,
           ),
@@ -97,68 +68,80 @@ class PieChart2State extends State {
     );
   }
 
-  List<PieChartSectionData> showingSections() {
-    return List.generate(4, (i) {
-      final isTouched = i == touchedIndex;
-      final fontSize = isTouched ? 25.0 : 16.0;
-      final radius = isTouched ? 60.0 : 50.0;
-      const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
-      switch (i) {
-        case 0:
-          return PieChartSectionData(
-            color: Colors.blue,
-            value: 40,
-            title: '40%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              shadows: shadows,
-            ),
-          );
-        case 1:
-          return PieChartSectionData(
-            color: Colors.yellow,
-            value: 30,
-            title: '30%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              shadows: shadows,
-            ),
-          );
-        case 2:
-          return PieChartSectionData(
-            color: Colors.purple,
-            value: 15,
-            title: '15%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              shadows: shadows,
-            ),
-          );
-        case 3:
-          return PieChartSectionData(
-            color: Colors.green,
-            value: 15,
-            title: '15%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              shadows: shadows,
-            ),
-          );
-        default:
-          throw Error();
-      }
-    });
+  List<Widget> getIndicators(List<String> categories, List<int> numbers) {
+  List<Widget> indicators = [];
+
+  for (int i = 0; i < categories.length; i++) {
+    String categoryText = categories[i].isNotEmpty ? categories[i] : "Sin categoría";
+    String countText = "(${numbers[i]})";
+
+    indicators.add(
+      Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Indicator(
+            color: getColor(categories[i]),
+            text: '$categoryText$countText',
+            isSquare: true,
+          ),
+          const SizedBox(
+            height: 4,
+          ),
+        ],
+      ),
+    );
   }
+
+  return indicators;
+}
+
+  Color getColor(String category) {
+  switch (category) {
+    case 'Sin Categoría':
+      return Colors.grey; // Color para 'Sin Categoría'
+    case 'Salud':
+      return Colors.blue;
+    case 'Medicamentos':
+      return Colors.green;
+    case 'Trabajo':
+      return Colors.orange;
+    case 'Cumpleaños':
+      return Colors.red;
+    case 'Aniversarios':
+      return Colors.purple;
+    case 'Personal':
+      return Colors.pink;
+    default:
+      return Colors.grey; // Color por defecto para categorías no especificadas
+  }
+}
+
+ List<PieChartSectionData> showingSections(List<String> categories, List<int> values) {
+  
+  List<PieChartSectionData> sections = [];
+
+  for (int i = 0; i < categories.length; i++) {
+    final isTouched = i == touchedIndex;
+    final fontSize = isTouched ? 20.0 : 10.0;
+    final radius = isTouched ? 60.0 : 50.0;
+    final percentage = (values[i] / values.reduce((a, b) => a + b)) * 100;
+
+    sections.add(PieChartSectionData(
+      color: getColor(categories[i]), // Usamos el método getColor
+      value: values[i].toDouble(),
+      title: '${percentage.toStringAsFixed(1)}%(${values[i]})', // Calculamos el porcentaje
+      radius: radius,
+      titleStyle: TextStyle(
+        fontSize: fontSize,
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+        shadows: const [Shadow(color: Colors.black, blurRadius: 2)],
+      ),
+    ));
+  }
+
+  return sections;
+}
+  
 }
