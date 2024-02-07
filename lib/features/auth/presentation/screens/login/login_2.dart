@@ -10,7 +10,7 @@ import '../../providers/providers_auth.dart';
 
 class Login2Screen extends StatelessWidget {
   static const name = "login_screen";
-  const Login2Screen({Key? key}) : super(key: key);
+  const Login2Screen({super.key});
   @override
   Widget build(BuildContext context) {
     return const _LoginForm();

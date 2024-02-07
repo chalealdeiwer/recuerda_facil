@@ -11,6 +11,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:recuerda_facil/presentations/providers/appearance_provider2.dart';
 import 'package:recuerda_facil/presentations/providers/theme_provider.dart';
 import 'package:recuerda_facil/services/notification_service.dart';
+import 'package:recuerda_facil/services/permissions.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 
@@ -39,12 +40,12 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final AppTheme appTheme = ref.watch(themeNotifierProvider);
-    bool notification=ref.watch(preferencesProvider).notification;
-    if(notification){
+    bool notification = ref.watch(preferencesProvider).notification;
+    if (notification) {
       showNotification();
     }
+
     return MaterialApp.router(
-      
       routerConfig: ref.watch(goRouterProvider),
       localizationsDelegates: const <LocalizationsDelegate<Object>>[
         GlobalMaterialLocalizations.delegate,

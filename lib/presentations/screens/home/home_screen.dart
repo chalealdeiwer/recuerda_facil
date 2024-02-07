@@ -1,4 +1,3 @@
-
 import 'package:animate_do/animate_do.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
@@ -45,12 +44,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   void initState() {
-
     super.initState();
     flutterTts = FlutterTts();
   }
-
-  
 
   Future<void> _speak(String text) async {
     await flutterTts.setLanguage("es-ES");
@@ -101,7 +97,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final ttsButtonsScreen = ref.watch(ttsButtonsScreenProvider);
     final openMenu = ref.watch(openMenuProvider);
     final showButton = ref.watch(buttonPageChangeProvider);
-    final backgroundImage=ref.watch(preferencesProvider).background; 
+    final backgroundImage = ref.watch(preferencesProvider).background;
     String viewRouteSpeechText = "";
     PageController pageController = PageController(
       initialPage: widget.pageIndex,
@@ -264,13 +260,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                 if (buttonMicrophone && showButton)
                   AvatarGlow(
-                    endRadius: 70.0,
+                    // endRadius: 70.0,
                     animate: isListeningProv,
                     duration: const Duration(milliseconds: 2000),
                     glowColor: Colors.green,
                     repeat: true,
-                    repeatPauseDuration: const Duration(milliseconds: 100),
-                    showTwoGlows: true,
+                    // repeatPauseDuration: const Duration(milliseconds: 100),
+                    // showTwoGlows: true,
                     child: GestureDetector(
                       onTapDown: (details) async {
                         if (await requestMicrophone() == true) {
@@ -354,15 +350,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ),
                     ),
                   ),
+                const SizedBox(
+                  height: 20,
+                ),
                 if (buttonNewNote && showButton)
                   AvatarGlow(
-                    endRadius: 70.0,
+                    // endRadius: 70.0,
                     animate: true,
                     duration: const Duration(milliseconds: 2000),
                     glowColor: colors.secondary,
                     repeat: true,
-                    repeatPauseDuration: const Duration(milliseconds: 100),
-                    showTwoGlows: true,
+                    // repeatPauseDuration: const Duration(milliseconds: 100),
+                    // showTwoGlows: true,
                     child: FloatingActionButton(
                       onPressed: () {
                         showNewNote(context, category, user!.uid);
@@ -380,6 +379,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 }
 
 void showNewNote(BuildContext context, category, user) {
+  
+  requestNotification();
   showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -394,7 +395,9 @@ void showNewNote(BuildContext context, category, user) {
                 )
             ],
           ),
-          content: ModalNewNote(user: user),
+          content: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: ModalNewNote(user: user)),
         );
       });
 }

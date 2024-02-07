@@ -234,6 +234,12 @@ class AppearanceNotifier extends StateNotifier<AppearanceState> {
   //notification
   void changeNotification(bool notification) {
     PreferencesUser().setValue<bool>('notification', notification);
+    if(notification == false){
+      //cancelar notificaciones
+      
+    }
+
+    
     state = state.copyWith(notification: notification);
   }
 
@@ -319,7 +325,7 @@ class AppearanceState {
     this.background =
         const Image(image: AssetImage("assets/backgrounds/background_5.jpg")),
     this.selectedColor = 0,
-    this.bottomVisibility = false,
+    this.bottomVisibility = true,
     this.clockVisibility = true,
     this.categoriesVisibility = true,
     this.appBarVisibility = true,

@@ -421,8 +421,8 @@ class _AppearanceScreenState extends ConsumerState<AppearanceScreen> {
 
 class ThemeChangerView extends ConsumerWidget {
   const ThemeChangerView({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, ref) {

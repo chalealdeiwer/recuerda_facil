@@ -40,6 +40,47 @@ Future<void> showNotification() async {
     notificationDetails,
   );
 }
+Future<void> showNotificationNewNote() async {
+  const AndroidNotificationDetails androidPlatformChannelSpecifics =
+      AndroidNotificationDetails(
+    '10',
+    'Notificación principal',
+    importance: Importance.min,
+    priority: Priority.min,
+    showWhen: true,
+    ongoing: true,
+    channelShowBadge: false,
+    enableVibration: true,
+    playSound: true,
+    visibility: NotificationVisibility.public,
+    actions: [
+      AndroidNotificationAction(
+        'reply_action',
+        'Responder',
+        // Reemplaza con el nombre de tu icono
+        // Habilita la entrada de texto directamente desde la notificación
+        // El identificador 'reply_action' se usará en onSelectNotification
+        // para manejar la respuesta del usuario
+        // También puedes configurar otras propiedades según tus necesidades
+        // Consulta la documentación para más detalles
+        
+        allowGeneratedReplies: true,
+      ),
+    ],
+  );
+
+  const NotificationDetails notificationDetails =
+      NotificationDetails(android: androidPlatformChannelSpecifics);
+
+  await flutterLocalNotificationsPlugin.show(
+    10,
+    'Crea un nuevo recordatorio',
+    'Escribe el recordatorio en la notificación',
+    notificationDetails,
+    payload: 'reply_action',
+  );
+}
+
 
 Future<void> showNotificationWithImage() async {
   var bigPictureStyleInformation = const BigPictureStyleInformation(
@@ -85,7 +126,7 @@ Future<void> showNotification2(int id, String title, String content) async {
           fullScreenIntent: true,
           actions: [
         // AndroidNotificationAction("1", "Actualizar🔄"),
-        const AndroidNotificationAction("1", "Cerrar✖️")
+        // const AndroidNotificationAction("1", "Cerrar")
       ]
           // ongoing: true, // Esto hace que la notificación sea persistente
 

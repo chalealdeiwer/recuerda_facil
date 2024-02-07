@@ -3,7 +3,7 @@ import 'package:recuerda_facil/presentations/screens/more/more_games/games/ticta
 
 class TicTacToeScreen extends StatefulWidget {
   static const name = 'tictac_screen';
-  const TicTacToeScreen({Key? key}) : super(key: key);
+  const TicTacToeScreen({super.key});
 
   @override
   State<TicTacToeScreen> createState() => _TicTacToeScreenState();

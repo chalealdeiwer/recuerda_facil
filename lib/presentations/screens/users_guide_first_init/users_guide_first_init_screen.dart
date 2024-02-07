@@ -41,7 +41,7 @@ final slides = <SlideInfo>[
 class UsersGuideFirstInitScreen extends ConsumerStatefulWidget {
   static const String name = 'tutorial_first_init_screen';
 
-  const UsersGuideFirstInitScreen({Key? key}) : super(key: key);
+  const UsersGuideFirstInitScreen({super.key});
 
   @override
   ConsumerState<UsersGuideFirstInitScreen> createState() => _UsersGuideScreenState();
@@ -149,11 +149,10 @@ class _Slide extends StatefulWidget {
   final String imageUrl;
 
   const _Slide({
-    Key? key,
     required this.title,
     required this.caption,
     required this.imageUrl,
-  }) : super(key: key);
+  });
 
   @override
   _SlideState createState() => _SlideState();
@@ -224,10 +223,10 @@ class PageIndicator extends StatelessWidget {
   final int pageCount;
 
   const PageIndicator({
-    Key? key,
+    super.key,
     required this.currentPage,
     required this.pageCount,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

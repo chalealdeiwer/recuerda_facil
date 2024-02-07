@@ -40,7 +40,7 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
   DateTime? dateInput;
   TimeOfDay? hourInput;
 
-  Future<void> _selectDate() async {
+  Future<void> selectDate() async {
     final size = MediaQuery.of(context).size;
 
     await showDialog<DateTime>(
@@ -164,7 +164,7 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
     );
   }
 
-  Future<void> _selectHour() async {
+  Future<void> selectHour() async {
     final size = MediaQuery.of(context).size;
     await showDialog<TimeOfDay>(
       context: context,
@@ -199,15 +199,15 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
                             child: const Text("Sin hora")),
                       // minutesButton(context, 'En 1 minutos',
                       //     addMinutesToTimeOfDay(TimeOfDay.now(), 1)),
-                      // minutesButton(context, 'En 2 minutos',
+                      // minutesButton(context, 'En 2 ms',
                       //     addMinutesToTimeOfDay(TimeOfDay.now(), 2)),
-                      // minutesButton(context, 'En 3 minutos',
+                      // minutesButton(context, 'En 3 m',
                       //     addMinutesToTimeOfDay(TimeOfDay.now(), 3)),
-                      // minutesButton(context, 'En 4 minutos',
-                          // addMinutesToTimeOfDay(TimeOfDay.now(), 4)),
+                      // minutesButton(context, 'En 4 m',
+                      //     addMinutesToTimeOfDay(TimeOfDay.now(), 4)),
                       minutesButton(context, 'En 5 minutos',
                           addMinutesToTimeOfDay(TimeOfDay.now(), 5)),
-                          minutesButton(context, 'En 10 minutos',
+                      minutesButton(context, 'En 10 minutos',
                           addMinutesToTimeOfDay(TimeOfDay.now(), 10)),
 
                       hourButton(context, '6:00 AM', 6, 0),
@@ -328,7 +328,7 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
                   onPressed: posting.isPosting
                       ? null
                       : () async {
-                          await _selectDate();
+                          await selectDate();
                           combinedDateTime = DateTime(
                             dateInput?.year ??
                                 1, // Si dateInput es null, se usará el año 1
@@ -358,7 +358,7 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
                     onPressed: posting.isPosting
                         ? null
                         : () async {
-                            await _selectHour();
+                            await selectHour();
                             combinedDateTime = DateTime(
                               dateInput?.year ??
                                   1, // Si dateInput es null, se usará el año 1
@@ -409,17 +409,6 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
                 },
                 title: const Text("5 minutos antes"),
               ),
-              // if (hourInput != null &&
-              //   combinedDateTime.isAfter(DateTime.now()))
-              // SwitchListTile(
-              //   value: alarm,
-              //   onChanged: (value) {
-              //     setState(() {
-              //       alarm = value;
-              //     });
-              //   },
-              //   title: const Text("¿Alarma?"),
-              // ),
 
             // categories(),
             Row(
@@ -464,14 +453,18 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
                                   _titleController.text,
                                   _contentController.text,
                                 );
+                                programNotification(combinedDateTime);
                                 DateTime fiveMinutesBeforeNow = DateTime.now()
                                     .subtract(const Duration(minutes: 5));
 
                                 if (combinedDateTime
-                                    .isAfter(fiveMinutesBeforeNow)&&prenotification) {
-                                  programNotification3(combinedDateTime,
-                                      _titleController.text, _contentController.text);
-                                } 
+                                        .isAfter(fiveMinutesBeforeNow) &&
+                                    prenotification) {
+                                  programNotification3(
+                                      combinedDateTime,
+                                      _titleController.text,
+                                      _contentController.text);
+                                }
                               }
 
                               await noteProvider
@@ -567,25 +560,24 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
         params: {'title': title, 'content': content});
   }
 
-  // void programNotification(DateTime targetTime) async {
-  //   final id = Random().nextInt(1000);
-  //   final initialDuration = targetTime.isBefore(DateTime.now())
-  //       ? targetTime.add(const Duration(days: 1)).difference(DateTime.now())
-  //       : targetTime.difference(DateTime.now());
+  void programNotification(DateTime targetTime) async {
+    final id = Random().nextInt(1000);
+    final initialDuration = targetTime.isBefore(DateTime.now())
+        ? targetTime.add(const Duration(days: 1)).difference(DateTime.now())
+        : targetTime.difference(DateTime.now());
 
-  //   await AndroidAlarmManager.oneShot(
-  //     initialDuration,
-  //     id,
-  //     myCallback,
-  //     alarmClock: true,
-  //     wakeup: true,
-  //     allowWhileIdle: true,
-  //     exact: true,
-  //     rescheduleOnReboot: true,
-  //     params: {'customParameter': 'Hello!'},
-  //   );
-  //   // await AndroidAlarmManager.periodic(duration, id, callback)
-  // }
+    await AndroidAlarmManager.oneShot(
+      initialDuration,
+      id,
+      alarmT,
+      alarmClock: true,
+      wakeup: true,
+      allowWhileIdle: true,
+      exact: true,
+      rescheduleOnReboot: true,
+    );
+    // await AndroidAlarmManager.periodic(duration, id, callback)
+  }
 
   // static myCallback(int id, Map<String, dynamic> para) async {
   //   final customParameter = para['customParameter'];
@@ -593,18 +585,6 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
   //   return print(
   //       'Callback executed with custom parameter: $customParameter y el id$id');
   // }
-
-  static notification2(int id, Map<String, dynamic> params) {
-    return showNotification2(
-        id, "⌚Recordatorio: ${params["title"]} ", "${params["content"]}");
-  }
-
-  static notification3(int id, Map<String, dynamic> params) {
-    return showNotification2(
-        id,
-        "Un recordatorio esta próximo a vencer: ${params["title"]} ",
-        "${params["content"]}");
-  }
 
   @override
   void dispose() {
@@ -614,9 +594,23 @@ class _ModalNewNoteState extends ConsumerState<ModalNewNote> {
     super.dispose();
   }
 }
+@pragma('vm:entry-point')
+void notification2(int id, Map<String, dynamic> params) {
+  showNotification2(
+      id, "⌚Recordatorio: ${params["title"]} ", "${params["content"]}");
+}
 
-void alarm() {
+@pragma('vm:entry-point')
+void notification3(int id, Map<String, dynamic> params) {
+  showNotification2(
+      id,
+      "Un recordatorio esta próximo a vencer en 5 minutos: ${params["title"]} ",
+      "${params["content"]}");
+}
+
+@pragma('vm:entry-point')
+void alarmT() {
   final id = Random().nextInt(1000);
-  showNotification2(id, "Recordatorio⌚ ",
-      "Un recordatorio esta esperando por ti, entra a la app para verlo");
+  showNotification2(id, "Un recordatorio esta esperando por ti, entra a la app para verlo",
+      "");
 }

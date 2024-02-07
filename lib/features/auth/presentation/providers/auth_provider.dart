@@ -126,16 +126,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
         state = state.copyWith(authStatus: AuthStatus.emailVerified);
         return false;
       } else {
-        
         state = state.copyWith(authStatus: AuthStatus.firstSignIn);
         return true;
       }
-
-    }
-    
-    );
+    });
     return false;
-
   }
 
   Future<void> firstSignIn() async {

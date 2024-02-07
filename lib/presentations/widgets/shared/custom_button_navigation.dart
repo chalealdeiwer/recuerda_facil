@@ -7,8 +7,7 @@ import '../../providers/providers.dart';
 
 class CustomBottomNavigation extends ConsumerStatefulWidget {
   final int currentIndex;
-  const CustomBottomNavigation({Key? key, required this.currentIndex})
-      : super(key: key);
+  const CustomBottomNavigation({super.key, required this.currentIndex});
 
   @override
   ConsumerState<CustomBottomNavigation> createState() =>

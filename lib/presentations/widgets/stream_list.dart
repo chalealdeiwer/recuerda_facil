@@ -17,15 +17,270 @@ class StreamListWidget extends ConsumerStatefulWidget {
 
 class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
   late FlutterTts flutterTts; // Declara una variable para FlutterTts
-  @override
-  void initState() {
-    super.initState();
-    flutterTts = FlutterTts();
-  }
+  DateTime combinedDateTime = DateTime(1, 1, 1, 0, 0);
+
+  DateTime? dateInput;
+  TimeOfDay? hourInput;
 
   Future<void> _speak(String text) async {
     await flutterTts.setLanguage("es-ES");
     await flutterTts.speak(text);
+  }
+
+  Future<void> selectDate() async {
+    final size = MediaQuery.of(context).size;
+
+    await showDialog<DateTime>(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  "Selecciona una fecha",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  width: size.width * 0.6,
+                  child: Wrap(
+                    alignment: WrapAlignment.spaceBetween,
+                    spacing: 8.0,
+                    runSpacing: 4.0,
+                    children: <Widget>[
+                      if (dateInput == null)
+                        OutlinedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("Sin fecha")),
+                      dateButton(context, "Hoy", DateTime.now()),
+                      dateButton(context, "Mañana",
+                          DateTime.now().add(const Duration(days: 1))),
+                      dateButton(context, "En 3 días",
+                          DateTime.now().add(const Duration(days: 3))),
+                      dateButton(
+                          context, "Este sábado", nextSaturday(DateTime.now())),
+                      dateButton(
+                          context, "Este domingo", nextSunday(DateTime.now())),
+                      dateButton(
+                          context, "Próximo lunes", nextMonday(DateTime.now())),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                OutlinedButton(
+                    child: const Text(
+                      'Ó Personaliza una fecha 📅',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    ),
+                    onPressed: () async {
+                      DateTime firstDate = DateTime(1999, 1, 1);
+                      DateTime lastDate = DateTime(2030, 12, 31);
+                      DateTime? selectedDate = await showDatePicker(
+                        cancelText: "Cancelar",
+                        confirmText: "Ok",
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: firstDate,
+                        lastDate: lastDate,
+                      );
+                      if (selectedDate != null) {
+                        if (mounted) {
+                          Navigator.of(context).pop(selectedDate);
+                        }
+                      }
+                    }),
+                const SizedBox(
+                  height: 10,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    ).then((selectedDate) {
+      if (selectedDate != null) {
+        setState(() {
+          dateInput = selectedDate;
+        });
+      }
+    });
+  }
+
+  DateTime nextSaturday(DateTime date) {
+    int daysUntilSaturday = (DateTime.saturday - date.weekday + 7) % 7;
+    daysUntilSaturday = daysUntilSaturday == 0
+        ? 7
+        : daysUntilSaturday; // Si hoy es sábado, se selecciona el próximo sábado
+    return date.add(Duration(days: daysUntilSaturday));
+  }
+
+  DateTime nextSunday(DateTime date) {
+    int daysUntilSunday = (DateTime.sunday - date.weekday + 7) % 7;
+    daysUntilSunday = daysUntilSunday == 0
+        ? 7
+        : daysUntilSunday; // Si hoy es domingo, se selecciona el próximo domingo
+    return date.add(Duration(days: daysUntilSunday));
+  }
+
+  DateTime nextMonday(DateTime date) {
+    int daysUntilMonday = (DateTime.monday - date.weekday + 7) % 7;
+    daysUntilMonday = daysUntilMonday == 0
+        ? 7
+        : daysUntilMonday; // Si hoy es lunes, se selecciona el próximo lunes
+    return date.add(Duration(days: daysUntilMonday));
+  }
+
+  Widget dateButton(BuildContext context, String label, DateTime date) {
+    return OutlinedButton(
+      onPressed: () {
+        Navigator.of(context).pop(date);
+      },
+      child: Text(label),
+    );
+  }
+
+  Future<void> selectHour() async {
+    final size = MediaQuery.of(context).size;
+    await showDialog<TimeOfDay>(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  "Selecciona una hora",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  width: size.width * 0.6,
+                  child: Wrap(
+                    alignment: WrapAlignment.spaceBetween,
+                    spacing: 8.0, // gap between adjacent chips
+                    runSpacing: 4.0, // gap between lines
+                    children: <Widget>[
+                      if (hourInput == null)
+                        OutlinedButton(
+                            onPressed: () {
+                              context.pop();
+                            },
+                            child: const Text("Sin hora")),
+                      minutesButton(context, 'En 1 minutos',
+                          addMinutesToTimeOfDay(TimeOfDay.now(), 1)),
+                      minutesButton(context, 'En 2 minutos',
+                          addMinutesToTimeOfDay(TimeOfDay.now(), 2)),
+                      minutesButton(context, 'En 3 minutos',
+                          addMinutesToTimeOfDay(TimeOfDay.now(), 3)),
+                      minutesButton(context, 'En 4 minutos',
+                          addMinutesToTimeOfDay(TimeOfDay.now(), 4)),
+                      minutesButton(context, 'En 5 minutos',
+                          addMinutesToTimeOfDay(TimeOfDay.now(), 5)),
+                      minutesButton(context, 'En 10 minutos',
+                          addMinutesToTimeOfDay(TimeOfDay.now(), 10)),
+
+                      hourButton(context, '6:00 AM', 6, 0),
+                      hourButton(context, '7:00 AM', 7, 0),
+                      hourButton(context, '9:00 AM', 9, 0),
+                      hourButton(context, '10:00 AM', 10, 0),
+                      hourButton(context, '12:00 PM', 12, 0),
+                      hourButton(context, '2:00 PM', 14, 0),
+                      hourButton(context, '4:00 PM', 16, 0),
+                      hourButton(context, '6:00 PM', 18, 0),
+                      hourButton(context, '7:00 PM', 19, 0),
+
+                      // Agrega más opciones predeterminadas según sea necesario
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                OutlinedButton(
+                    child: const Text(
+                      'Ó Personaliza una hora⌚',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
+                    ),
+                    onPressed: () async {
+                      final TimeOfDay? selectedTime = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.now(),
+                        builder: (BuildContext context, Widget? child) {
+                          return child!;
+                        },
+                      );
+                      if (selectedTime != null) {
+                        if (mounted) {
+                          Navigator.of(context).pop(selectedTime);
+                        }
+                      }
+                    }),
+                const SizedBox(
+                  height: 10,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    ).then((selectedTime) {
+      if (selectedTime != null) {
+        setState(() {
+          hourInput = selectedTime;
+          // Haz algo con la hora seleccionada
+        });
+      }
+    });
+  }
+
+  Widget hourButton(
+      BuildContext context, String hourLabel, int hour, int minute) {
+    return OutlinedButton(
+      child: Text(hourLabel),
+      onPressed: () {
+        Navigator.of(context).pop(TimeOfDay(hour: hour, minute: minute));
+      },
+    );
+  }
+
+  Widget minutesButton(BuildContext context, String label, TimeOfDay date) {
+    return OutlinedButton(
+      child: Text(label),
+      onPressed: () {
+        Navigator.of(context)
+            .pop(TimeOfDay(hour: date.hour, minute: date.minute));
+      },
+    );
+  }
+
+  TimeOfDay addMinutesToTimeOfDay(TimeOfDay time, int minutesToAdd) {
+    final minutes = time.hour * 60 + time.minute + minutesToAdd;
+    return TimeOfDay(hour: minutes ~/ 60, minute: minutes % 60);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    flutterTts = FlutterTts();
   }
 
   @override
@@ -41,6 +296,8 @@ class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
     final ttsCategory = ref.watch(ttsCategoryProvider);
     final textToSpeech = ref.watch(onTestToSpeechProvider);
     final updating = ref.watch(noteNotifierProvider);
+    bool notification = true;
+    bool prenotification = false;
 
     //recordatorios finalizados
     if (!widget.done) {
@@ -639,6 +896,15 @@ class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
                                     TextEditingController contentController =
                                         TextEditingController(
                                             text: notes2[index].content);
+                                    if (notes2[index].dateRemember !=
+                                        DateTime(1, 1, 1, 0, 0)) {
+                                      dateInput = notes2[index].dateRemember;
+                                      hourInput = TimeOfDay.fromDateTime(
+                                          notes2[index].dateRemember);
+                                    } else {
+                                      dateInput = null;
+                                      hourInput = null;
+                                    }
 
                                     return AlertDialog(
                                       title: const Text("Editar Recordatorio"),
@@ -682,55 +948,130 @@ class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
                                                   // notes[index]['content'].toString(),
                                                   ),
                                             ),
-                                            FilledButton(
-                                                onPressed: updating.isUpdating
-                                                    ? null
-                                                    : () async {
-                                                        await noteProvider
-                                                            .updateNote(
-                                                                notes2[index]
-                                                                    .key,
-                                                                titleController
-                                                                    .text,
-                                                                contentController
-                                                                    .text)
-                                                            .then((value) {
-                                                          ScaffoldMessenger.of(context).showSnackBar(
-                                                              SnackBar(
-                                                                  action: SnackBarAction(
-                                                                      textColor:
-                                                                          Colors
-                                                                              .black,
-                                                                      label:
-                                                                          '¡Ok!',
-                                                                      onPressed:
-                                                                          () {}),
-                                                                  duration: const Duration(
-                                                                      milliseconds:
-                                                                          1100),
-                                                                  backgroundColor:
-                                                                      Colors.yellow[
-                                                                          200],
-                                                                  content:
-                                                                      const Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .spaceBetween,
-                                                                    children: [
-                                                                      Icon(Icons
-                                                                          .add_alert_sharp),
-                                                                      Text(
-                                                                        "¡Recordatorio actualizado!",
-                                                                        style: TextStyle(
-                                                                            color:
-                                                                                Colors.black),
-                                                                      ),
-                                                                    ],
-                                                                  )));
-                                                          context.pop();
-                                                        });
-                                                      },
-                                                child: const Text("Actualizar"))
+                                            // Wrap(
+                                            //   children: [
+                                            //     OutlinedButton.icon(
+                                            //       icon: const Icon(
+                                            //           Icons.calendar_month),
+                                            //       onPressed: updating.isUpdating
+                                            //           ? null
+                                            //           : () async {
+                                            //               await selectDate();
+                                            //               combinedDateTime =
+                                            //                   DateTime(
+                                            //                 dateInput?.year ??
+                                            //                     1, // Si dateInput es null, se usará el año 1
+                                            //                 dateInput?.month ??
+                                            //                     1, // Si dateInput es null, se usará el mes 1
+                                            //                 dateInput?.day ??
+                                            //                     1, // Si dateInput es null, se usará el día 1
+                                            //                 hourInput?.hour ??
+                                            //                     0, // Si hourInput es null, se usará la hora 0
+                                            //                 hourInput?.minute ??
+                                            //                     0, // Si hourInput es null, se usará el minuto 0
+                                            //               );
+
+                                            //               setState(() {});
+                                            //             },
+                                            //       label: Text(
+                                            //         dateInput == null
+                                            //             ? "¿Cuando recordar??"
+                                            //             : DateFormat.yMEd('es')
+                                            //                 .format(dateInput!),
+                                            //         // style: TextStyle(color: Colors.white),
+                                            //       ),
+                                            //     ),
+                                            //     const SizedBox(
+                                            //       width: 2,
+                                            //     ),
+                                            //     if (dateInput != null)
+                                            //       OutlinedButton.icon(
+                                            //         onPressed: updating
+                                            //                 .isUpdating
+                                            //             ? null
+                                            //             : () async {
+                                            //                 await selectHour();
+                                            //                 combinedDateTime =
+                                            //                     DateTime(
+                                            //                   dateInput?.year ??
+                                            //                       1, // Si dateInput es null, se usará el año 1
+                                            //                   dateInput
+                                            //                           ?.month ??
+                                            //                       1, // Si dateInput es null, se usará el mes 1
+                                            //                   dateInput?.day ??
+                                            //                       1, // Si dateInput es null, se usará el día 1
+                                            //                   hourInput?.hour ??
+                                            //                       0, // Si hourInput es null, se usará la hora 0
+                                            //                   hourInput
+                                            //                           ?.minute ??
+                                            //                       0, // Si hourInput es null, se usará el minuto 0
+                                            //                 );
+                                            //                 setState(() {});
+                                            //               },
+                                            //         icon:
+                                            //             const Icon(Icons.watch),
+                                            //         label: Text(
+                                            //           hourInput == null
+                                            //               ? "¿A qué hora?"
+                                            //               : hourInput!
+                                            //                   .format(context),
+                                            //           // style: TextStyle(color: Colors.white),
+                                            //         ),
+                                            //       ),
+                                            //   ],
+                                            // ),
+                                            Align(
+                                              alignment: Alignment.centerRight,
+                                              child: FilledButton(
+                                                  onPressed: updating.isUpdating
+                                                      ? null
+                                                      : () async {
+                                                          await noteProvider
+                                                              .updateNote(
+                                                                  notes2[index]
+                                                                      .key,
+                                                                  titleController
+                                                                      .text,
+                                                                  contentController
+                                                                      .text)
+                                                              .then((value) {
+                                                            ScaffoldMessenger.of(context).showSnackBar(
+                                                                SnackBar(
+                                                                    action: SnackBarAction(
+                                                                        textColor:
+                                                                            Colors
+                                                                                .black,
+                                                                        label:
+                                                                            '¡Ok!',
+                                                                        onPressed:
+                                                                            () {}),
+                                                                    duration: const Duration(
+                                                                        milliseconds:
+                                                                            1100),
+                                                                    backgroundColor:
+                                                                        Colors.yellow[
+                                                                            200],
+                                                                    content:
+                                                                        const Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
+                                                                      children: [
+                                                                        Icon(Icons
+                                                                            .add_alert_sharp),
+                                                                        Text(
+                                                                          "¡Recordatorio actualizado!",
+                                                                          style:
+                                                                              TextStyle(color: Colors.black),
+                                                                        ),
+                                                                      ],
+                                                                    )));
+                                                            context.pop();
+                                                          });
+                                                        },
+                                                  child:
+                                                      const Text("Actualizar")),
+                                            )
                                           ],
                                         ),
                                       ),
