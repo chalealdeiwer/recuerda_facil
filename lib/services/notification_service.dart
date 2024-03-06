@@ -7,7 +7,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 Future<void> initNotifications() async {
   const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('app_icon');
+      AndroidInitializationSettings('@mipmap/ic_launcher');
 
   const InitializationSettings initializationSettings =
       InitializationSettings(android: initializationSettingsAndroid);
@@ -85,7 +85,7 @@ Future<void> showNotificationNewNote() async {
 Future<void> showNotificationWithImage() async {
   var bigPictureStyleInformation = const BigPictureStyleInformation(
     DrawableResourceAndroidBitmap(
-        '/assets/images/users_guide/planDay.png'), // Reemplaza 'app_icon' con el nombre de tu asset
+        '@mipmap/ic_launcher'), // Reemplaza 'app_icon' con el nombre de tu asset
     largeIcon: DrawableResourceAndroidBitmap('app_icon'),
     contentTitle: 'Notificación con imagen',
     htmlFormatContentTitle: true,

@@ -85,7 +85,8 @@ class BoardService {
       'users': FieldValue.arrayUnion([userId]),
     });
   }
-   Future<bool> doesBoardExist(String boardId) async {
+
+  Future<bool> doesBoardExist(String boardId) async {
     try {
       final boardDoc = await _firestore.collection('boards').doc(boardId).get();
       return boardDoc.exists;
@@ -109,17 +110,17 @@ class BoardService {
       // Manejar cualquier error según tus necesidades
       return false;
     }
-  
-}
-Future<void> removeUserFromBoard(String boardId, String userId) async {
-  try {
-    await _firestore.collection('boards').doc(boardId).update({
-      'users': FieldValue.arrayRemove([userId]),
-    });
-  } catch (e) {
-    // Manejar cualquier error según tus necesidades
   }
-}
+
+  Future<void> removeUserFromBoard(String boardId, String userId) async {
+    try {
+      await _firestore.collection('boards').doc(boardId).update({
+        'users': FieldValue.arrayRemove([userId]),
+      });
+    } catch (e) {
+      // Manejar cualquier error según tus necesidades
+    }
+  }
 
   String generateRandomCode() {
     const chars =

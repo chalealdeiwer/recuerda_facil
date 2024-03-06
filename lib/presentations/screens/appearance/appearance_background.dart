@@ -1,10 +1,14 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:recuerda_facil/presentations/providers/appearance_provider2.dart';
+import 'package:recuerda_facil/presentations/screens/appearance/backgrounds.dart';
 import 'package:recuerda_facil/presentations/screens/home/home_screen.dart';
 
 import '../../../services/services.dart';
@@ -121,14 +125,7 @@ class _ScreenBackgroundState extends ConsumerState<ScreenBackground> {
                 ),
               ],
             ),
-            // Opacity(
-            //   opacity: opacity,
-            //   child: Image(
-            //     key: key,
-            //     image: imageB.image,
-            //     fit: BoxFit.cover,
-            //   ),
-            // ),
+
             Center(
               child: Container(
                 decoration: BoxDecoration(
@@ -149,6 +146,23 @@ class _ScreenBackgroundState extends ConsumerState<ScreenBackground> {
                 ),
               ),
             ),
+            const SizedBox(
+              height: 20,
+            ),
+            Text(
+              "Fondos predefinidos",
+              style: textStyle.titleLarge,
+            ),
+            SizedBox(
+              height: 400,
+              child: GridView.extent(
+                maxCrossAxisExtent: 150,
+                padding: const EdgeInsets.all(5),
+                mainAxisSpacing: 5.0,
+                crossAxisSpacing: 5.0,
+                children: _imagesList,
+              ),
+            )
 
             // SizedBox(
             //   height: 600,
@@ -174,5 +188,44 @@ class _ScreenBackgroundState extends ConsumerState<ScreenBackground> {
         ),
       ),
     );
+  }
+
+  List<Widget> get _imagesList {
+    List<Widget> listImages = [];
+
+    for (var image in backgrounds) {
+      listImages.add(GestureDetector(
+          onTap: () async {
+            // Navigator.push(context, MaterialPageRoute(builder: ((context) => ImagePage(url: image))));
+
+            Image imageF = Image.asset(image);
+            ref.read(preferencesProvider.notifier).changeBackground2(imageF);
+            XFile imageFile = await assetToXFile(image, 'imagen.png');
+            ref.read(preferencesProvider.notifier).changeBackground(imageFile);
+          },
+          child: Image.asset(
+            image,
+            fit: BoxFit.cover,
+          )));
+    }
+
+    return listImages;
+  }
+
+  Future<XFile> assetToXFile(String assetPath, String fileName) async {
+    // Obtener la referencia al archivo de la imagen desde los assets
+    ByteData byteData = await rootBundle.load(assetPath);
+    List<int> bytes = byteData.buffer.asUint8List();
+
+    // Obtener la ruta del directorio temporal en el dispositivo
+    Directory tempDir = await getTemporaryDirectory();
+    String tempPath = tempDir.path;
+
+    // Escribir los bytes de la imagen en un archivo en el directorio temporal
+    File file = File('$tempPath/$fileName');
+    await file.writeAsBytes(bytes);
+
+    // Crear un XFile con la ruta del archivo temporal
+    return XFile(file.path);
   }
 }

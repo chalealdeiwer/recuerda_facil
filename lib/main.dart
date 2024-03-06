@@ -11,7 +11,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:recuerda_facil/presentations/providers/appearance_provider2.dart';
 import 'package:recuerda_facil/presentations/providers/theme_provider.dart';
 import 'package:recuerda_facil/services/notification_service.dart';
-import 'package:recuerda_facil/services/permissions.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 
