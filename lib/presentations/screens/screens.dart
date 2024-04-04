@@ -1,3 +1,5 @@
+export 'package:recuerda_facil/features/auth/presentation/screens/login/forget_password_screen.dart';
+
 export 'package:recuerda_facil/presentations/screens/more/more_board/board_chat_screen.dart';
 
 export 'package:recuerda_facil/presentations/screens/more/more_board/boards_List_screen.dart';
@@ -36,4 +38,5 @@ export 'package:recuerda_facil/presentations/screens/support/support_screen.dart
 export 'package:recuerda_facil/presentations/screens/test/splash_test.dart';
 export 'package:recuerda_facil/presentations/screens/test/test_screen.dart';
 export 'package:recuerda_facil/presentations/screens/users_guide_first_init/users_guide_first_init_screen.dart';
+
 

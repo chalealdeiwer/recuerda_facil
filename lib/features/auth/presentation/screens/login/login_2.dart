@@ -111,8 +111,9 @@ class _LoginForm extends ConsumerWidget {
               child: formulario(ref, loginForm),
             ),
             buttonLogin(ref, loginForm),
+            forgetPassword(context),
             buildOrLine(),
-            buttonGoogle(ref,loginForm),
+            buttonGoogle(ref, loginForm),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: Divider(),
@@ -126,6 +127,17 @@ class _LoginForm extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Widget forgetPassword(BuildContext context) {
+    return TextButton(
+        onPressed: () {
+          context.push('/forgetPassword');
+        },
+        child: const Text(
+          "¿Olvidaste tu contraseña?",
+          style: TextStyle(fontSize: 18),
+        ));
   }
 
   Widget buttonLogin(WidgetRef ref, loginForm) {
@@ -153,18 +165,28 @@ class _LoginForm extends ConsumerWidget {
           "Al iniciar sesión aceptas nuestros ",
           style: TextStyle(fontSize: 18),
         ),
-        TextButton(onPressed: (){
-          launchUrlService("https://recuerdafaciltu.deiwerchaleal.com/");
-        }, child: const Text("Términos de uso",style: TextStyle(fontSize: 18, color: Colors.blue, decoration: TextDecoration.underline, decorationColor: Colors.blue))),
+        TextButton(
+            onPressed: () {
+              launchUrlService("https://recuerdafaciltu.deiwerchaleal.com/");
+            },
+            child: const Text("Términos de uso",
+                style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline,
+                    decorationColor: Colors.blue))),
         const Text("y"),
         TextButton(
             onPressed: () {
-          launchUrlService("https://recuerdafacilpp.deiwerchaleal.com/");
-
+              launchUrlService("https://recuerdafacilpp.deiwerchaleal.com/");
             },
             child: const Text(
               "Política de Privacidad",
-              style: TextStyle(fontSize: 18, color: Colors.blue, decoration: TextDecoration.underline, decorationColor: Colors.blue),
+              style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.blue,
+                  decoration: TextDecoration.underline,
+                  decorationColor: Colors.blue),
             ))
       ],
     );
@@ -209,18 +231,18 @@ class _LoginForm extends ConsumerWidget {
     );
   }
 
-  Widget buttonGoogle(WidgetRef ref,loginForm) {
+  Widget buttonGoogle(WidgetRef ref, loginForm) {
     return Column(
       children: [
-        loginForm.isPosting? const CircularProgressIndicator():
-        SignInButton(
-
-            padding: const EdgeInsets.only(left: 40),
-            // mini: true,
-            text: "Entrar con Google",
-            Buttons.Google, onPressed: () async {
-          ref.read(loginFormProvider.notifier).signInGoogle();
-        })
+        loginForm.isPosting
+            ? const CircularProgressIndicator()
+            : SignInButton(
+                padding: const EdgeInsets.only(left: 40),
+                // mini: true,
+                text: "Entrar con Google",
+                Buttons.Google, onPressed: () async {
+                ref.read(loginFormProvider.notifier).signInGoogle();
+              })
       ],
     );
   }

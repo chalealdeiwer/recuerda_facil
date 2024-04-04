@@ -923,7 +923,12 @@ class _StreamListWidgetState extends ConsumerState<StreamListWidget> {
                                                   WrapCrossAlignment.start,
                                               children: [
                                                 Text(
-                                                    'Creado: ${DateFormat('dd MMM hh:mm a').format(notes2[index].dateCreate)}')
+                                                    'Creado: ${DateFormat('dd MMM hh:mm a').format(notes2[index].dateCreate)}'),
+                                                notes2[index].dateRemember !=
+                                                        DateTime(1, 1, 1, 0, 0)
+                                                    ? Text(
+                                                        'Recordar: ${DateFormat('dd MMM yyyy hh:mm a').format(notes2[index].dateRemember)}')
+                                                    : const Text(""),
                                               ],
                                             ),
                                             const Text("Recordatorio"),

@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +14,7 @@ import 'package:recuerda_facil/presentations/views/notes/home_view.dart';
 import 'package:recuerda_facil/presentations/views/notes/more_view.dart';
 import 'package:recuerda_facil/presentations/widgets/widgets.dart';
 import 'package:recuerda_facil/services/permissions.dart';
+import 'package:recuerda_facil/services/services.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 import '../../providers/providers.dart';
@@ -303,43 +307,80 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         if (textProv == "") return;
                         if (textProv == "cancelar") return;
                         if (textProv ==
-                            "Mantén presionado el botón para iniciar el reconocimiento de voz") {
+                            "Mantén presionado el botón para iniciar comandos de voz") {
                           return;
+                        } 
+
+                          final response =
+                              await WitAiService().sendMessage(textProv);
+                          List<dynamic> datos =
+                              WitAiService().processWitResponse(response);
+
+                          if (datos[1].isAfter(DateTime.now())) {
+                            programNotification2(
+                              datos[1],
+                              datos[0],
+                              "",
+                            );
+                            programNotification(datos[1]);
+                            DateTime fiveMinutesBeforeNow = DateTime.now()
+                                .subtract(const Duration(minutes: 5));
+
+                            if (datos[1].isAfter(fiveMinutesBeforeNow)) {
+                              programNotification3(datos[1], datos[0], "");
+                            }
+                          }
+
+                          if (datos[0] == "") {
+                            return;
+                          }
+                          await noteProvider
+                              .addNote(
+                                  datos[0],
+                                  "",
+                                  user!.uid!,
+                                  DateTime.now(),
+                                  false,
+                                  category,
+                                  DateTime(1, 1, 1, 0, 0),
+                                  datos[1],
+                                  Icons.alarm.codePoint.toString())
+                              .then((value) {
+                            ref.read(textProvider.notifier).update((state) =>
+                                "Mantén presionado el botón para iniciar comandos de voz");
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                duration: const Duration(milliseconds: 2000),
+                                action: SnackBarAction(
+                                    textColor: Colors.black,
+                                    label: "¡Ok!",
+                                    onPressed: () {}),
+                                backgroundColor: Colors.green[200],
+                                content: const Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "¡Recordatorio agregado!",
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                    Icon(Icons.add_alert_sharp)
+                                  ],
+                                )));
+                          });
                         }
-                        await noteProvider
-                            .addNote(
-                                textProv,
-                                "",
-                                user!.uid!,
-                                DateTime.now(),
-                                false,
-                                category,
-                                DateTime(1, 1, 1, 0, 0),
-                                DateTime(1, 1, 1, 0, 0),
-                                Icons.alarm.codePoint.toString())
-                            .then((value) {
-                          ref.read(textProvider.notifier).update((state) =>
-                              "Mantén presionado el botón para iniciar el reconocimiento de voz");
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              duration: const Duration(milliseconds: 2000),
-                              action: SnackBarAction(
-                                  textColor: Colors.black,
-                                  label: "¡Ok!",
-                                  onPressed: () {}),
-                              backgroundColor: Colors.green[200],
-                              content: const Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "¡Recordatorio agregado!",
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                  Icon(Icons.add_alert_sharp)
-                                ],
-                              )));
-                        });
-                      },
+
+                        // await noteProvider
+                        //     .addNote(
+                        //         textProv,
+                        //         "",
+                        //         user!.uid!,
+                        //         DateTime.now(),
+                        //         false,
+                        //         category,
+                        //         DateTime(1, 1, 1, 0, 0),
+                        //         DateTime(1, 1, 1, 0, 0),
+                        //         Icons.alarm.codePoint.toString())
+                      ,
                       child: CircleAvatar(
                         backgroundColor: Colors.green,
                         radius: 35,
@@ -376,10 +417,63 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ],
             )));
   }
+
+  void programNotification2(DateTime targetTime, title, content) async {
+    final id = Random().nextInt(1000);
+    final initialDuration = targetTime.isBefore(DateTime.now())
+        ? targetTime.add(const Duration(days: 1)).difference(DateTime.now())
+        : targetTime.difference(DateTime.now());
+
+    await AndroidAlarmManager.oneShot(initialDuration, id, notification2,
+        alarmClock: true,
+        wakeup: true,
+        allowWhileIdle: true,
+        exact: true,
+        rescheduleOnReboot: true,
+        params: {'title': title, 'content': content});
+  }
+
+  void programNotification3(DateTime targetTime, title, content) async {
+    // Ajustar el tiempo objetivo restando 5 minutos
+    final targetTimeAdjusted = targetTime.subtract(const Duration(minutes: 5));
+
+    final id = Random().nextInt(1000);
+    final initialDuration = targetTimeAdjusted.isBefore(DateTime.now())
+        ? targetTimeAdjusted
+            .add(const Duration(days: 1))
+            .difference(DateTime.now())
+        : targetTimeAdjusted.difference(DateTime.now());
+
+    await AndroidAlarmManager.oneShot(initialDuration, id, notification3,
+        alarmClock: true,
+        wakeup: true,
+        allowWhileIdle: true,
+        exact: true,
+        rescheduleOnReboot: true,
+        params: {'title': title, 'content': content});
+  }
+
+  void programNotification(DateTime targetTime) async {
+    final id = Random().nextInt(1000);
+    final initialDuration = targetTime.isBefore(DateTime.now())
+        ? targetTime.add(const Duration(days: 1)).difference(DateTime.now())
+        : targetTime.difference(DateTime.now());
+
+    await AndroidAlarmManager.oneShot(
+      initialDuration,
+      id,
+      alarmT,
+      alarmClock: true,
+      wakeup: true,
+      allowWhileIdle: true,
+      exact: true,
+      rescheduleOnReboot: true,
+    );
+    // await AndroidAlarmManager.periodic(duration, id, callback)
+  }
 }
 
 void showNewNote(BuildContext context, category, user) {
-  
   requestNotification();
   showDialog(
       context: context,

@@ -32,6 +32,10 @@ final goRouterProvider = Provider((ref) {
           path: '/login',
           builder: (context, state) => const Login2Screen()),
       GoRoute(
+          name: ForgetPasswordScreen.name,
+          path: '/forgetPassword',
+          builder: (context, state) => const ForgetPasswordScreen()),
+      GoRoute(
           name: CreateUserScreen.name,
           path: '/createUser',
           builder: (context, state) => const CreateUserScreen()),
@@ -76,7 +80,7 @@ final goRouterProvider = Provider((ref) {
                     builder: (context, state) => const BoardsSCreen(),
                     routes: [
                       GoRoute(
-                          name:BoardChatScreen.name,
+                          name: BoardChatScreen.name,
                           path: 'board/:boardId',
                           builder: (context, state) {
                             final boardId =
@@ -218,6 +222,8 @@ final goRouterProvider = Provider((ref) {
           authStatus == AuthStatus.authenticated) return '/home/1';
       if (isGoingTo == '/createUser' &&
           authStatus == AuthStatus.notAuthenticated) return '/createUser';
+      if (isGoingTo == '/forgetPassword' &&
+          authStatus == AuthStatus.notAuthenticated) return '/forgetPassword';
 
       if (isGoingTo == '/login' && authStatus == AuthStatus.authenticated) {
         return '/home/1';
